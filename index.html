@@ -59,6 +59,11 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 @keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:3000;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
 #toast.show{transform:translate(-50%,0)}
+#testp{position:fixed;right:10px;bottom:10px;z-index:4000;background:#fff;border:2px dashed #673ab7;border-radius:8px;padding:10px;width:200px;box-shadow:0 3px 10px rgba(0,0,0,.2);font-size:13px}
+#testp b{display:block;cursor:pointer;color:#673ab7;margin-bottom:6px}
+#testp button{display:block;width:100%;text-align:left;margin:4px 0;padding:6px 8px;border:1px solid #dadce0;border-radius:4px;background:#f8f9fa;font:inherit;cursor:pointer}
+#testp small{display:block;color:#5f6368;margin-top:6px;line-height:1.5}
+#testp.min div{display:none}#testp.min b{margin:0}
 .yarm{position:absolute;overflow:hidden;opacity:0;z-index:6}
 .yarm iframe{position:absolute;border:0}
 .vbox.vhide{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;pointer-events:none;animation:none}
@@ -822,8 +827,10 @@ function result(){
   const rank=Object.entries(sc).sort((a,b)=>b[1]-a[1]),top=rank.slice(0,5),tot=top.reduce((s,x)=>s+x[1],0);
   return {type:rank[0][0],ranks:top.map(([t,p])=>[t,Math.round(p/tot*100)]),obs:Object.values(marks).filter(m=>m.ana).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana)};
 }
-function reveal(){
-  document.body.classList.add('glitch');play('vineboom');
+// fast=true：直接顯示最終結果，不跑動畫（用於重新整理後還原、測試面板）
+function reveal(fast){
+  stats.done=true;FROG.off=true;save();
+  if(!fast){document.body.classList.add('glitch');play('vineboom')}
   setTimeout(()=>{
     document.body.classList.remove('glitch');window.scrollTo(0,0);
     const self=(ans.mytype||'').trim().toUpperCase(),selfOk=MB_OK.test(self),base=selfOk?self:mbti();
@@ -856,7 +863,13 @@ function reveal(){
       <div class="foot">本分析結果僅供參考，如有雷同，純屬你自己的問題。<br>本問卷不會收集任何資料，你的答案只存在你自己的螢幕上。</div>
     </div>`;
     bindCta(nick);
-    $('#again').onclick=()=>location.reload();
+    $('#again').onclick=()=>{clearSave();location.reload()};
+    if(fast){
+      document.querySelectorAll('#slots span').forEach((s,i)=>s.textContent=r.type[i]);$('#slots').classList.add('final');
+      $('#sl').textContent='重新判定後，您的人格類型為';$('#sn').innerHTML=`<b>${r.type}｜${T.n}</b>${T.tag}`;
+      const b=$('#rbody');b.style.display='block';b.classList.add('on');b.querySelectorAll('i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%');
+      return;
+    }
     $('#share').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(()=>toast('連結已複製')).catch(()=>toast('複製失敗，直接把網址傳給朋友吧'))};
     spin(base,()=>{
       $('#sn').textContent=`初步結果：${base}`;
@@ -870,7 +883,7 @@ function reveal(){
         },180),1400);
       },1300);
     },380);
-  },900);
+  },fast?0:900);
 }
 const HIST={};
 const GAG={t5:[2],t6:[2],jd:[1,2,4,5],j2:[3],vid:[1],m2:[3],m4:[0,1,2],q1:[3],q2:[2],q67:[1]};
@@ -885,16 +898,19 @@ function gagMark(){
 const seqTxt=h=>h.slice(-8).map(s=>`「${esc(s)}」`).join(' → ');
 // 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
 // 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。
-stats.went={};stats.away={};let goOut=null;
-function noteGo(k){stats.went[k]=true;goOut={k,t:Date.now()}}
+stats.went={};stats.away={};stats.goOut=null;
+function noteGo(k){stats.went[k]=true;stats.goOut={k,t:Date.now()};save()}
+// 回到這頁：算出在外面待了幾秒（頁面被重新載入的情況，在還原紀錄時也會呼叫）
+function backFromOut(){
+  const g=stats.goOut;if(!g)return null;stats.goOut=null;
+  const s=Math.round((Date.now()-g.t)/1000);stats.away[g.k]=Math.max(stats.away[g.k]||0,s);save();return [g.k,s];
+}
 document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;
   const h=a.getAttribute('href');const k=h===CONFIG.igUrl?'ig':h===CONFIG.ytChannelUrl?'yt':h===CONFIG.videoUrl?'video':null;
   if(k)noteGo(k)},true);
 document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState!=='visible'||!goOut)return;
-  const {k,t}=goOut,s=Math.round((Date.now()-t)/1000);goOut=null;
-  stats.away[k]=Math.max(stats.away[k]||0,s);
-  if($('#cta'))ctaBack(k,s);
+  if(document.visibilityState!=='visible')return save();
+  const r=backFromOut();if(r&&$('#cta'))ctaBack(...r);
 });
 const awayTxt=s=>s<1?'不到 1 秒':`${s} 秒`;
 // 結果頁上點出去又回來時，即時吐槽
@@ -996,7 +1012,56 @@ function spin(target,done,gap){
   setTimeout(st,900);
 }
 
-render();
+// ===== 作答紀錄保存：存在使用者自己的手機（localStorage），按返回、重新整理、從 IG 跳回來都能接著填；按「再填一次」才清掉 =====
+const SAVE_KEY='mbti_form_save_v1',TEST=/[?&]test\b/.test(location.search);
+let cleared=false;
+function save(){
+  if(TEST||cleared)return;
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify({page,ans,stats,marks,HIST,GAGC,extras,
+    frog:{shown:FROG.shown,caught:FROG.caught,seen:FROG.seen},
+    qs:Object.fromEntries(Object.values(Q).map(q=>[q.id,{opts:q.opts,lateShown:q.lateShown}]))}))}catch(e){}
+}
+function clearSave(){cleared=true;try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+function restore(){
+  if(TEST)return false;
+  let s=null;try{s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(e){}
+  if(!s||!s.ans)return false;
+  try{
+    Object.assign(ans,s.ans);Object.assign(stats,s.stats);Object.assign(marks,s.marks);Object.assign(HIST,s.HIST);
+    GAGC.push(...(s.GAGC||[]));extras.splice(0,extras.length,...(s.extras||[]));
+    Object.assign(FROG,s.frog||{});
+    Object.entries(s.qs||{}).forEach(([id,v])=>{const q=Q[id];if(!q)return;if(v.opts)q.opts=v.opts;if(v.lateShown)q.lateShown=true});
+    page=Math.min(Math.max(0,s.page|0),N-1);
+    return true;
+  }catch(e){return false}
+}
+['change','input','click'].forEach(ev=>document.addEventListener(ev,()=>setTimeout(save,0)));
+addEventListener('pagehide',save);setInterval(save,3000);
+
+// ===== 結尾情勒話術測試面板：網址後面加 ?test 才會出現（例如 https://你的網址/?test），測試時不會存紀錄 =====
+function testPanel(){
+  const S=[['預設（什麼都沒做）',{}],['勾「已追蹤」但沒點連結',{ig:[0]}],['點進 IG 只待 2 秒',{ig:[0],went:{ig:1},away:{ig:2}}],
+    ['點進 IG 待 30 秒',{ig:[0],went:{ig:1},away:{ig:30}}],['選「下次一定」',{ig:[2]}],
+    ['說看完影片但沒點連結',{ig:[0,1],went:{ig:1},away:{ig:30}}],['說看完影片只待 8 秒',{ig:[1],went:{video:1},away:{video:8}}]];
+  const d=document.createElement('div');d.id='testp';
+  d.innerHTML=`<b>情勒話術測試 ▾</b><div>${S.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}<small>到結果頁後點 IG / YouTube 按鈕出去再回來，可以測「回來得好快喔」那段。</small></div>`;
+  document.body.appendChild(d);
+  d.onclick=e=>{
+    if(e.target.tagName==='B'){d.classList.toggle('min');return}
+    const b=e.target.closest('button');if(!b)return;const c=S[b.dataset.i][1];
+    if(c.ig)ans.ig=c.ig;else delete ans.ig;
+    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;
+    if(!ans.nick)ans.nick='測試人';
+    reveal(true);setTimeout(()=>{const x=$('#cta');if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},100);
+  };
+}
+
+if(restore()){
+  const back=backFromOut();
+  if(stats.done){reveal(true);if(back)setTimeout(()=>ctaBack(...back),50)}
+  else{render();toast('已幫你接回上次填到的地方')}
+}else render();
+if(TEST)testPanel();
 </script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
 <script defer src="/_vercel/insights/script.js"></script>
