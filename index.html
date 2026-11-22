@@ -599,7 +599,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');
   if(g){
-    window.open(CONFIG[g.dataset.go+'Url'],'_blank','noopener');
+    window.open(CONFIG[g.dataset.go+'Url'],'_blank','noopener');noteGo(g.dataset.go);
     const k=g.dataset.go==='ig'?0:1;ans.ig=[...new Set([...(ans.ig||[]),k])];
     const c=$('#q_ig');c.querySelector(`input[value="${k}"]`).checked=true;c.classList.remove('bad');picks.ig(k,c);return;
   }
@@ -851,11 +851,11 @@ function reveal(){
         <div class="rel"><span>最佳拍檔</span><div>${T.m}</div></div><div class="rel"><span>天敵</span><div>${T.e}</div></div><div class="rel"><span>適合職業</span><div>${T.j}</div></div></div>
       <div class="card"><div class="rt">人格成分</div><div class="rs">樣本數：1（你）・分析信度 α = 0.67（研究小組自己算的）</div>
         ${r.ranks.map(([t,p])=>`<div class="bar"><b>${t}</b><div class="t"><i data-w="${p}"></i></div><span>${p}%</span></div>`).join('')}</div>
-      <div class="card cta"><div class="rt">想知道這份有病的表單是誰做的嗎？</div><p class="rp" style="margin:6px 0 0">追蹤《${CONFIG.showName}》，看更多不正經的 MBTI。</p>
-        <div class="ctab"><a class="btn" href="${CONFIG.igUrl}" target="_blank" rel="noopener">追蹤 IG ${esc(CONFIG.igHandle)}</a><a class="btn w" href="${CONFIG.videoUrl}" target="_blank" rel="noopener">看最新影片</a></div></div>
+      ${ctaCard(nick)}
       <div class="nav" style="justify-content:center;gap:24px"><button class="link" id="again">再填一次</button><button class="link" id="share">分享給朋友</button></div>
       <div class="foot">本分析結果僅供參考，如有雷同，純屬你自己的問題。<br>本問卷不會收集任何資料，你的答案只存在你自己的螢幕上。</div>
     </div>`;
+    bindCta(nick);
     $('#again').onclick=()=>location.reload();
     $('#share').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(()=>toast('連結已複製')).catch(()=>toast('複製失敗，直接把網址傳給朋友吧'))};
     spin(base,()=>{
@@ -883,6 +883,65 @@ function gagMark(){
   mark('gagM','MEME',Math.min(10,(meme.length-2)*1.5),`作答期間，受試者共點擊附有音效或迷因的選項 ${meme.length} 次，涵蓋 ${kinds} 個不同的梗，其中「${esc(topName)}」被點了 ${topN} 次。研究小組判斷其點選項並非為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
 }
 const seqTxt=h=>h.slice(-8).map(s=>`「${esc(s)}」`).join(' → ');
+// 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
+// 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。
+stats.went={};stats.away={};let goOut=null;
+function noteGo(k){stats.went[k]=true;goOut={k,t:Date.now()}}
+document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;
+  const h=a.getAttribute('href');const k=h===CONFIG.igUrl?'ig':h===CONFIG.ytChannelUrl?'yt':h===CONFIG.videoUrl?'video':null;
+  if(k)noteGo(k)},true);
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState!=='visible'||!goOut)return;
+  const {k,t}=goOut,s=Math.round((Date.now()-t)/1000);goOut=null;
+  stats.away[k]=Math.max(stats.away[k]||0,s);
+  if($('#cta'))ctaBack(k,s);
+});
+const awayTxt=s=>s<1?'不到 1 秒':`${s} 秒`;
+// 結果頁上點出去又回來時，即時吐槽
+function ctaBack(k,s){
+  const t=$('#ctaT'),b=$('#ctaB');if(!t||!b)return;
+  const where={ig:'IG',yt:'YouTube',video:'影片'}[k];
+  if(s<4){t.textContent='……回來得好快喔';
+    b.innerHTML=`<p class="rp" style="margin:6px 0 0">你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間${k==='video'?'連片頭都看不完':'不太夠按追蹤'}。</p>`;play('bruh')}
+  else{t.textContent='🥹 謝謝你，你是好人';
+    b.innerHTML=`<p class="rp" style="margin:6px 0 0">你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有${k==='video'?'看完':'按下去'}。</p>`}
+}
+// 結果頁的情勒追蹤卡：依第六部分「支持我們」那題的回答 + 有沒有真的點過按鈕，給不同的台詞
+function ctaCard(nick){
+  const c=ans.ig||[],saidIg=c.includes(0),saidVid=c.includes(1),later=c.includes(2),went=stats.went,aw=stats.away;
+  let lines;
+  if(saidIg&&!went.ig)lines=[`${nick}，你在前面勾了「我已追蹤 IG」。`,'但系統顯示，你從頭到尾都沒有點過我們的 IG 連結。','沒關係，我們不會說什麼。我們只是會有點難過。'];
+  else if(went.ig&&aw.ig!==undefined&&aw.ig<4)lines=[`${nick}，你剛剛點進我們的 IG，只待了 ${awayTxt(aw.ig)} 就回來了。`,'研究小組實測，這個時間不太夠按追蹤。','可以再去一次，我們等你。'];
+  else if(later&&!saidIg)lines=['你前面說「下次一定」。','研究小組想通知你：現在就是下次。'];
+  else if(went.ig)lines=[`謝謝你點進我們的 IG，${nick}${aw.ig?`，還待了 ${awayTxt(aw.ig)}`:''}。`,'如果你沒有按追蹤就跑回來了……','我們看不到，但你自己知道。'];
+  else lines=['這份表單我們熬了好幾個晚上做出來，你只花了五分鐘填完。','追蹤只需要一秒。','我們算過了，這很划算。'];
+  if(saidVid&&!went.video)lines.push('另外，你也說你看完新影片了，但你沒點過影片連結。我們也很想相信你。');
+  else if(saidVid&&aw.video!==undefined&&aw.video<20)lines.push(`另外，你說你看完新影片了。你在影片那邊待了 ${awayTxt(aw.video)}。我們的影片沒有那麼短。`);
+  return `<div class="card cta" id="cta"><div class="rt" id="ctaT">在你離開之前……</div>
+    <div id="ctaB">${lines.map(l=>`<p class="rp" style="margin:6px 0 0">${l}</p>`).join('')}</div>
+    <div class="ctab" id="ctaBtns"><a class="btn" data-r="ig" href="${CONFIG.igUrl}" target="_blank" rel="noopener">追蹤 IG ${esc(CONFIG.igHandle)}</a><a class="btn" data-r="yt" href="${CONFIG.ytChannelUrl}" target="_blank" rel="noopener">訂閱 YouTube</a><a class="btn w" data-r="video" href="${CONFIG.videoUrl}" target="_blank" rel="noopener">看最新影片</a></div>
+    <p class="rp" style="margin:14px 0 0;font-size:13px;color:#5f6368">如果你早就追蹤了，<button class="link" id="ctaOld" style="font-size:13px">請點這裡領取你的神聖讚美</button></p>
+    <div style="margin-top:10px"><button class="link" id="ctaNo" style="color:#9aa0a6;font-size:12px">殘忍拒絕</button></div></div>`;
+}
+function bindCta(nick){
+  const t=$('#ctaT'),b=$('#ctaB'),no=$('#ctaNo');let refused=0;
+  $('#ctaBtns').addEventListener('click',e=>{const a=e.target.closest('[data-r]');if(!a)return;
+    play('ding');
+    t.textContent='🥹 謝謝你，你是好人';
+    b.innerHTML=`<p class="rp" style="margin:6px 0 0">${refused?'我們就知道你剛剛只是嘴硬。':'研究小組已將您的人格類型額外標註為「善良」。'}</p>`;
+    no.style.display='none'});
+  const old=$('#ctaOld');
+  old.onclick=()=>{play('congcong');setTimeout(()=>play('airhorn'),350);
+    t.textContent='✨ 神聖讚美已降臨 ✨';
+    b.innerHTML=[`${nick}，你早就追蹤了。`,'研究小組全體起立，向你致上最崇高的敬意。','你是本研究的天選之人、節目的守護神、演算法的光。','從今天起，你的 MBTI 後面可以多加一個字母：S（Supporter）。'].map(l=>`<p class="rp" style="margin:6px 0 0">${l}</p>`).join('');
+    old.parentElement.style.display='none';no.style.display='none'};
+  const msgs=['你確定嗎？做這份表單的人現在眼睛還是紅的。',`研究小組已把「${nick}」寫進小本本。`,'好吧。我們會假裝沒事。','（研究小組正在哭）'];
+  no.onclick=()=>{play('sadviolin');shake($('#cta'));
+    b.innerHTML=`<p class="rp" style="margin:6px 0 0">${msgs[Math.min(refused,msgs.length-1)]}</p>`;
+    refused++;if(refused===1)t.textContent='……';
+    if(refused>=msgs.length){no.textContent='好啦我追';no.onclick=()=>{$('#ctaBtns [data-r="ig"]').click()}}
+    else no.textContent=['真的不要','真的真的不要','不要'][refused-1]||'不要'};
+}
 function trackCard(){
   const all=Object.entries(HIST),total=all.reduce((s,[,h])=>s+h.length,0);if(!total)return '';
   const changed=all.filter(([id,h])=>h.length>1),top=changed.filter(([id])=>id!=='vid').sort((a,b)=>b[1].length-a[1].length).slice(0,3);
