@@ -906,7 +906,8 @@ stats.went={};stats.away={};stats.goOut=null;
 // 待超過這個秒數就算「有誠意」：之後再點同一個連結就不再重新計時（也不會再跳即時吐槽）
 const passSec=k=>k==='video'?CONFIG.videoThankSec:4;
 const passed=k=>(stats.away[k]||0)>=passSec(k);
-function noteGo(k){stats.went[k]=true;if(!passed(k))stats.goOut={k,t:Date.now()};save()}
+// 任何一個連結曾經待夠久（問卷中或結果頁都算）＝已經有誠意，之後點任何連結都不再計時
+function noteGo(k){stats.went[k]=true;if(!stats.thanked&&!Object.keys(stats.away).some(passed))stats.goOut={k,t:Date.now()};save()}
 // 回到這頁：算出在外面待了幾秒（頁面被重新載入的情況，在還原紀錄時也會呼叫）
 function backFromOut(){
   const g=stats.goOut;if(!g)return null;stats.goOut=null;
@@ -923,18 +924,14 @@ document.addEventListener('visibilitychange',()=>{
 const awayTxt=s=>s<1?'不到 1 秒':`${s} 秒`;
 // 結果頁上點出去又回來時，即時吐槽
 function ctaBack(k,s){
-  const t=$('#ctaT'),b=$('#ctaB');if(!t||!b||stats.oldFan)return;
+  // 已經被感謝過（任何一個連結待夠久）就不再吐槽，讓感謝的台詞留著
+  const t=$('#ctaT'),b=$('#ctaB');if(!t||!b||stats.oldFan||stats.thanked)return;
   const where={ig:'IG',yt:'YouTube',video:'影片'}[k];
   const p=txt=>`<p class="rp" style="margin:6px 0 0">${txt}</p>`;
-  if(k==='video'){
-    if(s<CONFIG.videoThankSec){t.textContent='……回來得好快喔';b.innerHTML=p(`你在影片那邊只待了 ${awayTxt(s)}。研究小組實測，這個時間連片頭都看不完。`);play('bruh')}
-    else{t.textContent='🥹 謝謝你，你是好人';b.innerHTML=p(`你在影片那邊待了 ${awayTxt(s)}。影片有 10 分鐘，我們不強求，有點進來看就是愛。`)}
-    return;
-  }
-  if(s<passSec(k)){t.textContent='……回來得好快喔';
-    b.innerHTML=p(`你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間不太夠按追蹤。`);play('bruh')}
-  else{t.textContent='🥹 謝謝你，你是好人';
-    b.innerHTML=p(`你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有按下去。`)}
+  if(s<passSec(k)){t.textContent='……回來得好快喔';play('bruh');
+    b.innerHTML=p(k==='video'?`你在影片那邊只待了 ${awayTxt(s)}。研究小組實測，這個時間連片頭都看不完。`:`你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間不太夠按追蹤。`);return}
+  stats.thanked=true;save();t.textContent='🥹 謝謝你，你是好人';
+  b.innerHTML=p(k==='video'?`你在影片那邊待了 ${awayTxt(s)}。影片有 10 分鐘，我們不強求，有點進來看就是愛。`:`你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有按下去。`);
 }
 // 結果頁的情勒追蹤卡：依第六部分「支持我們」那題的回答 + 有沒有真的點過按鈕，給不同的台詞
 function ctaCard(nick){
@@ -1074,7 +1071,7 @@ function testPanel(){
     if(e.target.tagName==='B'){d.classList.toggle('min');return}
     const b=e.target.closest('button');if(!b)return;const c=S[b.dataset.i][1];
     if(c.ig)ans.ig=c.ig;else delete ans.ig;
-    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;stats.oldFan=!!c.oldFan;
+    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;stats.oldFan=!!c.oldFan;stats.thanked=false;
     if(!ans.nick)ans.nick='測試人';
     reveal(true);setTimeout(()=>{if(c.back)ctaBack(...c.back);const x=$('#cta');if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},100);
   };
