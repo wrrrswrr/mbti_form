@@ -112,6 +112,11 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 .cta .rt{font-size:18px}
 .cta .ctab{justify-content:center;margin:16px 0 0}
 .foot .pw{text-align:left}
+.foot a{color:inherit}
+.foot .gmark{display:block;width:fit-content;margin:18px auto 0;font:400 24px/1 "Product Sans",Roboto,Arial,sans-serif;color:#5f6368;text-decoration:none;letter-spacing:-.3px}
+.head .gl{border-top:1px solid #dadce0;margin:16px -24px 0;padding:14px 24px;font-size:14px;color:#202124}
+.head .gl a{color:#1a73e8}
+.head .gl+.meta{margin-top:0}
 /* 手機版：比照 Google 表單手機排版（卡片寬 90%、內距 24px、16px 字、進度條在按鈕上方獨立一列） */
 @media(max-width:520px){
   .wrap{width:90%;max-width:none;padding:0;margin:12px auto 32px}
@@ -144,6 +149,7 @@ const CONFIG={
   showName:'MBTI生存指南',
   igHandle:'@mbti_survivalguide',
   igUrl:'https://www.instagram.com/mbti_survivalguide/',
+  ytChannelUrl:'https://youtube.com/channel/UCPcDNWfqmAapUuud4d6ahCg',
   videoUrl:'https://www.youtube.com/watch?v=xCZVvScZX70',
   hotpotId:'dMTy6C4UiQ4',
   hotpotFile:'',
@@ -472,7 +478,7 @@ const Q={};pages.forEach(p=>p.qs.forEach(q=>Q[q.id]=q));
 const extras=['已讀不回','我在路上了（其實還在家）','你決定就好','已購買，小孩愛吃','嘻嘻','不嘻嘻','破防了'];
 
 function header(full){
-  return `<div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1>${full?`<div class="desc">您好！我們是人格心理學專題研究小組，本問卷旨在探討 MBTI 十六型人格與日常行為模式之間的關聯。<br><br>・填答時間約 5 分鐘<br>・本問卷採匿名方式，所有資料僅作學術統計用途，不會對外公開<br>・請依照您「最直覺」的反應作答，沒有對錯之分<br><br>填答完成後，系統將依據您的作答產生個人化的人格分析報告。感謝您撥空協助！</div>`:''}<div class="meta">* 表示必填問題</div></div>`;
+  return `<div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1>${full?`<div class="desc">您好！我們是人格心理學專題研究小組，本問卷旨在探討 MBTI 十六型人格與日常行為模式之間的關聯。<br><br>・填答時間約 5 分鐘<br>・本問卷採匿名方式，所有資料僅作學術統計用途，不會對外公開<br>・請依照您「最直覺」的反應作答，沒有對錯之分<br><br>填答完成後，系統將依據您的作答產生個人化的人格分析報告。感謝您撥空協助！</div>`:''}<div class="gl"><a href="${CONFIG.igUrl}" target="_blank" rel="noopener">登入 Gooogle</a> 即可儲存進度。<a href="${CONFIG.ytChannelUrl}" target="_blank" rel="noopener">瞭解詳情</a></div><div class="meta">* 表示必填問題</div></div>`;
 }
 function optHTML(q,o,k,extra=''){
   const ty=q.type==='checkbox'?'checkbox':'radio',v=ans[q.id];
@@ -497,7 +503,7 @@ function render(){
   if(p.title)h+=`<div class="card sec"><div class="tab">第 ${page+1} 部分，共 ${N} 部分</div><div class="st">${p.title}</div>${p.desc?`<div class="sd">${p.desc}</div>`:''}</div>`;
   h+=p.qs.map(qHTML).join('');
   h+=`<div class="nav">${page>0?'<button class="btn w" id="back">返回</button>':''}<button class="btn" id="next">${page===N-1?'提交':'下一頁'}</button><div class="prog"><span class="pb"><i style="width:${(page+1)/N*100}%"></i></span>第 ${page+1} 頁，共 ${N} 頁</div><a class="clear" id="clear">清除表單內容</a></div>`;
-  h+=`<div class="foot"><div class="pw">請勿透過這份表單提交密碼。</div><div style="margin-top:14px">本問卷由研究小組自行建立，僅供學術研究使用。</div></div>`;
+  h+=`<div class="foot"><div class="pw">請勿利用 Gooogle 表單送出密碼。</div><div style="margin-top:14px">這份表單是在 ${esc(CONFIG.showName)} 中建立。<br>這份表單很可疑嗎？<a href="${CONFIG.ytChannelUrl}" target="_blank" rel="noopener">報告</a></div><a class="gmark" href="${CONFIG.igUrl}" target="_blank" rel="noopener">Gooogle 表單</a></div>`;
   $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
   p.qs.forEach(q=>{
     const card=$('#q_'+q.id);
