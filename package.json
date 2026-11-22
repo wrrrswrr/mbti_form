@@ -1,0 +1,10 @@
+{
+  "name": "mbti-form",
+  "private": true,
+  "scripts": {
+    "dev": "serve . -l 5173"
+  },
+  "devDependencies": {
+    "serve": "^14.2.5"
+  }
+}

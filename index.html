@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MBTI 人格傾向與日常行為調查</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f0ebf8;font-family:Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;color:#202124;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:640px;margin:12px auto 40px;padding:0 8px}
+.card{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:24px;margin-bottom:12px;position:relative;transition:border-color .2s}
+.head{border-top:10px solid #673ab7;padding-top:22px}
+.head h1{font-size:30px;font-weight:400;margin:0 0 12px;line-height:1.3}
+.head .desc{font-size:14px;line-height:1.7}
+.head .meta{border-top:1px solid #dadce0;margin:16px -24px 0;padding:12px 24px 0;font-size:14px;color:#d93025}
+.sec{padding:0;overflow:hidden}
+.sec .tab{background:#673ab7;color:#fff;padding:8px 16px;font-size:13px;display:inline-block;border-radius:0 0 8px 0}
+.sec .st{padding:14px 24px 6px;font-size:20px}
+.sec .sd{padding:0 24px 18px;font-size:14px;line-height:1.6;color:#5f6368}
+.sec .st:last-child{padding-bottom:18px}
+.qt{font-size:16px;line-height:1.5;margin-bottom:16px}
+.qd{font-size:13px;color:#5f6368;margin:-8px 0 16px;line-height:1.6}
+.req{color:#d93025}
+.ti{border:none;border-bottom:1px solid #dadce0;width:50%;min-width:220px;font-size:14px;padding:6px 0;outline:none;font-family:inherit;background:transparent}
+.ti:focus{border-bottom:2px solid #673ab7}
+.opt{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:14px;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.6,.5,1);width:fit-content;position:relative;z-index:2}
+.opt input{width:20px;height:20px;accent-color:#673ab7;margin:0;cursor:pointer;flex:none}
+.opt.hid{display:none}
+.opt.pop{animation:pop .6s cubic-bezier(.3,1.8,.5,1)}
+@keyframes pop{0%{transform:scale(0) rotate(-20deg);background:#fff59d}60%{background:#fff59d}100%{transform:scale(1);background:transparent}}
+.err,.wmsg{color:#d93025;font-size:12px;margin-top:12px;line-height:1.6}
+.err{display:none}
+.q.bad,.q.warn{border-color:#d93025}.q.bad .err{display:block}
+.scale{display:flex;align-items:flex-end;justify-content:space-between;gap:2px;font-size:14px}
+.scale .lb{padding-bottom:4px;max-width:96px;text-align:center;font-size:13px;line-height:1.4}
+.scale label{display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;flex:1}
+.scale input{width:20px;height:20px;accent-color:#673ab7;margin:0}
+.thumb{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,#1a1a2e,#3a2d6b 60%,#673ab7);display:flex;align-items:center;justify-content:center;color:#fff}
+.thumb .play{width:68px;height:48px;background:#f00;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.thumb .play:after{content:"";border-left:18px solid #fff;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:4px}
+.thumb .cap{position:absolute;left:14px;top:12px;font-size:14px;opacity:.9}
+.thumb .dur{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.75);font-size:12px;padding:2px 6px;border-radius:3px}
+.ctab{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.nav{display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap}
+.btn{background:#673ab7;color:#fff;border:none;border-radius:4px;padding:9px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:transform .2s cubic-bezier(.3,1.6,.5,1);position:relative;z-index:5;text-decoration:none;display:inline-block}
+.btn:hover{background:#5e35b1}
+.btn.w{background:#fff;color:#673ab7;border:1px solid #dadce0}
+.btn.w:hover{background:#f6f2fc}
+.prog{display:flex;align-items:center;gap:10px;font-size:12px;color:#5f6368;margin-left:auto}
+.pb{width:120px;height:10px;background:#e0e0e0;border-radius:5px;overflow:hidden;display:inline-block}
+.pb i{display:block;height:100%;background:#673ab7;transition:width .4s}
+.pb.big{width:100%;height:12px;margin-top:6px}
+.clear{color:#673ab7;font-size:14px;cursor:pointer;margin-left:8px}
+.foot{text-align:center;font-size:12px;color:#5f6368;margin-top:24px;line-height:1.8}
+.link{color:#1a73e8;font-size:14px;text-decoration:underline;cursor:pointer;background:none;border:none;padding:0;font-family:inherit}
+.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px) rotate(-1deg)}40%{transform:translateX(10px) rotate(1deg)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+body.glitch .wrap{animation:glitch .7s steps(2) infinite}
+@keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:3000;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+#toast.show{transform:translate(-50%,0)}
+.vbox.vhide{height:0;aspect-ratio:auto;margin:0;animation:none}
+.vbox{position:relative;aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden;margin-top:12px;animation:pop .5s}
+.vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.tr{background:#f8f9fa;border-left:3px solid #673ab7;border-radius:4px;padding:12px 14px;font-size:14px;line-height:1.9;margin-bottom:16px;min-height:48px}
+.tr div{animation:pop .3s}
+#flash{position:fixed;left:50%;top:45%;transform:translate(-50%,-50%) scale(0);font:900 110px/1 Arial,sans-serif;color:#673ab7;text-shadow:5px 5px 0 #fff59d;z-index:1500;pointer-events:none;white-space:nowrap}
+#flash.on{animation:fl 1.1s ease-out}
+@keyframes fl{0%{transform:translate(-50%,-50%) scale(0) rotate(-12deg);opacity:1}30%{transform:translate(-50%,-50%) scale(1.15) rotate(4deg)}70%{opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
+/* 偷看的奶蛙 */
+#frog{position:fixed;z-index:1200;object-fit:contain;cursor:pointer;transition:transform .55s cubic-bezier(.3,1.3,.5,1);display:none;-webkit-user-drag:none;user-select:none}
+.frogwin{text-align:center;margin:10px 0 4px}
+.frogwin img{width:150px;cursor:pointer;animation:boing 1s cubic-bezier(.3,1.8,.5,1)}
+@keyframes boing{0%{transform:scale(0) rotate(-15deg)}100%{transform:scale(1)}}
+.frogwin img.angry{animation:angry .15s linear 6;filter:saturate(1.6) hue-rotate(-20deg)}
+@keyframes angry{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px) rotate(-4deg)}75%{transform:translateX(6px) rotate(4deg)}}
+.frogwin img.flee{animation:flee 1s cubic-bezier(.5,-.5,.8,.3) forwards}
+@keyframes flee{0%{transform:none}25%{transform:translateY(14px) scaleY(.8)}100%{transform:translate(30px,-110vh) rotate(540deg) scale(.4);opacity:0}}
+/* 結果頁 */
+.score{border-top:1px solid #dadce0;margin:18px -24px 0;padding:22px 24px 4px;text-align:center}
+.score .sl{font-size:13px;color:#5f6368;margin-bottom:12px}
+.slots{white-space:nowrap}
+.slots span{display:inline-block;width:56px;height:70px;border:2px solid #673ab7;color:#673ab7;font:700 40px/66px Roboto,Arial,sans-serif;text-align:center;border-radius:8px;margin:0 3px;background:#fff}
+.slots.flip span{animation:flip .5s}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.slots.final span{background:#673ab7;color:#fff}
+.sn{font-size:15px;margin:14px 0 6px;min-height:22px;color:#3c4043}
+.sn b{font-size:20px;color:#202124;display:block;margin-bottom:4px}
+#rbody{display:none;opacity:0;transform:translateY(16px);transition:all .6s}
+#rbody.on{opacity:1;transform:none}
+.rt{font-size:16px;font-weight:500;margin-bottom:6px}
+.rs{font-size:12px;color:#5f6368;margin-bottom:16px}
+.rp{font-size:14px;line-height:1.85;margin:0 0 10px}
+.fn{display:flex;gap:14px;padding:14px 0;border-top:1px solid #f1f3f4}
+.fn:first-of-type{border-top:none;padding-top:4px}
+.fn .lt{flex:none;width:44px;height:44px;border-radius:50%;background:#ede7f6;color:#673ab7;font:700 22px/44px Roboto,Arial,sans-serif;text-align:center}
+.fn .ft{font-size:12px;color:#5f6368}
+.fn .fw{font-size:15px;font-weight:500;margin:2px 0 4px}
+.fn .fd{font-size:13px;color:#3c4043;line-height:1.7}
+.mini{height:6px;background:#ede7f6;border-radius:3px;margin-top:8px;overflow:hidden}
+.mini i{display:block;height:100%;background:#673ab7;width:0;transition:width 1s .3s}
+.ob{padding:12px 14px;background:#f8f9fa;border-radius:6px;margin-bottom:10px}
+.ob small{display:block;font-size:11px;color:#673ab7;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.ob p{margin:0;font-size:14px;line-height:1.8}
+.rel{display:flex;padding:10px 0;border-top:1px solid #f1f3f4;font-size:14px;gap:12px}
+.rel:first-of-type{border-top:none}
+.rel span{width:72px;flex:none;color:#5f6368}
+.bar{display:flex;align-items:center;gap:10px;font-size:13px;margin:10px 0}
+.bar b{width:48px;font-weight:500}
+.bar .t{flex:1;height:22px;background:#f1f3f4;border-radius:0 4px 4px 0;overflow:hidden}
+.bar .t i{display:block;height:100%;background:#673ab7;width:0;transition:width 1s .3s}
+.bar span{width:40px;text-align:right;color:#5f6368}
+.cta{border-top:10px solid #673ab7;text-align:center}
+.cta .rt{font-size:18px}
+.cta .ctab{justify-content:center;margin:16px 0 0}
+@media(max-width:520px){.head h1{font-size:24px}.card{padding:20px 16px}.head .meta,.score{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}.scale .lb{font-size:11px;max-width:56px}.prog{margin-left:0}.slots span{width:50px;height:62px;font-size:34px;line-height:58px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="form"></div>
+<div id="toast"></div>
+<div id="flash"></div>
+<img id="frog" alt="" draggable="false">
+
+<script>
+/* =====================================================
+   ① 設定區：連結到時候改這裡
+   ===================================================== */
+const CONFIG={
+  showName:'MBTI生存指南',
+  igHandle:'@mbti_survivalguide',
+  igUrl:'https://www.instagram.com/mbti_survivalguide/',
+  videoUrl:'https://www.youtube.com/watch?v=xCZVvScZX70',
+  hotpotId:'dMTy6C4UiQ4',                 // 「研究說明影片」＝統神端火鍋
+  rickId:'dQw4w9WgXcQ'                    // 「其他」點到底＝Rick Roll
+};
+
+/* 洗腦題的選項：把前三個換成你要的完整名稱 */
+const BRAINWASH=['高峰期的街上堆滿車子長長的一隊堵塞max','夢的翅膀已經受了傷','她很壞嘟嘟嘟','以上皆是'];
+
+/* =====================================================
+   ② 音效區：音檔放進同資料夾的 sounds/，檔名對上就會用你們的
+      沒放的會用程式合成的替代音效
+   ===================================================== */
+const SOUND_FILES={
+  vineboom:'sounds/vineboom.mp3',   // 突然冒出的選項、結果揭曉
+  bruh:'sounds/bruh.mp3',           // 年齡身分矛盾、被抓包
+  error:'sounds/error.mp3',         // MBTI 亂填、分析出錯
+  fart:'sounds/fart.mp3',           // 馬桶
+  airhorn:'sounds/airhorn.mp3',     // 結果揭曉
+  boing:'sounds/boing.mp3',         // 選項逃跑、答案被修正
+  ding:'sounds/ding.mp3',           // 一般提示
+  sadviolin:'sounds/sadviolin.mp3', // 不追 IG
+  sixseven:'sounds/67.mp3',         // 6 7
+  frog:'sounds/frog.mp3',           // 點到偷看的奶蛙、結果頁全抓到
+  muaji:'sounds/muaji.mp3',         // 你這個……ㄇㄨㄚˇ 吉
+  car:'sounds/car.mp3',             // 你後面有車
+  rush:'sounds/rush.mp3',           // 匆匆忙忙、連滾帶爬
+  calm:'sounds/calm.mp3',           // 從從容容、遊刃有餘
+  traffic:'sounds/traffic.mp3',     // 洗腦題 選項 1
+  dream:'sounds/dream.mp3',         // 洗腦題 選項 2
+  bad:'sounds/bad.mp3'              // 洗腦題 選項 3（以上皆是＝不放音效）
+};
+/* 之後想幫某個選項加音效：在上面加一行 名稱:'sounds/檔名.mp3'，
+   再到下面 picks 裡對應題目加 play('名稱') 就好 */
+
+const FROG_IMG={peek:"data:image/webp;base64,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",laugh:"data:image/webp;base64,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"};
+
+/* ---------- 音效引擎 ---------- */
+let ac;
+function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{A()}catch(e){}}));
+function tone(f,dur,type='sine',vol=.3,fEnd,delay=0){
+  const a=A(),t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);if(fEnd)o.frequency.exponentialRampToValueAtTime(fEnd,t+dur);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g).connect(out());o.start(t);o.stop(t+dur);
+}
+function noise(dur,freq,q,vol,lfoF=0,lfoAmt=0){
+  const a=A(),n=a.sampleRate*dur,b=a.createBuffer(1,n,a.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;
+  const s=a.createBufferSource();s.buffer=b;const f=a.createBiquadFilter();f.type='lowpass';f.frequency.value=freq;f.Q.value=q;
+  if(lfoF){const l=a.createOscillator();l.frequency.value=lfoF;const lg=a.createGain();lg.gain.value=lfoAmt;l.connect(lg).connect(f.frequency);l.start();l.stop(a.currentTime+dur)}
+  const g=a.createGain(),t=a.currentTime;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.01,t+dur);
+  s.connect(f).connect(g).connect(out());s.start();s.stop(t+dur);
+}
+/* 所有音效都接到同一條「匯流排」，播新音效時把舊的整條切掉 */
+let bus=null;const live=new Set();
+const FREE={frog:1};   // 獨立音效：不會停掉別人，也不會被別人停掉
+let freeNow=false;
+function out(){const a=A();if(freeNow)return a.destination;if(!bus){bus=a.createGain();bus.connect(a.destination)}return bus}
+function stopAll(){
+  live.forEach(au=>{au.pause();au.currentTime=0});live.clear();
+  Object.keys(chan).forEach(k=>chan[k]=[]);
+  if(bus){const b=bus;bus=null;try{b.gain.setTargetAtTime(0,ac.currentTime,.01);setTimeout(()=>b.disconnect(),120)}catch(e){}}
+}
+const SYN={
+  vineboom(){tone(160,1.3,'sine',.9,35);tone(90,1.3,'triangle',.6,30)},
+  bruh(){tone(140,.5,'sawtooth',.25,95);tone(70,.5,'square',.12,50)},
+  error(){tone(320,.15,'square',.18);tone(210,.35,'square',.18,null,.16)},
+  fart(){noise(.8,180,18,1.6,22,110)},
+  airhorn(){[0,.17,.34,.62].forEach((d,i)=>[466,587,698].forEach(f=>tone(f,i===3?1:.14,'sawtooth',.11,f*.97,d)))},
+  boing(){tone(180,.35,'sine',.4,900);tone(900,.3,'sine',.25,250,.12)},
+  ding(){tone(1320,.7,'sine',.22);tone(1980,.5,'sine',.08)},
+  sadviolin(){[[659,0],[622,.35],[587,.7],[554,1.05]].forEach(([f,d])=>tone(f,.5,'sawtooth',.06,f*.99,d))},
+  car(){tone(420,.25,'square',.15);tone(420,.45,'square',.15,null,.32)},
+  tungtung(){[0,.18,.36,.7].forEach(d=>tone(700,.09,'square',.18,300,d))},
+  ven(){tone(300,.25,'sawtooth',.15,180)},
+  congcong(){tone(523,.2,'triangle',.2);tone(659,.2,'triangle',.2,null,.2);tone(784,.4,'triangle',.2,null,.4)},
+  qin(){tone(110,.9,'sawtooth',.18,100);tone(165,.9,'sawtooth',.1,150)},
+  duck(){tone(500,.12,'square',.12,300);tone(500,.12,'square',.12,300,.18)},
+  tick(){tone(1100,.04,'square',.07)},
+  sixseven(){tone(523,.22,'square',.15);tone(587,.4,'square',.15,null,.28)},
+  frog(){tone(600,.12,'sine',.35,1200);tone(1200,.18,'sine',.25,500,.12)}
+};
+const fileBad={};
+const chan={};
+function play(k,ch){   // 播新音效前，先停掉所有還沒播完的（tick 滴答聲除外）
+  const free=!!FREE[k];
+  if(k!=='tick'&&!free)stopAll();
+  const syn=()=>{if(!SYN[k])return;freeNow=free;try{SYN[k]()}finally{freeNow=false}};
+  const f=SOUND_FILES[k];
+  if(f&&!fileBad[k]){const au=new Audio(f);au.volume=.9;if(!free){live.add(au);au.onended=()=>live.delete(au)}
+    au.play().catch(()=>{live.delete(au);fileBad[k]=true;syn()});if(ch&&!free)(chan[ch]=chan[ch]||[]).push(au);return au}
+  else syn();
+}
+function stopCh(ch){if(chan[ch]){chan[ch].forEach(a=>{a.pause();a.currentTime=0});chan[ch]=[]}}
+
+/* ---------- 工具 ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+function flash(txt){const f=$('#flash');f.textContent=txt;f.classList.remove('on');void f.offsetWidth;f.classList.add('on')}
+function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+/* 像「必填問題未填」一樣的紅框紅字提示（不會擋住作答） */
+function warn(card,key,text){
+  if(!card)return;const o=card.querySelector('.w-'+key);if(o)o.remove();
+  if(text)card.insertAdjacentHTML('beforeend',`<div class="wmsg w-${key}">ⓘ ${text}</div>`);
+  card.classList.toggle('warn',!!card.querySelector('.wmsg'));
+}
+
+const ans={};let page=0;
+const stats={dodge:0,igDodge:0,spawn:0,submitDodge:0,badMbti:0,lastBad:null,rolled:false};
+const marks={};
+function mark(key,type,pts,ana){if(!type)delete marks[key];else marks[key]={type,pts,ana}}
+
+/* ---------- 影片直接嵌在表單裡（不跳出網站） ---------- */
+function embed(id){
+  const yt=`https://www.youtube.com/watch?v=${id}`;
+  if(location.protocol==='file:')return `<div class="vbox" style="display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;text-align:center;padding:20px;line-height:1.8">（開發者提示）你目前是直接打開本機檔案，YouTube 會拒絕播放。<br>上傳到網站，或用 Live Server 開啟後就會正常顯示。<br><a href="${yt}" target="_blank" rel="noopener" style="color:#b39ddb">先在 YouTube 看這支影片</a></div>`;
+  return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
+}
+
+/* ---------- Rick Roll：先把播放器藏在題目下面載好，點下去的瞬間直接播（iPhone 也比較不會擋） ---------- */
+let ytReady=false;const ytQ=[];const RICK={p:null};
+function loadYT(){
+  if(window.YT&&YT.Player){ytReady=true;return}if(loadYT.started)return;loadYT.started=true;
+  window.onYouTubeIframeAPIReady=()=>{ytReady=true;ytQ.splice(0).forEach(f=>f())};
+  const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
+}
+function preloadRick(card){
+  if(stats.rolled||location.protocol==='file:'||card.querySelector('#rickWrap'))return;
+  card.querySelector('.opts').insertAdjacentHTML('afterend','<div class="vbox vhide" id="rickWrap"><div id="rickPlayer"></div></div>');
+  RICK.p=null;loadYT();
+  const go=()=>{if(!document.getElementById('rickPlayer'))return;
+    new YT.Player('rickPlayer',{videoId:CONFIG.rickId,playerVars:{playsinline:1,rel:0,origin:location.origin},events:{onReady:e=>RICK.p=e.target}})};
+  ytReady?go():ytQ.push(go);
+}
+function playRick(card){
+  const w=card.querySelector('#rickWrap');
+  if(w&&RICK.p){w.classList.remove('vhide');w.style.animation='pop .5s';RICK.p.playVideo();return}
+  if(w)w.remove();card.querySelector('.opts').insertAdjacentHTML('afterend',embed(CONFIG.rickId));   // 播放器還沒載好時的備案
+}
+
+/* ---------- 偷看的奶蛙：第三頁起每頁探頭一次 ---------- */
+const FROG={shown:0,caught:0,seen:{},off:false,t:[]};
+function frogPeek(){
+  FROG.t.forEach(clearTimeout);FROG.t=[];frogHide();
+  if(page<2||FROG.seen[page]||FROG.off)return;const my=page;
+  FROG.t.push(setTimeout(()=>{if(page!==my||FROG.off||FROG.seen[page])return;
+    FROG.seen[page]=true;
+    const edges=['bottom','top','left','right'].filter(e=>e!==FROG.last),edge=edges[Math.random()*edges.length|0];FROG.last=edge;
+    const w=Math.max(34,Math.round(120*Math.pow(.78,FROG.shown))),h=w*2;   // 每出現一次就變小一點
+    const vw=innerWidth,vh=innerHeight;let pos,rot,flip;
+    if(edge==='bottom'||edge==='top'){const x=12+Math.random()*(vw-w-24);pos=`${edge}:0;left:${x}px`;rot=edge==='top'?180:0;flip=edge==='bottom'?x<vw/2:x>vw/2}
+    else{const y=60+Math.random()*Math.max(0,vh-h-120);pos=`${edge}:${w/2}px;top:${y}px`;rot=edge==='left'?90:-90;flip=Math.random()<.5}
+    const base=`rotate(${rot}deg) ${flip?'scaleX(-1) ':''}`;
+    const f=$('#frog');f.src=FROG_IMG.peek;
+    f.style.cssText=`display:block;width:${w}px;height:${h}px;${pos};transition:none;transform:${base}translateY(110%)`;
+    f.dataset.base=base;FROG.shown++;FROG.live=true;void f.offsetWidth;
+    f.style.transition='';f.style.transform=`${base}translateY(58%)`;
+    FROG.t.push(setTimeout(frogHide,3200));
+  },700+Math.random()*1500));   // 進頁面 0.7～2.2 秒內就出現，手快的人也看得到
+}
+function frogHide(){const f=$('#frog');if(!FROG.live)return;FROG.live=false;f.style.transform=`${f.dataset.base}translateY(110%)`}
+$('#frog').addEventListener('pointerdown',e=>{e.preventDefault();if(!FROG.live)return;FROG.live=false;FROG.caught++;play('frog');
+  const f=$('#frog');f.style.transition='transform .25s ease-in';f.style.transform=`${f.dataset.base}translateY(58%) scale(0)`;});
+
+/* =====================================================
+   ③ 人格類型（假正經分析內容）
+   ===================================================== */
+const TYPES={
+ BRUH:{n:'淡定吐槽型',tag:'表情沒變，心裡已經講完三句',
+  o:'BRUH 型人格在面對荒謬情境時，傾向以極低的外顯情緒反應進行處理，但內部評論系統持續高速運轉。本研究發現，此類型受試者於「質疑題目合理性」指標顯著高於常模，且在整份問卷中未曾真正放棄作答，顯示其具備高度的荒謬耐受力。',
+  f:[['B','Blank','放空表情','能在任何場合維持面無表情，包括被當面告白。'],['R','Roast','內建吐槽','大腦預設開啟彈幕功能，且無法關閉。'],['U','Unbothered','情緒省電','對大部分事情的反應都是「喔」。'],['H','Hold','憋笑','人生最大的挑戰，是在嚴肅場合不笑出來。']],
+  m:'SALT（一起吐槽，效率加倍）',e:'SIMP（無法理解對方為何這麼投入）',j:'字幕組、選秀評審、資深網友'},
+ SIMP:{n:'無條件臣服型',tag:'對方開心就好，自己的事明天再說',
+  o:'SIMP 型人格具備高度的情感投入傾向。受試者在無任何外部壓力的情況下，於「出題者顏值評估」項目給出自願性高分，此行為在本研究樣本中極為罕見，顯示其擁有不需要理由的支持能力。',
+  f:[['S','Supportive','無條件支持','不管對方說什麼，第一反應都是「你說得對」。'],['I','Idolize','濾鏡生成','能在任何人身上找到優點，包括本問卷出題者。'],['M','Melt','融化反應','對方回一個貼圖，就能開心一整天。'],['P','Please','討好迴路','說「不要」之前，會先在心裡排練十次。']],
+  m:'CHAD（你負責支持，他負責衝）',e:'FXCK（太真實，承受不住）',j:'應援團長、客服、站姐'},
+ SALT:{n:'嘴硬鹽巴型',tag:'答案可以被修正，態度不行',
+  o:'SALT 型人格對外部評分標準具高度抗拒性。受試者在答案遭系統修正後並未改變立場，展現出罕見的認知一致性（俗稱嘴硬）。此類型通常是朋友圈中負責講實話、也負責被封鎖的那一位。',
+  f:[['S','Sarcasm','酸度輸出','講話自帶檸檬汁，本人卻認為只是陳述事實。'],['A','Argue','抬槓本能','聽到任何論點，第一時間先找反例。'],['L','Last word','最後一句','吵架一定要講最後一句，傳訊息也是。'],['T','Truth','真相執念','寧可被討厭，也不說違心的話。']],
+  m:'BRUH（彼此吐槽不會受傷）',e:'SIMP（對方的濾鏡太厚）',j:'評論家、辯論社、Threads 留言區常駐'},
+ FXCK:{n:'誠實到傷人型',tag:'我不是故意的，我是認真的',
+  o:'FXCK 型人格的語言輸出缺乏一般社交緩衝機制。受試者在「朋友新髮型」情境題中選擇直接表達真實感受，此反應於常模中屬於極端值。研究小組提醒，此類型的意見通常是對的，但不一定是你想聽的。',
+  f:[['F','Filterless','無濾鏡','話從大腦到嘴巴之間，沒有任何審核程序。'],['X','eXtreme','極端評價','形容詞只有「超好」跟「超爛」兩種。'],['C','Candid','直球對決','別人還在暗示，你已經講完了。'],['K','Knife','精準補刀','說完實話，會再補一句「我是為你好」。']],
+  m:'SALT（兩個都不怕吵）',e:'SIMP（會被你嚇哭）',j:'健身教練、品管、美食評論'},
+ CHAD:{n:'永不放棄型',tag:'選項會跑，但你跑得更快',
+  o:'CHAD 型人格具備異常高的目標追逐動機。受試者在選項持續移動的情況下仍反覆嘗試點擊，堅持程度超出本研究預期。研究小組對此結果深感敬佩，同時也有一點不安。',
+  f:[['C','Chase','追逐本能','越抓不到的東西越想要。'],['H','Headstrong','頭很硬','被拒絕會當成一種邀請。'],['A','Again','再一次','失敗後的第一句話永遠是「再一次」。'],['D','Drive','動力過剩','這股能量拿去讀書的話，現在已經畢業兩次了。']],
+  m:'SIMP（他會一直幫你加油）',e:'LAZY（看你努力就覺得累）',j:'業務、夾娃娃機台主、電競選手'},
+ LIAR:{n:'自我設定混亂型',tag:'基本資料僅供參考',
+  o:'LIAR 型人格的自我描述與實際條件之間存在顯著落差。受試者所填寫的資料在邏輯上無法同時成立，研究小組推測其可能同時存在於多個平行時空，或單純是手滑。',
+  f:[['L','Loose','事實寬鬆','對「事實」的定義比一般人寬鬆約 40%。'],['I','Improvise','即興演出','人生沒有劇本，基本資料也沒有。'],['A','Alternate','平行宇宙','在某個宇宙裡，你填的都是真的。'],['R','Rewrite','隨時改設定','人設可以每天更新，跟手機一樣。']],
+  m:'MEME（一起活在網路的平行時空）',e:'FXCK（會被當場拆穿）',j:'編劇、小說家、遊戲 NPC'},
+ LAZY:{n:'明天再說型',tag:'不是拖延，是對時間有自己的理解',
+  o:'LAZY 型人格對截止期限具備特殊的時間感知。受試者在明知事情尚未完成的情況下，仍選擇填寫一份陌生人製作的問卷，顯示其擁有高度的現實隔離能力。研究小組建議其在閱讀完本報告後，立刻去做原本該做的事（但我們知道你不會）。',
+  f:[['L','Later','延後處理','所有事情都可以等一下，包括讀完這一段。'],['A','Avoid','迴避機制','看到待辦清單，手會自動切到其他 App。'],['Z','Zero','電量歸零','起床的那一刻就已經想睡了。'],['Y','YOLO','及時行樂','反正明天的自己會處理。明天的自己：？']],
+  m:'SOLO（一起待在家，誰都不用約誰）',e:'CHAD（光看就累）',j:'自由接案、床墊試睡員、待辦清單收藏家'},
+ SHIT:{n:'馬桶哲學家型',tag:'人生的答案都在那三分鐘裡',
+  o:'SHIT 型人格在特定空間中展現出顯著提升的專注力與思考深度。本研究證實，受試者確實在如廁期間完成了人格測驗的作答，研究小組對其坦誠表示敬意，並建議其適時起身，以維持下肢血液循環。',
+  f:[['S','Seated','坐姿思考','最好的點子，從來不是在書桌前想到的。'],['H','Hideout','秘密基地','需要獨處的時候，會去一個門可以鎖的地方。'],['I','Insight','頓悟','經常在不該頓悟的時候頓悟。'],['T','Timeless','時間感消失','進去說五分鐘，出來已經半小時。']],
+  m:'SOLO（彼此尊重獨處時間）',e:'你的室友',j:'哲學家、Podcast 主持人、手遊重度玩家'},
+ SOLO:{n:'人間蒸發型',tag:'已讀不回不是冷漠，是節能',
+  o:'SOLO 型人格的社交電量容量偏低，充電速度極慢。受試者在多項情境題中選擇降低社交接觸的選項，研究小組建議與其互動時，以貼圖取代文字、以文字取代語音、以不打擾取代打電話。',
+  f:[['S','Silent','潛水','群組訊息全部看完，一則都沒回。'],['O','Offline','假性離線','上線狀態永遠是「剛剛」。'],['L','Low battery','社交電量低','出門一次，需要在家三天回血。'],['O','Out','已讀','已讀，已經是你給出的最大誠意。']],
+  m:'LAZY（約了也不會出門，很有默契）',e:'打電話給你的人',j:'工程師、夜班人員、圖書館員'},
+ MEME:{n:'迷因中毒型',tag:'講話有一半是梗',
+  o:'MEME 型人格的語言系統已有相當比例由網路流行語取代。受試者能在無任何提示的情況下辨識本問卷中的大量迷因，研究小組推估其每日短影音觀看量已超過健康建議值，且此刻腦中可能正在播放某段洗腦音樂。',
+  f:[['M','Meme','梗圖語言','能用一張圖回覆任何訊息。'],['E','Echo','複讀機','聽到流行語會不自覺重複三次。'],['M','Mimic','口音模仿','看完一支影片就學會那個口音。'],['E','Endless','無限滑動','說「最後一支」已經說了兩小時。']],
+  m:'LIAR（一起活在平行時空）',e:'家族長輩群組',j:'社群小編、迷因策展人、短影音創作者'},
+ RICK:{n:'一點就中型',tag:'看到連結就想點',
+  o:'RICK 型人格具備高度探索衝動與低度風險意識。受試者在本研究中主動點擊來路不明的內容，且在發現受騙後未表現出明顯的戒心。研究小組建議其近期勿點開任何以「你被拍到了」開頭的訊息。',
+  f:[['R','Reflex','反射點擊','大腦還沒判斷，手指已經按下去了。'],['I','Innocent','純真','相信每個連結都會帶你去對的地方。'],['C','Curious','好奇心','想知道「其他」到底還有什麼其他。'],['K','Knocked','中招','被騙之後的第一反應，是轉傳給朋友。']],
+  m:'MEME（他負責傳，你負責點）',e:'防詐騙宣導',j:'遊戲測試員、開箱 YouTuber'},
+ LOUD:{n:'群組噪音製造機型',tag:'群組 99+ 的那個 99，有 87 則是你',
+  o:'LOUD 型人格的社交電量來源疑似為核融合。受試者在多人場合中能量不減反增，且於群組中主動發起話題之頻率顯著高於常模。研究小組統計，其所在群組的靜音比例高達 100%，但受試者本人並不知情。',
+  f:[['L','Laugh','笑聲擴音','笑聲可以穿透兩面牆和一副抗噪耳機。'],['O','Online','永遠在線','凌晨三點傳「有人醒著嗎」，而且真心期待有人回。'],['U','Unstoppable','停不下來','一句「欸我跟你說」可以講四十分鐘。'],['D','Drag','拖人出門','你的一句「出來啦」，是 SOLO 型的惡夢。']],
+  m:'MEME（一個負責講梗，一個負責大笑）',e:'SOLO（你的每則訊息都在消耗他的電量）',j:'婚禮主持、夜市叫賣、永遠的班代'},
+ NERD:{n:'卷王型',tag:'死線是給凡人用的',
+  o:'NERD 型人格對時間規劃具有近乎偏執的掌控力。受試者在報告截止前即已完成作業，並於旅行前三個月排定行程，此行為已對同組組員造成顯著的心理壓力。研究小組提醒：你的存在本身，就是一種卷。',
+  f:[['N','Notes','筆記狂','筆記比老師的簡報還完整，而且有分顏色。'],['E','Early','提早完成','別人在問「報告要寫什麼」，你已經在問「可以加分嗎」。'],['R','Reminder','人體鬧鐘','比 Google 行事曆更早提醒大家要交東西。'],['D','Done','已完成','最常說的話是「我寫完了，你們呢？」']],
+  m:'OKAY（你說什麼他都說好）',e:'LAZY（每次分組都在等你 carry）',j:'專案經理、補習班名師、分組報告的唯一組員'},
+ OKAY:{n:'好啦好啦型',tag:'人生所有爭議，都用一句「好啦」結案',
+  o:'OKAY 型人格具備極高的衝突迴避能力。受試者在多項情境題中選擇最不會吵起來的選項，即使朋友遲到、頭髮剪壞、把人氣到說不出話，仍能以「好啦」一筆帶過。研究小組懷疑其「好啦」的真實含義為「我記住了」。',
+  f:[['O','Obey','順從','晚餐吃什麼？「都可以」。真的都可以嗎？「好啦都可以」。'],['K','Keep calm','情緒穩定','內心翻了三次白眼，臉上只有微笑。'],['A','Agree','先同意再說','同意完才開始想自己到底同意了什麼。'],['Y','Yield','讓步','吵架的最後一句永遠是「好啦是我的錯」。']],
+  m:'SALT（他負責吵，你負責說好啦）',e:'追問你「真的都可以嗎」的人',j:'客服、調解委員、群組裡唯一會回「+1」的人'},
+ OOPS:{n:'社死預備軍型',tag:'腦中的社死畫面，已經重播 87 次',
+  o:'OOPS 型人格對公開出糗具高度敏感性。受試者最害怕的情境包括錢包掉落與拉鍊未拉，且自評在團體合照中偷感很重。研究小組發現，此類型受試者常於深夜突然想起三年前說錯的一句話，並在床上發出無聲的尖叫。',
+  f:[['O','Overthink','過度回想','三年前叫錯老師名字，到現在還會突然想起來。'],['O','Observed','被看感','總覺得全世界都在看你，雖然其實沒有。'],['P','Panic','小劇場','別人笑一聲，你已經腦補完自己做錯了什麼。'],['S','Shrink','縮小術','拍照時會自動往邊邊站，最好被切掉一半。']],
+  m:'OKAY（不管你出什麼糗，他都說沒事）',e:'偷拍你還發限動的朋友',j:'幕後工作人員、攝影師（站在鏡頭後面比較安全）'},
+ FOOD:{n:'萬物皆可吃型',tag:'雲是棉花糖，規劃應該也可以吃',
+  o:'FOOD 型人格的思考系統以食物為核心運作。受試者看到雲會聯想到棉花糖，聽到「規劃」一詞的第一反應為詢問能否食用。研究小組推測其填寫本問卷的同時正在吃東西，且本報告讀到一半就會起身去冰箱看看。',
+  f:[['F','Fridge','冰箱巡邏','明知道裡面沒東西，還是每小時打開一次。'],['O','Om nom','進食本能','「吃了嗎」對你來說不是問候語，是真心的問題。'],['O','Order','外送成癮','外送平台的會員等級比你的學期成績還高。'],['D','Dessert','甜點胃','吃飽了，但甜點是另一個胃。']],
+  m:'LAZY（一起叫外送，一起躺）',e:'說「我不餓」然後吃掉你一半的人',j:'美食 YouTuber、試吃員、夜市巡察員'}
+};
+
+/* =====================================================
+   ④ 題目
+   ===================================================== */
+const pages=[
+ {qs:[
+  {id:'nick',type:'text',q:'暱稱',req:true},
+  {id:'age',type:'radio',q:'年齡',req:true,opts:['未滿 18 歲','18–22 歲','23–30 歲','31 歲以上']},
+  {id:'role',type:'radio',q:'目前身分',req:true,opts:['高中生','大學生 / 研究生','上班族','其他']},
+  {id:'know',type:'radio',q:'您是否做過 MBTI 測驗？',req:true,opts:['有，且記得自己的類型','有，但忘記了','沒有']},
+  {id:'mytype',type:'text',q:'承上題，請填寫您的 MBTI 類型（例：INFP）',d:'若選擇「有，且記得自己的類型」則為必填。'}
+ ]},
+ {title:'第一部分：能量來源（E / I）',desc:'請依照您「最直覺」的反應作答。1 為非常不同意，5 為非常同意。',qs:[
+  {id:'e1',type:'scale',q:'參加完多人聚會後，我通常會覺得充滿活力。',req:true},
+  {id:'e2',type:'scale',q:'比起打電話，我更喜歡傳訊息溝通。',req:true},
+  {id:'e3',type:'scale',q:'在陌生的團體中，我通常會主動開啟話題。',req:true},
+  {id:'e4',type:'radio',q:'週末沒有任何安排時，您通常會：',req:true,opts:['主動約朋友出門','待在家裡休息、追劇','看當天心情決定','跟別人說有事，其實在家']},
+  {id:'e5',type:'radio',q:'在班級或公司的聊天群組中，您通常是：',req:true,opts:['主動發起話題的人','偶爾回應幾句','潛水，只看不說話','只會丟貼圖']}
+ ]},
+ {title:'第二部分：資訊處理（S / N）',desc:'本部分探討您接收與處理資訊的偏好。',qs:[
+  {id:'s1',type:'scale',q:'比起直覺，我更相信實際經驗與具體數據。',req:true},
+  {id:'s2',type:'scale',q:'我常常會想像一些不太可能發生的情境。',req:true},
+  {id:'s3',type:'scale',q:'洗澡時，我會在腦中跟不存在的人吵架，而且通常會吵贏。',req:true},
+  {id:'s4',type:'radio',q:'看到天上的雲，您第一個想到的是：',req:true,opts:['等一下會不會下雨','它長得好像某種動物','好想吃棉花糖','這題跟 MBTI 有什麼關係']},
+  {id:'s5',type:'radio',q:'聊天時，您比較常說「竟然」還是「居然」？',d:'近期網路觀察指出，此用語偏好可能與人格類型存在關聯。',req:true,opts:['竟然','居然','兩個都會用','我現在開始懷疑自己了']}
+ ]},
+ {title:'第三部分：決策方式（T / F）',desc:'本部分探討您在做決定時的考量方式。',qs:[
+  {id:'t1',type:'scale',q:'做決定時，我比較重視邏輯分析而非個人感受。',req:true},
+  {id:'t2',type:'radio',q:'朋友問您「我新剪的頭髮好看嗎？」但其實真的很醜，您會：',req:true,opts:['誠實說不好看','說「很有個性耶」','說「頭髮會長回來的」','當場笑出來']},
+  {id:'t3',type:'scale',q:'我認為本問卷的出題者是天才。',req:true,l:'天才',r:'曠世奇才'},
+  {id:'t4',type:'radio',q:'您是否覺得這份問卷越來越奇怪？',req:true,opts:['沒有','完全沒有','有']},
+  {id:'t5',type:'radio',q:'朋友傳訊息說「我五分鐘後到」，您的第一反應是：',req:true,opts:['相信他','自動乘以三','信他五分鐘會到，還是信我是秦始皇','已讀']},
+  {id:'t6',type:'radio',q:'被朋友氣到說不出話時，您通常會：',req:true,opts:['深呼吸，算了','說「你很煩欸」','你這個……ㄇㄨㄚˇ 吉！！','直接封鎖']}
+ ]},
+ {title:'第四部分：生活風格（J / P）',desc:'本部分探討您安排生活的方式。',qs:[
+  {id:'j1',type:'radio',q:'您通常如何規劃旅行？',req:true,opts:['提早三個月排好詳細行程','出發前一週大概查一下','到了當地再說','規劃是什麼？可以吃嗎？'],late:3},
+  {id:'j2',type:'radio',q:'報告死線是明天早上 9 點，現在凌晨 2 點，您正在：',req:true,opts:['早就交了','做最後檢查','剛打開 Word','填這份問卷']},
+  {id:'jd',type:'scale',q:'面對死線時，您的狀態比較接近：',req:true,l:'匆匆忙忙<br>連滾帶爬',r:'從從容容<br>遊刃有餘'},
+  {id:'j3',type:'checkbox',q:'以下哪些是您常說的話？（可複選）',req:true,opts:['我等一下就做','明天再說','好啦好啦','蛤？','其他：']},
+  {id:'j4',type:'radio',q:'請問您目前填寫問卷的姿勢是？',req:true,opts:['坐著','躺著','趴著','蹲在馬桶上']}
+ ]},
+ {title:'第五部分：網路使用習慣',desc:'本部分調查您的網路使用狀況，作為人格分析之輔助指標。',qs:[
+  {id:'vid',type:'video',req:true,q:'【研究說明】請先觀看以下影片後再繼續作答',qq:'看完影片後，您的感想是：',opts:['已看完，獲益良多','已看完，小孩愛吃','看完了，但我不知道我剛剛看了什麼','看完了，有一點想哭','我需要再看一次才能回答','我沒看，可以直接下一題嗎']},
+  {id:'m1',type:'scale',q:'請評估您目前的心情。',req:true,l:'不嘻嘻',r:'嘻嘻'},
+  {id:'m2',type:'radio',listen:true,q:'【閱讀理解】朋友打電話向您說明他今晚的行程，以下為通話逐字稿：',req:true,qq:'請問朋友最後打算怎麼回家？',opts:['搭計程車回桃園新竹','開車回桃園新竹','住在台北','好啦隨便啦我沒有辦法跟你溝通']},
+  {id:'m3',type:'scale',q:'拍團體合照時，我常覺得自己偷感很重。',req:true},
+  {id:'m4',type:'radio',q:'最近一次讓您被洗腦、一直在腦中重播的東西是：',req:true,opts:BRAINWASH}
+ ]},
+ {title:'第六部分：作答品質確認',desc:'為確保資料品質，以下題目將確認您的作答狀態。',qs:[
+  {id:'nick2',type:'text',q:'請再次輸入您在第一頁填寫的暱稱。',req:true},
+  {id:'q1',type:'radio',q:'這題我們再 ven 一次：您前面的答案都是認真作答的嗎？',req:true,opts:['是','是的','對','你 ven 題真多']},
+  {id:'q2',type:'radio',q:'走在路上，朋友突然對您大喊一句話，您最怕聽到的是：',req:true,opts:['「你錢包掉了」','「你拉鍊沒拉」','「你後面有車」','「你是不是 INFP」']},
+  {id:'q67',type:'radio',q:'為確認您仍在專心作答，請問 6 + 7 等於多少？',req:true,opts:['13','67','42','我數學不好']},
+  {id:'q3',type:'radio',q:'填到這裡，您目前的狀態比較接近：',req:true,opts:['還很有精神','有點累了','誰敢想，我竟然填到了這裡','我已經不知道我在填什麼了']}
+ ]},
+ {title:'填答確認',desc:'最後一頁了，感謝您的耐心作答。',qs:[
+  {id:'res',type:'radio',q:'您是否希望在提交後立即查看個人化人格分析結果？',req:true,opts:['是','是（我就是為了這個才填的）']},
+  {id:'ig',type:'checkbox',cta:true,q:'為了讓本研究得以持續進行，請支持我們的節目。',req:true,opts:['我已追蹤 IG','我已看完新影片','下次一定']}
+ ]}
+];
+const N=pages.length;
+const Q={};pages.forEach(p=>p.qs.forEach(q=>Q[q.id]=q));
+const extras=['已讀不回','我在路上了（其實還在家）','你決定就好','已購買，小孩愛吃','嘻嘻','不嘻嘻','破防了'];
+
+/* =====================================================
+   ⑤ 畫面
+   ===================================================== */
+function header(full){
+  return `<div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1>${full?`<div class="desc">您好！我們是人格心理學專題研究小組，本問卷旨在探討 MBTI 十六型人格與日常行為模式之間的關聯。<br><br>・填答時間約 5 分鐘<br>・本問卷採匿名方式，所有資料僅作學術統計用途，不會對外公開<br>・請依照您「最直覺」的反應作答，沒有對錯之分<br><br>填答完成後，系統將依據您的作答產生個人化的人格分析報告。感謝您撥空協助！</div>`:''}<div class="meta">* 表示必填問題</div></div>`;
+}
+function optHTML(q,o,k,extra=''){
+  const ty=q.type==='checkbox'?'checkbox':'radio',v=ans[q.id];
+  const on=ty==='radio'?v===k:(v||[]).includes(k);
+  const hid=(q.late===k&&!q.lateShown)?' hid':'';
+  return `<label class="opt${hid}${extra}" data-k="${k}"><input type="${ty}" name="${q.id}" value="${k}"${on?' checked':''}><span>${o}</span></label>`;
+}
+function qHTML(q){
+  let h=`<div class="card q" id="q_${q.id}"><div class="qt">${q.q}${q.req?'<span class="req"> *</span>':''}</div>${q.d?`<div class="qd">${q.d}</div>`:''}`;
+  if(q.type==='text')h+=`<input class="ti" data-id="${q.id}" placeholder="你的回答" value="${esc(ans[q.id]||'')}">`;
+  else if(q.type==='video')h+=`<div class="thumb" id="thumb"><div class="cap">填答說明｜人格心理學研究小組</div><div class="play"></div><div class="dur">0:28</div></div><div class="qt" style="font-size:15px;margin:18px 0 6px">${q.qq}</div><div class="opts">${q.opts.map((o,k)=>optHTML(q,o,k)).join('')}</div>`;
+  else if(q.type==='scale')h+=`<div class="scale"><span class="lb">${q.l||'非常不同意'}</span>${[1,2,3,4,5].map(n=>`<label><span>${n}</span><input type="radio" name="${q.id}" value="${n}"${ans[q.id]===n?' checked':''}></label>`).join('')}<span class="lb">${q.r||'非常同意'}</span></div>`;
+  else{
+    if(q.cta)h+=`<div class="qd">本研究由《${CONFIG.showName}》製作團隊執行。若本問卷對您有任何幫助（或傷害），請以實際行動支持我們。</div><div class="ctab"><a class="btn" data-go="ig">追蹤 IG ${esc(CONFIG.igHandle)}</a><a class="btn w" data-go="video">觀看最新影片</a></div>`;
+    if(q.listen)h+=`<div class="tr" id="tr"></div><div class="qt" style="font-size:15px">${q.qq}</div>`;
+    h+=`<div class="opts">${q.opts.map((o,k)=>optHTML(q,o,k)).join('')}</div>`;
+  }
+  return h+`<div class="err">ⓘ 這是必填問題</div></div>`;
+}
+function render(){
+  const p=pages[page];let h=header(page===0);
+  if(p.title)h+=`<div class="card sec"><div class="tab">第 ${page+1} 部分，共 ${N} 部分</div><div class="st">${p.title}</div>${p.desc?`<div class="sd">${p.desc}</div>`:''}</div>`;
+  h+=p.qs.map(qHTML).join('');
+  h+=`<div class="nav">${page>0?'<button class="btn w" id="back">返回</button>':''}<button class="btn" id="next">${page===N-1?'提交':'下一頁'}</button><div class="prog"><span class="pb"><i style="width:${(page+1)/N*100}%"></i></span>第 ${page+1} 頁，共 ${N} 頁</div><a class="clear" id="clear">清除表單內容</a></div>`;
+  h+=`<div class="foot">請勿透過這份表單提交密碼。<br>本問卷由研究小組自行建立，僅供學術研究使用。</div>`;
+  $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
+  p.qs.forEach(q=>{
+    const card=$('#q_'+q.id);
+    if(q.late!==undefined&&!q.lateShown)setTimeout(()=>{if(!document.body.contains(card))return;q.lateShown=true;
+      const o=card.querySelector(`.opt[data-k="${q.late}"]`);o.classList.remove('hid');o.classList.add('pop');play('vineboom');shake(card)},2200);
+    hooks[q.id]&&hooks[q.id](card,q);
+  });
+}
+function answered(q){const v=ans[q.id];return q.type==='checkbox'?v&&v.length:q.type==='text'?v&&v.trim():v!==undefined}
+function validate(){
+  let first=null;
+  pages[page].qs.forEach(q=>{
+    const need=q.req||(q.id==='mytype'&&ans.know===0);if(!need)return;
+    const ok=answered(q),c=$('#q_'+q.id);c.classList.toggle('bad',!ok);if(!ok&&!first)first=c});
+  if(page===0&&!checkMbti()&&!first)first=$('#q_mytype');
+  if($('#q_nick2')&&ans.nick2&&!checkNick()&&!first)first=$('#q_nick2');
+  if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return false}return true;
+}
+function bindNav(){
+  const b=$('#back');if(b)b.onclick=()=>{page--;render()};
+  $('#clear').onclick=()=>{pages[page].qs.forEach(q=>{delete ans[q.id]});render();toast('已清除此頁的回答')};
+  const nx=$('#next');
+  if(page<N-1){nx.onclick=()=>{if(validate()){page++;render()}};return}
+  const dodge=()=>{if(stats.submitDodge>=3)return;stats.submitDodge++;
+    nx.style.transform=`translate(${(Math.random()*2-1)*Math.min(160,innerWidth/3)}px,${-20-Math.random()*60}px) rotate(${(Math.random()*2-1)*20}deg)`;play('boing');
+    if(stats.submitDodge>=3)setTimeout(()=>{nx.style.transform='';nx.textContent='好啦，給你按';play('vineboom')},450)};
+  nx.addEventListener('mouseenter',()=>{if(pages[page].qs.every(q=>!q.req||answered(q)))dodge()});
+  nx.onclick=()=>{if(!validate())return;if(stats.submitDodge<3){dodge();return}submit()};
+}
+
+/* =====================================================
+   ⑥ 互動
+   ===================================================== */
+const MB_OK=/^[EI][NS][TF][JP]$/i;
+document.addEventListener('input',e=>{const id=e.target.dataset&&e.target.dataset.id;if(!id)return;ans[id]=e.target.value;const c=$('#q_'+id);if(!c)return;c.classList.remove('bad');
+  if(id==='mytype')warn(c,'mb','')});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  const id=t.name;if(!id||!Q[id])return;const q=Q[id],card=$('#q_'+id);
+  if(q.type==='checkbox')ans[id]=[...card.querySelectorAll('input:checked')].map(i=>+i.value);else ans[id]=+t.value;
+  /* 點擊紀錄：每一題點了什麼都記下來 */
+  const lab=q.type==='scale'?`${t.value} 分`:(q.opts&&q.opts[+t.value])||t.value;
+  (HIST[id]=HIST[id]||[]).push(q.type==='checkbox'?(t.checked?'勾選':'取消')+lab:lab);
+  const gv=+t.value;if(GAG[id]&&GAG[id].includes(gv)&&(q.type!=='checkbox'||t.checked))
+    GAGC.push({id,name:id==='jd'?(gv<=2?'匆匆忙忙、連滾帶爬':'從從容容、遊刃有餘'):q.opts[gv]});
+  card.classList.remove('bad');picks[id]&&picks[id](+t.value,card,t,q);
+});
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');
+  if(g){
+    window.open(CONFIG[g.dataset.go+'Url'],'_blank','noopener');
+    const k=g.dataset.go==='ig'?0:1;ans.ig=[...new Set([...(ans.ig||[]),k])];
+    const c=$('#q_ig');c.querySelector(`input[value="${k}"]`).checked=true;c.classList.remove('bad');picks.ig(k,c);return;
+  }
+  const th=e.target.closest('#thumb');
+  if(th){stopAll();th.outerHTML=embed(CONFIG.hotpotId);stats.vidPlayed=true;   // 直接在本頁播放，不跳出去
+    const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
+    mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。')}
+});
+
+/* 年齡 × 身分：只有真的矛盾才吐槽 */
+const AR={
+  '0-1':'未滿 18 歲的大學生 / 研究生？請問你的指導教授知道你還不能考駕照嗎？',
+  '0-2':'未滿 18 歲的上班族？勞動部想跟你聊聊。',
+  '2-0':'23 歲以上的高中生？這已經不是重考可以解釋的範圍了。',
+  '3-0':'31 歲以上的高中生？請問是在教書，還是在讀第 N 次高三？'
+};
+function checkAR(silent){
+  const card=$('#q_role');if(!card)return;const t=AR[ans.age+'-'+ans.role];
+  warn(card,'ar',t||'');
+  if(!t){mark('ar');return}
+  mark('ar','LIAR',6,'受試者所填寫之年齡與身分組合，在現行教育與勞動體制下無法成立。研究小組推測其對「基本資料」一詞的理解具有高度彈性。');
+}
+/* MBTI 欄位：只在按「下一頁」時檢查 */
+const MB_MSG=['請填寫有效的 MBTI 類型（例如：INFP、ESTJ）。','本問卷為正式學術問卷，請勿隨意填寫。','我們是很正經的問卷，請你也正經一點。','研究小組已經注意到你了。','好，你贏了。但這格還是要填對才能繼續。'];
+const FORGOT=/忘|不記得|不知道|不曉得|記不得|idk|不清楚/i;
+function checkMbti(){
+  const card=$('#q_mytype');if(!card)return true;const v=(ans.mytype||'').trim();
+  warn(card,'mb','');
+  if(!v){mark('mb2');return true}
+  if(MB_OK.test(v)){
+    stats.lastBad=null;
+    if(ans.know===1||ans.know===2){
+      warn(card,'mb',ans.know===2?'您剛剛選的是「沒有做過」。':'您剛剛選的是「有，但忘記了」。');shake(card);
+      mark('mb2','LIAR',3,ans.know===2?'受試者表示從未接受 MBTI 測驗，卻能明確填寫自身類型，其記憶系統可能存在選擇性運作。':'受試者表示已忘記自己的 MBTI 類型，卻在下一題立刻想起來了。研究小組認為其記憶具有「被問到才會想起來」的特性。');
+      const key=ans.know+v.toUpperCase();if(stats.knowWarned===key)return true;stats.knowWarned=key;return false}
+    mark('mb2');return true;
+  }
+  if(FORGOT.test(v)){
+    const msg=ans.know===0?'您上一題選的是「有，且<b>記得</b>自己的類型」。':ans.know===1?'我們知道你忘了，上一題就說過了。不記得的話這格可以空白。':'沒做過的話，這格可以空白就好。';
+    warn(card,'mb',msg);shake(card);
+    mark('mbti','LIAR',5,'受試者先表示記得自己的 MBTI 類型，隨後於類型欄位填寫「忘記」。兩項陳述之間的時間差不到十秒，研究小組對其記憶體容量表示關切。');
+    return false;
+  }
+  if(v!==stats.lastBad){stats.badMbti++;stats.lastBad=v}
+  shake(card);
+  warn(card,'mb',MB_MSG[Math.min(stats.badMbti,MB_MSG.length)-1]);
+  mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`受試者於 MBTI 類型欄位輸入非標準類型「${esc(v.slice(0,16))}」，累計 ${stats.badMbti} 次。在系統明確提示後仍持續嘗試，顯示其對既定規則具顯著挑戰傾向。`);
+  return false;
+}
+/* 暱稱確認：對不上會擋一次，再按一次就放行（但會記下來） */
+function checkNick(){
+  const card=$('#q_nick2'),a=(ans.nick||'').trim(),b=(ans.nick2||'').trim();
+  if(a.toLowerCase()===b.toLowerCase()){warn(card,'nk','');mark('nick2');stats.nickWarned=null;return true}
+  mark('nick2','LIAR',4,`受試者第一頁自稱「${esc(a.slice(0,12))}」，於品質確認題中改稱「${esc(b.slice(0,12))}」，其自我認同可能仍在形成階段。`);
+  if(stats.nickWarned===b)return true;
+  stats.nickWarned=b;warn(card,'nk','與第一頁填寫的不同。我們不會說什麼，但會記下來。');shake(card);return false;
+}
+/* 統神逐字稿：這題停在畫面中間超過 1.2 秒，才開始一句一句出現 */
+const LINES=['你從','你從新竹','你從桃園','你從','你從','你從桃園新竹','你從桃園新竹','你從桃園新竹','好','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','到台北吃麻油雞','你從','好','你從桃園新竹','要開車吃麻油雞到台北','然後你吃完麻油雞跟朋友唱歌','然後你說你會','搭計程車回桃園新竹','好啦隨便啦我沒有辦法跟你溝通'];
+function listen(card){
+  const box=card.querySelector('#tr');
+  if(stats.listened){box.innerHTML=LINES.map(l=>`<div>${l}</div>`).join('');return}
+  const go=()=>{stats.listened=true;let i=0;(function nx(){if(i>=LINES.length||!document.body.contains(box))return;
+    box.insertAdjacentHTML('beforeend',`<div>${LINES[i]}</div>`);i++;setTimeout(nx,i<6?550:i<15?320:600)})()};
+  box.innerHTML='<div style="color:#9aa0a6">📞 通話接通中…</div>';let tm;
+  const io=new IntersectionObserver(es=>{
+    if(es[0].isIntersecting)tm=setTimeout(()=>{io.disconnect();if(!document.body.contains(box))return;box.innerHTML='';go()},1200);
+    else clearTimeout(tm);
+  },{rootMargin:'-35% 0px -35% 0px'});   // 只看畫面中間那 30% 的區域
+  io.observe(box);
+}
+
+/* 進入題目時 */
+const hooks={
+  role(){checkAR(true)},
+  m2(card){listen(card)},
+  j3(card){preloadRick(card)},
+  q2(card,q){   // 「你是不是 INFP」→ 換成受試者自己填的 MBTI
+    const t=(ans.mytype||'').trim().toUpperCase();if(!MB_OK.test(t))return;
+    q.opts[3]=`「你是不是 ${t}」`;card.querySelector('.opt[data-k="3"] span').textContent=q.opts[3];
+  },
+  t4(card,q){
+    dodger(card,q,2,'dodge','好啦，有一點點',n=>mark('dodge','CHAD',n*2,`選項「有」在畫面上持續移動的情況下，受試者仍嘗試點擊共 ${n} 次。其目標追逐動機顯著高於常模，研究小組建議勿讓其接觸夾娃娃機。`));
+  },
+  ig(card,q){
+    dodger(card,q,2,'igDodge','好啦，等一下就去追',n=>{});
+  }
+};
+/* 會逃跑的選項 */
+function dodger(card,q,k,stat,finalText,onMove){
+  const lab=card.querySelector(`.opt[data-k="${k}"]`);if(stats[stat]>=5)return;
+  let last=0;
+  const move=e=>{if(stats[stat]>=5)return;if(e)e.preventDefault();if(Date.now()-last<400)return;last=Date.now();stats[stat]++;
+    const w=Math.min(220,card.clientWidth/2-40);
+    lab.style.transform=`translate(${Math.random()*w}px,${(Math.random()*2-1)*45}px)`;play('boing');onMove(stats[stat]);
+    if(stats[stat]>=5)setTimeout(()=>{lab.style.transform='';q.opts[k]=finalText;lab.querySelector('span').textContent=finalText;play('vineboom');shake(card)},450)};
+  lab.addEventListener('mouseenter',()=>move());
+  lab.addEventListener('click',e=>{if(stats[stat]<5)move(e)});
+}
+
+/* 選了某個選項時（同時計分） */
+const picks={
+  age(){checkAR()},role(){checkAR()},
+  e2(v){mark('e2',v>=4?'SOLO':0,1,'受試者明顯偏好文字溝通，對語音通話存在迴避傾向。')},
+  e1(v){mark('e1',v>=4?'LOUD':0,2,'受試者在多人聚會結束後反而充滿活力，研究小組懷疑其靠吸收他人的社交電量維生。')},
+  e3(v){if(v>=4)mark('e3','LOUD',2,'受試者在陌生團體中會主動開啟話題，現場氣氛不一定因此變好，但一定變吵。');else mark('e3',v<=2?'SOLO':0,1,'受試者在陌生團體中鮮少主動開啟話題。')},
+  e4(v){if(v===0)mark('e4','LOUD',3,'受試者在週末沒有安排時會主動約人出門，研究小組在此向被約的朋友致意。');else mark('e4',v===3?'SOLO':0,3,'受試者在週末無安排時傾向對外宣稱「有事」，此為典型的社交防禦機制，常見於社交電量長期不足之個體。')},
+  e5(v){if(v===0)mark('e5','LOUD',3,'受試者為群組中主動發起話題的人，該群組成員開啟「靜音通知」的比例因此顯著上升。');else mark('e5',v>=2?'SOLO':0,v===2?3:2,v===2?'受試者在群組中長期潛水，已讀所有訊息但不回應，屬於高度觀察型、低度參與型的社群行為。':'受試者在群組中以貼圖作為主要溝通方式，有效避免了任何需要組織語言的情境。')},
+  s1(v){mark('s1',v>=4?'NERD':0,1,'受試者高度信任實際數據。本問卷的數據可能會讓其非常失望。')},
+  s2(v){mark('s2',v>=4?'OOPS':0,1,'受試者常想像不太可能發生的情境，經追問後發現，其中約九成為自己出糗的畫面。')},
+  s3(v){mark('s3',v>=4?'SALT':0,2,'受試者經常在淋浴情境中與虛構對象爭論並取得勝利，顯示其在現實生活中可能仍有尚未說出口的話。')},
+  s4(v){if(v===2)mark('s4','FOOD',4,'受試者看到天上的雲，第一個想到的是棉花糖。研究小組判斷其填答時處於飢餓狀態，建議先去吃點東西。');else mark('s4',v===3?'BRUH':0,3,'受試者對題目設計提出質疑，其批判性思考能力值得肯定，但本研究決定不予理會。')},
+  s5(v){mark('s5',v===3?'BRUH':0,2,'受試者在「竟然／居然」一題中陷入自我懷疑，此為正常現象，約有八成受試者會在作答後默默觀察自己的用字。')},
+  t2(v){if(v===1||v===2)return mark('t2','OKAY',3,v===1?'受試者面對朋友失敗的新髮型，選擇以「很有個性耶」帶過。研究小組認定此為教科書等級的社交求生技巧。':'受試者面對朋友失敗的新髮型，選擇以「頭髮會長回來的」安慰對方，等於承認了很醜，但非常溫柔。');mark('t2',v===0||v===3?'FXCK':0,v===0?5:3,v===0?'受試者面對朋友的新髮型，選擇直接給予負面回饋。其語言輸出缺乏一般社交緩衝，於常模中屬罕見的極端值。':'受試者在朋友髮型失敗時當場發笑，屬於即時且無法控制的情緒外放反應。')},
+  t3(v,card){
+    if(v===5){warn(card,'fix','');if(!stats.t3fixed)mark('t3','SIMP',6,'受試者在無任何外部壓力的情況下，自願給予出題者「曠世奇才」之最高評價。此結果已由研究小組列印並裱框。');return}
+    stats.t3fixed=true;
+    mark('t3','SALT',5,`受試者原本僅給予出題者 ${v} 分的天才程度評價，經系統修正為 5 分後並未提出申訴，研究小組推測其內心仍堅持原判。`);
+    setTimeout(()=>{ans.t3=5;card.querySelector('input[value="5"]').checked=true;play('boing');shake(card);
+      warn(card,'fix','系統偵測到異常作答，已自動修正為 5 分。')},450);
+  },
+  t4(v){if(v<2)return mark('t4b','LIAR',4,'');   // 分析文字由 t4Obs() 固定顯示在結果頁
+    mark('t4b','BRUH',2,'受試者察覺本問卷之異常並誠實回報，但仍選擇繼續作答。')},
+  t5(v){
+    if(v<=1)return mark('t5','OKAY',2,v===0?'受試者完全相信朋友「五分鐘後到」，研究小組對其純真表示敬佩，也表示擔憂。':'受試者早已自動將朋友的「五分鐘」乘以三，並選擇不追究。這是一種成熟的放棄。');
+    mark('t5',v===2?'SALT':v===3?'SOLO':0,v===2?4:2,v===2?'受試者對朋友的時間承諾抱持高度懷疑，其信任程度約等同於相信自己是秦始皇。':'受試者面對朋友的訊息選擇僅讀取不回覆，溝通效率極高。')},
+  t6(v){if(v===2)play('muaji','t6');else stopCh('t6');
+    if(v===0)return mark('t6','OKAY',3,'受試者被氣到說不出話時，選擇深呼吸並說「算了」。研究小組提醒，這些「算了」可能正在某處默默累積。');
+    if(v===1)return mark('t6','FXCK',2,'受試者被激怒時直接說出「你很煩欸」，情緒輸出零延遲。');
+    mark('t6',v===2?'MEME':v===3?'SOLO':0,v===2?3:2,v===2?'受試者在情緒激動時的第一反應為「你這個……ㄇㄨㄚˇ 吉！！」。經研究小組比對，確認受試者即為最弱萌騎士本人。':'受試者處理人際衝突的方式為直接封鎖，效率極高，後續維護成本極低。')},
+  j1(v){if(v===0)return mark('j1','NERD',3,'受試者會提早三個月排好旅行行程，同行友人可能在出發前就已經累了。');
+    if(v===3)return mark('j1','FOOD',4,'受試者聽到「規劃」一詞時，首先確認其是否可以食用。研究小組判斷食物在其大腦中擁有最高處理權限。');
+    mark('j1',v===2?'LAZY':0,1,'受試者的旅行哲學為「到了再說」，此哲學可能同樣適用於其人生。')},
+  j2(v){if(v===3){play('bruh');toast('被抓包了吧，快去寫報告')}
+    if(v<=1)return mark('j2','NERD',v===0?4:2,v===0?'受試者在死線前一天就已交出報告。研究小組無法理解此人為何還有時間填寫本問卷，但深感佩服。':'受試者在凌晨兩點進行報告的最後檢查，屬於「準時交，但還是熬夜」的特殊族群。');
+    mark('j2',v>=2?'LAZY':0,v===3?5:2,v===3?'受試者在報告截止前七小時，選擇填寫一份陌生人製作的問卷，顯示其具備高度的現實隔離能力。':'受試者於截止前七小時才開始作業，對時間具有獨特的感知方式。')},
+  jd(v){if(v<=2)play('rush','jd');else if(v>=4)play('calm','jd');else stopCh('jd');
+   
+    if(v===5&&ans.j2===3)mark('jd','LIAR',4,'受試者自評面對死線時「從從容容、遊刃有餘」，但同時承認凌晨兩點報告尚未開始。兩項陳述之間存在研究小組無法調和的矛盾。');
+    else if(v===5)mark('jd','NERD',2,'受試者面對死線時「從從容容、遊刃有餘」，此狀態通常只出現在已經寫完的人身上。');
+    else mark('jd',v<=2?'LAZY':0,2,'受試者自評面對死線時處於「匆匆忙忙、連滾帶爬」的狀態，與其他題項之作答高度一致。')},
+  j3(v,card,t,q){
+    const other=q.opts.length-1,cur=ans.j3||[];
+    mark('j3a',cur.some(k=>k<=1)?'LAZY':0,2,'受試者的常用語包含「等一下」與「明天再說」，研究小組判斷其「等一下」平均約為三小時。');
+    const gi=q.opts.indexOf('已讀不回');mark('j3b',gi>-1&&cur.includes(gi)?'SOLO':0,3,'受試者主動承認自己會已讀不回，此誠實程度高於多數同類型個體。');
+    const has=s=>{const i=q.opts.indexOf(s);return i>-1&&cur.includes(i)};
+    mark('j3c',has('好啦好啦')||has('你決定就好')?'OKAY':0,2,'受試者的常用語包含「好啦好啦」或「你決定就好」，研究小組判斷其人生中約有七成的決定是別人幫忙做的。');
+    mark('j3d',has('已購買，小孩愛吃')?'FOOD':0,3,'受試者的常用語包含「已購買，小孩愛吃」。研究小組無法確認其是否真的有小孩，但可以確認其真的有買。');
+    if(v!==other||!t.checked)return;
+    if(extras.length){
+      t.checked=false;ans.j3=cur.filter(k=>k!==other);
+      q.opts.splice(other,0,extras.shift());stats.spawn++;
+      card.querySelector('.opts').innerHTML=q.opts.map((o,k)=>optHTML(q,o,k,k===other?' pop':'')).join('');play('boing');
+      mark('spawn','RICK',stats.spawn*.6,`受試者連續點擊「其他」共 ${stats.spawn} 次，對未知選項展現強烈探索動機。`);
+    }else if(!stats.rolled){
+      t.checked=false;ans.j3=cur.filter(k=>k!==other);stats.rolled=true;
+      q.opts[other]='其他（你已經知道會發生什麼了）';card.querySelector(`.opt[data-k="${other}"] span`).textContent=q.opts[other];
+      playRick(card);
+      mark('spawn','RICK',7,`受試者連續點擊「其他」共 ${stats.spawn+1} 次，對未知選項展現強烈探索動機，最終被導向一段 1987 年的音樂錄影帶。`);
+    }
+  },
+  j4(v){if(v===3){play('fart');toast('感謝您的誠實。')}
+    mark('j4',v===3?'SHIT':v===1?'LAZY':0,v===3?8:1,v===3?'受試者確認作答時位於馬桶上。本研究對其坦誠致上敬意，並建議其適時起身，以維持下肢血液循環。':'受試者以平躺姿勢完成作答，研究小組判斷其可能隨時會睡著。')},
+  m1(v){mark('m1',v<=2?'BRUH':0,1,'受試者自評目前心情為「不嘻嘻」，與其正在填寫本問卷之處境相符。')},
+  m2(v){mark('m2',v===3?'MEME':v===0?'BRUH':0,v===3?4:2,v===3?'受試者在閱讀理解題中選擇以「我沒有辦法跟你溝通」作答，研究小組判斷其已完全理解這段通話的精神。':'受試者在一段高度重複、資訊量極低的逐字稿中，仍成功萃取出正確答案，閱讀耐性顯著高於常模。')},
+  m3(v){mark('m3',v>=4?'OOPS':0,3,'受試者自評在團體合照中「偷感很重」，屬於典型的鏡頭迴避型反應。研究小組推測其在合照中的位置通常是最邊邊，且只露出半張臉。')},
+  m4(v){stopCh('bw');if(v<3)play(['traffic','dream','bad'][v],'bw');
+   mark('m4',v===3?'MEME':0,5,'受試者同時遭受多首短影音神曲之持續性洗腦，其大腦目前可能正以三首歌輪播的方式運作。研究小組無法提供任何協助。')},
+  q1(v){mark('q1',v===3?'MEME':0,4,'受試者在品質確認題中以「你 ven 題真多」回應研究小組，顯示其已深度內化近期網路語言。')},
+  vid(v,card,t,q,recheck){
+    if(v<=3&&!stats.vidPlayed){warn(card,'vid','系統顯示您尚未播放影片。我們不會說什麼，但會記下來。');shake(card);
+      return mark('vid2','LIAR',4,'受試者表示已看完研究說明影片，但系統紀錄顯示該影片從未被播放。研究小組推測其擁有不需要看就能看完的能力。')}
+    warn(card,'vid','');
+    const M=[['SIMP',2,'受試者表示從研究說明影片中「獲益良多」。研究小組至今仍不知道該影片有什麼益處可以獲得。'],
+      ['MEME',3,'受試者看完研究說明影片後表示「小孩愛吃」。研究小組無法確認該影片是否可以食用，也無法確認受試者是否真的有小孩。'],
+      ['BRUH',3,'受試者看完研究說明影片後，表示不知道自己剛剛看了什麼。研究小組也不知道。'],
+      ['SIMP',3,'受試者觀看研究說明影片後「有一點想哭」。研究小組反覆觀看該影片十次，仍無法找到任何感人之處。'],
+      ['MEME',3,'受試者表示需要再看一次才能回答，顯示該影片對其產生了不明的吸引力。'],
+      ['LAZY',3,'受試者在「請先觀看以下影片」的明確指示下，直接詢問能否跳過。研究小組欣賞其坦誠。']];
+    mark('vid2',...M[v]);
+  },
+  q2(v){if(v===2)play('car','q2');else stopCh('q2');
+   if(v<=1)return mark('q2','OOPS',3,v===0?'受試者最怕在路上聽到「你錢包掉了」，其腦中可能已預演過在大街上蹲著撿零錢的十種結局。':'受試者最怕在路上聽到「你拉鍊沒拉」，並在讀到這題時下意識低頭確認了一下。');
+   mark('q2',v===2?'MEME':v===3?'BRUH':0,3,v===2?'受試者對「你後面有車」一語具有明顯的情境記憶，推測其曾觀看大量直播剪輯。':'受試者最害怕被他人辨識出人格類型，此恐懼本身即具有研究價值。')},
+  q67(v){if(v===1){play('sixseven');flash('6 7')}
+    if(v===0)return mark('q67','NERD',1,'受試者在 6 + 7 一題中選擇了正確答案 13。在本問卷中，這反而是最罕見的作答。');
+    mark('q67',v===1?'MEME':v===3?'BRUH':0,v===1?5:2,v===1?'在一題國小程度的算術題中，受試者選擇了「67」。研究小組確認此非計算錯誤，而是條件反射。':'受試者坦言數學不好，在一份人格問卷中展現了罕見的誠實。')},
+  q3(v){if(v===0)return mark('q3','NERD',2,'受試者填到這裡仍表示「還很有精神」。研究小組認為這不是正常人類的反應。');mark('q3',v>=2?'BRUH':0,2,v===2?'受試者對於自己能填寫至此感到意外，研究小組亦同。':'受試者坦言已不清楚自己正在填寫什麼，此為本研究中最誠實的一項回答。')},
+  res(v){mark('res',v===1?'SIMP':0,1,'受試者坦言填答動機為取得結果，具高度目標導向。')},
+  ig(v,card){
+    const c=ans.ig||[],later=c.includes(2),done=c.some(k=>k<2);
+    if(later&&!done){play('sadviolin');warn(card,'ig','好的，我們會一直等你。')}
+    else if(later&&done)warn(card,'ig','所以到底是追了，還是下次一定？');
+    else warn(card,'ig','');
+    mark('ig2',later&&!done?'LAZY':0,2,'受試者在支持研究團隊一題中選擇「下次一定」。根據研究小組過去的經驗，下次不會來。');
+    mark('ig',c.includes(0)?'SIMP':0,3,'受試者主動追蹤研究團隊之社群帳號，研究小組對此表達誠摯感謝，並判定其具高度支持傾向。');
+  }
+};
+
+/* =====================================================
+   ⑦ 提交 → 分析 → 結果
+   ===================================================== */
+function submit(){
+  const nx=$('#next');nx.disabled=true;nx.textContent='提交中…';FROG.off=true;FROG.t.forEach(clearTimeout);frogHide();
+  setTimeout(()=>{
+    $('#form').innerHTML=`<div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1><div class="desc">已記錄您的回覆。</div></div>
+    <div class="card"><div class="qt"><span id="anaT">正在產生您的個人化人格分析報告…</span> <b id="pct">0%</b></div><div class="pb big"><i id="pbi" style="width:0"></i></div></div>`;
+    const steps=[[14,600,'比對十六型人格資料庫…'],[38,700,'計算 E / I 指數…'],[67,900,'分析決策模式…','six7'],[83,800,'偵測異常作答行為…'],[97,1200,'發現大量異常作答…'],[97,900,'發現大量異常作答…'],[9,400,'分析失敗，改用備用資料庫…','error'],[52,700,'載入《網路人格資料庫》…'],[88,700,'重新判定中…'],[100,900,'完成']];
+    let i=0;(function go(){if(i>=steps.length)return reveal();const [p,d,txt,s]=steps[i++];
+      $('#pbi').style.width=p+'%';$('#pct').textContent=p+'%';$('#anaT').textContent=txt;if(s==='six7'){play('sixseven');flash('6 7')}else play(s||'tick');setTimeout(go,d)})();
+  },1300);
+}
+function mbti(){
+  const g=k=>ans[k]||3;
+  const E=(g('e1')+(6-g('e2'))+g('e3'))/3+(ans.e4===0||ans.e5===0?1:ans.e4===1||ans.e4===3||ans.e5===2?-1:0)>=3?'E':'I';
+  const S=g('s1')-g('s2')>0?'S':'N',T=g('t1')>=3?'T':'F',J=ans.j1===0||ans.j1===1?'J':'P';
+  return E+S+T+J;
+}
+function result(){
+  const sc={BRUH:1};
+  Object.values(marks).forEach(m=>sc[m.type]=(sc[m.type]||0)+m.pts);
+  const rank=Object.entries(sc).sort((a,b)=>b[1]-a[1]),top=rank.slice(0,5),tot=top.reduce((s,x)=>s+x[1],0);
+  return {type:rank[0][0],ranks:top.map(([t,p])=>[t,Math.round(p/tot*100)]),obs:Object.values(marks).filter(m=>m.ana).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana)};
+}
+function reveal(){
+  document.body.classList.add('glitch');play('vineboom');
+  setTimeout(()=>{
+    document.body.classList.remove('glitch');window.scrollTo(0,0);
+    const self=(ans.mytype||'').trim().toUpperCase(),selfOk=MB_OK.test(self),base=selfOk?self:mbti();
+    const fs=FROG.shown,fc=FROG.caught,allFrog=fs>0&&fc===fs;
+    if(fs){if(allFrog)mark('frog','CHAD',7,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者全數捕獲。其周邊視覺與反應速度遠超常模，研究小組懷疑其平常就很在意別人在看他。`);
+      else if(fc)mark('frog','RICK',1,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者捕獲 ${fc} 次、漏看 ${fs-fc} 次。注意力尚可，但顯然有在分心。`);
+      else mark('frog','BRUH',3,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者完全沒有察覺。研究小組建議其平時多留意身後。`)}
+    gagMark();
+    const r=result(),T=TYPES[r.type],nick=esc((ans.nick||'受試者').trim()),pw=[92,78,61,37];
+    $('#form').innerHTML=`
+    <div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1><div class="desc">已記錄您的回覆。以下為系統依據您的作答所產生之個人化人格分析報告。</div>
+      <div class="score"><div class="sl" id="sl">您的人格類型</div><div class="slots" id="slots"><span>?</span><span>?</span><span>?</span><span>?</span></div><div class="sn" id="sn">&nbsp;</div></div></div>
+    <div id="rbody">
+      <div class="card"><div class="rt">人格概述</div><div class="rs">受試者：${nick}</div>
+        <p class="rp">${T.o}</p>${selfOk&&self!==r.type?`<p class="rp" style="color:#5f6368">※ 您自評為 ${self}，但本次分析顯示您更接近 ${r.type} 型。兩者並不衝突，只是後者比較準。</p>`:''}</div>
+      <div class="card"><div class="rt">認知功能堆疊</div><div class="rs">依功能強度排序</div>
+        ${T.f.map((f,i)=>`<div class="fn"><div class="lt">${f[0]}</div><div style="flex:1"><div class="ft">${['主導功能','輔助功能','第三功能','劣勢功能'][i]}</div><div class="fw">${f[1]}・${f[2]}</div><div class="fd">${f[3]}</div><div class="mini"><i data-w="${pw[i]}"></i></div></div></div>`).join('')}</div>
+      <div class="card"><div class="rt">作答行為分析</div><div class="rs">本分析依據您於各題項之實際反應</div>
+        ${t4Obs().concat(r.obs.length?r.obs:['受試者全程作答正常，未出現任何異常反應。研究小組認為這反而是最可疑的。'],vidObs()).map((o,i)=>`<div class="ob"><small>觀察 ${i+1}</small><p>${o}</p></div>`).join('')}</div>
+      ${trackCard()}
+      ${fs?`<div class="card"><div class="rt">窺視者觀察紀錄</div><div class="rs">作答期間共出現 ${fs} 次・捕獲 ${fc} 次</div>
+        ${allFrog?`<div class="frogwin"><img id="frogwin" src="${FROG_IMG.laugh}" alt=""></div><p class="rp" style="text-align:center">全數捕獲。奶蛙對您的觀察力表示佩服，並決定不再偷看您了。</p>`
+        :`<p class="rp">${fc?'您抓到了一部分，但奶蛙表示：牠其實一直都在。':'您完全沒有發現。奶蛙已經看完您全部的答案了。'}</p>`}</div>`:''}
+      <div class="card"><div class="rt">人際與職涯</div><div class="rs">&nbsp;</div>
+        <div class="rel"><span>最佳拍檔</span><div>${T.m}</div></div><div class="rel"><span>天敵</span><div>${T.e}</div></div><div class="rel"><span>適合職業</span><div>${T.j}</div></div></div>
+      <div class="card"><div class="rt">人格成分</div><div class="rs">樣本數：1（你）・分析信度 α = 0.67（研究小組自己算的）</div>
+        ${r.ranks.map(([t,p])=>`<div class="bar"><b>${t}</b><div class="t"><i data-w="${p}"></i></div><span>${p}%</span></div>`).join('')}</div>
+      <div class="card cta"><div class="rt">想知道這份有病的表單是誰做的嗎？</div><p class="rp" style="margin:6px 0 0">追蹤《${CONFIG.showName}》，看更多不正經的 MBTI。</p>
+        <div class="ctab"><a class="btn" href="${CONFIG.igUrl}" target="_blank" rel="noopener">追蹤 IG ${esc(CONFIG.igHandle)}</a><a class="btn w" href="${CONFIG.videoUrl}" target="_blank" rel="noopener">看最新影片</a></div></div>
+      <div class="nav" style="justify-content:center;gap:24px"><button class="link" id="again">再填一次</button><button class="link" id="share">分享給朋友</button></div>
+      <div class="foot">本分析結果僅供參考，如有雷同，純屬你自己的問題。<br>本問卷不會收集任何資料，你的答案只存在你自己的螢幕上。</div>
+    </div>`;
+    $('#again').onclick=()=>location.reload();
+    $('#share').onclick=()=>{(navigator.clipboard?navigator.clipboard.writeText(location.href):Promise.reject()).then(()=>toast('連結已複製')).catch(()=>toast('複製失敗，直接把網址傳給朋友吧'))};
+    spin(base,()=>{
+      $('#sn').textContent=`初步結果：${base}`;
+      setTimeout(()=>{play('error');$('#sn').textContent='偵測到大量異常作答，改以《網路人格資料庫》重新判定…';
+        setTimeout(()=>spin(r.type,()=>{
+          $('#slots').classList.add('flip','final');play('vineboom');setTimeout(()=>play('airhorn'),500);
+          $('#sl').textContent='重新判定後，您的人格類型為';
+          $('#sn').innerHTML=`<b>${r.type}｜${T.n}</b>${T.tag}`;
+          const b=$('#rbody');b.style.display='block';const fw=$('#frogwin');if(fw)frogWin(fw);
+          setTimeout(()=>{b.classList.add('on');b.querySelectorAll('i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%')},300);
+        },180),1400);
+      },1300);
+    },380);
+  },900);
+}
+/* 點擊軌跡：全部題目 */
+const HIST={};
+/* 有音效／有梗的選項（題目 id：選項編號；jd 是分數）。被點越多次，越像爛梗愛好者——就算最後沒選它 */
+const GAG={t5:[2],t6:[2],jd:[1,2,4,5],j2:[3],vid:[1],m2:[3],m4:[0,1,2],q1:[3],q2:[2],q67:[1]};
+const GAGC=[];
+function gagMark(){
+  const meme=GAGC;
+  if(meme.length<3)return mark('gagM');
+  const cnt={};meme.forEach(g=>cnt[g.name]=(cnt[g.name]||0)+1);
+  const [topName,topN]=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],kinds=Object.keys(cnt).length;
+  mark('gagM','MEME',Math.min(10,(meme.length-2)*1.5),`作答期間，受試者共點擊附有音效或迷因的選項 ${meme.length} 次，涵蓋 ${kinds} 個不同的梗，其中「${esc(topName)}」被點了 ${topN} 次。研究小組判斷其點選項並非為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
+}
+const seqTxt=h=>h.slice(-8).map(s=>`「${esc(s)}」`).join(' → ');
+function trackCard(){
+  const all=Object.entries(HIST),total=all.reduce((s,[,h])=>s+h.length,0);if(!total)return '';
+  const changed=all.filter(([id,h])=>h.length>1),top=changed.filter(([id])=>id!=='vid').sort((a,b)=>b[1].length-a[1].length).slice(0,3);
+  const qt=id=>{const s=Q[id].q.replace(/<[^>]+>/g,'');return esc(s.length>28?s.slice(0,28)+'…':s)};
+  const c=changed.length;
+  const verdict=!c?'您每一題都只點一次就決定了。研究小組懷疑您根本沒有在看題目。'
+    :c<=3?'偶爾會改答案，屬於正常人類的猶豫範圍。'
+    :c<=7?'您的答案經常在最後一刻改變心意，研究小組建議您點餐時讓別人先點。'
+    :'您幾乎每一題都改過答案。研究小組不確定最後提交的，到底是不是您真正的想法（您可能也不確定）。';
+  return `<div class="card"><div class="rt">作答軌跡紀錄</div><div class="rs">系統於背景記錄之實際點擊行為（您以為我們沒在看）</div>
+    <div class="rel"><span>點擊總數</span><div>${total} 次</div></div>
+    <div class="rel"><span>改過答案</span><div>${c} 題</div></div>
+    ${top.map(([id,h])=>`<div class="ob" style="margin-top:10px"><small>點了 ${h.length} 次</small><p><b>${qt(id)}</b><br>${h.length>8?'最後幾次：':''}${seqTxt(h)}</p></div>`).join('')}
+    <p class="rp" style="margin-top:12px">${verdict}</p></div>`;
+}
+/* 「您是否覺得這份問卷越來越奇怪？」選了沒有／完全沒有 → 結果頁第一條就點名 */
+function t4Obs(){
+  if(ans.t4!==0&&ans.t4!==1)return [];
+  const d=stats.dodge,
+    seen=['被要求評估出題者是天才還是曠世奇才','在洗澡時跟不存在的人吵架並吵贏','被問到雲長得像什麼','被問「竟然」還是「居然」'].join('、');
+  let s=ans.t4===0
+    ?`在作答「您是否覺得這份問卷越來越奇怪？」一題時，受試者已經歷過${seen}等題目，卻仍回答「沒有」。研究小組在此誠摯詢問：你還好嗎？`
+    :`在「您是否覺得這份問卷越來越奇怪？」一題中，受試者不僅回答沒有，還特別選擇了「完全沒有」。研究小組根據多年經驗指出：會特別強調「完全」的人，心裡通常都有。`;
+  if(d)s+=`更值得注意的是，系統紀錄顯示受試者曾試圖點擊「有」共 ${d} 次，最後卻選擇了「${ans.t4===0?'沒有':'完全沒有'}」。研究小組判斷其內心其實覺得非常奇怪，只是嘴硬。`;
+  return [s];
+}
+/* 影片感想題：點了幾次、依序點了什麼 */
+function vidObs(){
+  const h=HIST.vid||[];if(!h.length)return [];
+  const last=h[h.length-1],n=h.length;
+  if(n===1)return [`受試者於「研究說明影片」感想題中僅點擊 1 次，即果斷選擇「${esc(last)}」。研究小組認為其對一名男子端著一大鍋食物走路的影片，抱持著異常明確的立場。`];
+  const seq=seqTxt(h);
+  return [`受試者於「研究說明影片」感想題中共點擊 ${n} 次，${n>8?'最後幾次':'依序'}為：${seq}，最終選定「${esc(last)}」。研究小組認為，對一段影片的感想不應該如此難以決定。`];
+}
+/* 結果頁的大笑奶蛙：點一下笑一聲（不重疊），點太多次會變臉逃走 */
+function frogWin(fw){
+  let n=0,au=null,gone=false;
+  const card=fw.closest('.card'),laugh=()=>{if(au){au.pause();au.currentTime=0}au=play('frog')||null};
+  setTimeout(()=>{if(!gone)laugh()},1400);
+  fw.onclick=()=>{if(gone)return;n++;laugh();
+    if(n===5)warn(card,'fw','奶蛙笑太多，有點喘不過氣了。');
+    if(n<8)return;
+    gone=true;warn(card,'fw','奶蛙被你戳到笑不出來，已經逃走了。');
+    fw.style.height=fw.offsetHeight+'px';fw.style.objectFit='contain';fw.src=FROG_IMG.peek;   // 變臉
+    fw.classList.add('angry');
+    setTimeout(()=>{fw.classList.remove('angry');fw.classList.add('flee');play('boing')},900);
+    setTimeout(()=>{fw.style.visibility='hidden'},1900);
+    const p=card.querySelector('.frogwin + .rp');if(p)p.textContent='全數捕獲。但您戳太多下了，奶蛙決定以後要繼續偷看您。';
+  };
+}
+function spin(target,done,gap){
+  const sp=[...document.querySelectorAll('#slots span')],L='ABCDEFGHIJKLMNOPQRSTUVWXYZ';let stop=0;
+  const iv=setInterval(()=>{sp.forEach((s,i)=>{if(i>=stop)s.textContent=L[Math.random()*26|0]});play('tick')},70);
+  const st=()=>{sp[stop].textContent=target[stop];stop++;play('ding');if(stop<4)setTimeout(st,gap);else{clearInterval(iv);done()}};
+  setTimeout(st,900);
+}
+
+render();
+
+/* ===== 【暫時測試用】直接看「奶蛙全抓到」的結果頁，正式上線前把這段整段刪掉 ===== */
+(()=>{const b=document.createElement('button');b.textContent='🧪 測試：奶蛙全抓結果頁';
+  b.style.cssText='position:fixed;left:10px;bottom:10px;z-index:4000;background:#d93025;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:13px;cursor:pointer;opacity:.85';
+  b.onclick=()=>{b.remove();FROG.off=true;FROG.t.forEach(clearTimeout);frogHide();
+    FROG.shown=N-2;/* 第 3 頁～最後一頁，每頁一次 */FROG.caught=FROG.shown;if(!ans.nick)ans.nick='測試員';reveal()};
+  document.body.appendChild(b)})();
+/* ===== 測試用結束 ===== */
+</script>
+<!-- Vercel Web Analytics（要先在 Vercel 專案的 Analytics 分頁按 Enable） -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
