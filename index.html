@@ -937,7 +937,10 @@ function ctaBack(k,s){
 function ctaCard(nick){
   const c=ans.ig||[],saidIg=c.includes(0),saidVid=c.includes(1),later=c.includes(2),went=stats.went,aw=stats.away;
   let lines;
-  if(saidIg&&!went.ig)lines=[`${nick}，你在前面勾了「我已追蹤 IG」。`,'但系統顯示，你從頭到尾都沒有點過我們的 IG 連結。','沒關係，我們不會說什麼。我們只是會有點難過。'];
+  const igQuick=aw.ig!==undefined&&aw.ig<passSec('ig');
+  if(later&&!saidIg&&went.ig&&igQuick)lines=[`${nick}，你前面選了「下次一定」，然後真的點進我們的 IG，待了 ${awayTxt(aw.ig)} 就回來了。`,'研究小組不確定這算不算「下次」。','但我們確定這不夠按追蹤。'];
+  else if(later&&!saidIg&&went.ig)lines=[`${nick}，你前面選了「下次一定」。`,`但系統顯示，你其實點進我們的 IG 待了${aw.ig?` ${awayTxt(aw.ig)}`:'一陣子'}。`,'嘴巴說下次，身體很誠實。研究小組決定把你的「下次一定」改判為「這次一定」。'];
+  else if(saidIg&&!went.ig)lines=[`${nick}，你在前面勾了「我已追蹤 IG」。`,'但系統顯示，你從頭到尾都沒有點過我們的 IG 連結。','沒關係，我們不會說什麼。我們只是會有點難過。'];
   else if(went.ig&&aw.ig!==undefined&&aw.ig<4)lines=[`${nick}，你剛剛點進我們的 IG，只待了 ${awayTxt(aw.ig)} 就回來了。`,'研究小組實測，這個時間不太夠按追蹤。','可以再去一次，我們等你。'];
   else if(later&&!saidIg)lines=['你前面說「下次一定」。','研究小組想通知你：現在就是下次。'];
   else if(went.ig)lines=[`謝謝你點進我們的 IG，${nick}${aw.ig?`，還待了 ${awayTxt(aw.ig)}`:''}。`,'如果你沒有按追蹤就跑回來了……','我們看不到，但你自己知道。'];
@@ -1056,6 +1059,7 @@ addEventListener('pagehide',save);setInterval(save,3000);
 function testPanel(){
   const S=[['預設（什麼都沒做）',{}],['勾「已追蹤」但沒點連結',{ig:[0]}],['點進 IG 只待 2 秒',{ig:[0],went:{ig:1},away:{ig:2}}],
     ['點進 IG 待 30 秒',{ig:[0],went:{ig:1},away:{ig:30}}],['選「下次一定」',{ig:[2]}],
+    ['選「下次一定」但點進 IG 待 2 秒',{ig:[2],went:{ig:1},away:{ig:2}}],['選「下次一定」但點進 IG 待 30 秒',{ig:[2],went:{ig:1},away:{ig:30}}],
     ['說看完影片但沒點連結',{ig:[0,1],went:{ig:1},away:{ig:30}}],['說看完影片只待 8 秒',{ig:[1],went:{video:1},away:{video:8}}],
     ['說看完影片待了 45 秒',{ig:[1],went:{video:1},away:{video:45}}],
     ['（即時）剛從 IG 回來，待 2 秒',{ig:[0],went:{ig:1},away:{ig:2},back:['ig',2]}],
