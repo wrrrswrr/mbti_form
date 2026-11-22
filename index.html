@@ -59,7 +59,7 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 @keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:3000;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
 #toast.show{transform:translate(-50%,0)}
-#testp{position:fixed;right:10px;bottom:10px;z-index:4000;background:#fff;border:2px dashed #673ab7;border-radius:8px;padding:10px;width:200px;box-shadow:0 3px 10px rgba(0,0,0,.2);font-size:13px}
+#testp{position:fixed;right:10px;bottom:10px;z-index:4000;background:#fff;border:2px dashed #673ab7;border-radius:8px;padding:10px;width:220px;max-height:70vh;overflow-y:auto;box-shadow:0 3px 10px rgba(0,0,0,.2);font-size:13px}
 #testp b{display:block;cursor:pointer;color:#673ab7;margin-bottom:6px}
 #testp button{display:block;width:100%;text-align:left;margin:4px 0;padding:6px 8px;border:1px solid #dadce0;border-radius:4px;background:#f8f9fa;font:inherit;cursor:pointer}
 #testp small{display:block;color:#5f6368;margin-top:6px;line-height:1.5}
@@ -1052,17 +1052,24 @@ addEventListener('pagehide',save);setInterval(save,3000);
 function testPanel(){
   const S=[['預設（什麼都沒做）',{}],['勾「已追蹤」但沒點連結',{ig:[0]}],['點進 IG 只待 2 秒',{ig:[0],went:{ig:1},away:{ig:2}}],
     ['點進 IG 待 30 秒',{ig:[0],went:{ig:1},away:{ig:30}}],['選「下次一定」',{ig:[2]}],
-    ['說看完影片但沒點連結',{ig:[0,1],went:{ig:1},away:{ig:30}}],['說看完影片只待 8 秒',{ig:[1],went:{video:1},away:{video:8}}]];
+    ['說看完影片但沒點連結',{ig:[0,1],went:{ig:1},away:{ig:30}}],['說看完影片只待 8 秒',{ig:[1],went:{video:1},away:{video:8}}],
+    ['說看完影片待了 45 秒',{ig:[1],went:{video:1},away:{video:45}}],
+    ['（即時）剛從 IG 回來，待 2 秒',{ig:[0],went:{ig:1},away:{ig:2},back:['ig',2]}],
+    ['（即時）剛從 IG 回來，待 10 秒',{ig:[0],went:{ig:1},away:{ig:10},back:['ig',10]}],
+    ['（即時）剛從 YouTube 回來，待 2 秒',{went:{yt:1},away:{yt:2},back:['yt',2]}],
+    ['（即時）剛從影片回來，待 8 秒',{ig:[1],went:{video:1},away:{video:8},back:['video',8]}],
+    ['（即時）剛從影片回來，待 45 秒',{ig:[1],went:{video:1},away:{video:45},back:['video',45]}],
+    ['領過神聖讚美',{oldFan:true}]];
   const d=document.createElement('div');d.id='testp';
-  d.innerHTML=`<b>情勒話術測試 ▾</b><div>${S.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}<small>到結果頁後點 IG / YouTube 按鈕出去再回來，可以測「回來得好快喔」那段。</small></div>`;
+  d.innerHTML=`<b>情勒話術測試 ▾</b><div>${S.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}<small>「即時」= 模擬在結果頁點按鈕出去又回來。也可以真的點按鈕出去再回來測。</small></div>`;
   document.body.appendChild(d);
   d.onclick=e=>{
     if(e.target.tagName==='B'){d.classList.toggle('min');return}
     const b=e.target.closest('button');if(!b)return;const c=S[b.dataset.i][1];
     if(c.ig)ans.ig=c.ig;else delete ans.ig;
-    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;stats.oldFan=false;
+    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;stats.oldFan=!!c.oldFan;
     if(!ans.nick)ans.nick='測試人';
-    reveal(true);setTimeout(()=>{const x=$('#cta');if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},100);
+    reveal(true);setTimeout(()=>{if(c.back)ctaBack(...c.back);const x=$('#cta');if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},100);
   };
 }
 
