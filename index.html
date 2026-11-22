@@ -1328,11 +1328,13 @@ function reveal(fast){
       <div class="score"><div class="sl" id="sl">您的人格類型</div><div class="slots" id="slots"><span>?</span><span>?</span><span>?</span><span>?</span></div><div class="sn" id="sn">&nbsp;</div></div></div>
     <div id="rbody">
       <div class="card sum"><div class="rt">結果摘要</div><div class="rs">重點都在這裡，密密麻麻的分析請往下滑</div>
-        <div class="rel"><span>受試者</span><div>${nick}</div></div>
+        <div class="rel"><span>受試者</span><div>${nick}<br><small>${doneAt()}</small></div></div>
         <div class="rel"><span>人格類型</span><div><b>${r.type}｜${T.n}</b><br><small>${T.tag}</small></div></div>
-        <div class="rel"><span>稀有度</span><div><b>${rare}%</b><span class="tier" style="background:${tc}">${tn}</span> <span style="color:${tc}">${starsHTML(ts)}</span><br><small>約每 ${Math.round(100/rare)} 位受試者中才有 1 位（研究小組估算）</small></div></div>
-        <div class="rel"><span>主要成分</span><div>${r.ranks.slice(0,3).map(([t,p])=>`${t} ${p}%`).join('・')}</div></div>
-        <div class="rel"><span>人機驗證</span><div>${capSum(stats.cap)}</div></div>
+        <div class="rel"><span>稀有度</span><div><b>${rare}%</b><span class="tier" style="background:${tc}">${tn}</span> <span style="color:${tc}">${starsHTML(ts)}</span></div></div>
+        <div class="rel"><span>人格成分</span><div>${r.ranks.map(([t,p])=>`${t} ${p}%`).join('・')}</div></div>
+        <div class="rel"><span>抓到奶蛙</span><div>${frogTxt()}</div></div>
+        <div class="rel"><span>最佳拍檔</span><div>${T.m}</div></div>
+        <div class="rel"><span>天敵</span><div>${T.e}</div></div>
         <div class="rel"><span>作答時間</span><div>${durTxt(durSec())}</div></div>
         ${r.hid?`<div class="note hidn">${ic('unlock',16)} <b>隱藏結局解鎖：${r.type}</b><br>觸發條件：${T.hidden}。全體受試者中只有 ${rare}% 的人走到這裡。</div>`:''}
         ${late?`<div class="note late">${ic('moon',16)} ${late}</div>`:''}
@@ -1508,6 +1510,10 @@ function recHTML(type){
     const inner=`<div class="ic">${ic(icn,22)}</div><div><div class="nm">${nm}</div><div class="ds">${ds}</div></div><div class="lk">${pct(i+1)}% 好評</div>`;
     return url?`<a class="rec" href="${url}" target="_blank" rel="noopener">${inner}</a>`:`<div class="rec">${inner}</div>`}).join('');
 }
+// 結果摘要跟下載圖共用的文字，兩邊才不會對不起來
+function doneAt(){const d=new Date(stats.testLate||stats.t1||Date.now());return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`}
+// 奶蛙從第 3 頁開始每頁探頭一次，總共 N-2 = 6 次；翻太快沒看到的也算漏抓
+function frogTxt(){const ft=N-2,fc=Math.min(FROG.caught,ft);return `${fc} / ${ft} 次${fc===ft?'（全數捕獲）':!fc?'（一次都沒抓到）':''}`}
 // 用 canvas 畫一張「Google 表單風格」的結果圖
 function drawResult(){
   const {r,T,nick,rare,late}=RES,W=1080,P=60,CW=W-P*2,IN=56,F='"Noto Sans TC","PingFang TC","Microsoft JhengHei",Roboto,Arial,sans-serif';
@@ -1521,7 +1527,7 @@ function drawResult(){
   font(28);text('已記錄您的回覆。以下為您的人格分析結果。',L,y,'#5f6368');y+=40;
   x.fillStyle='#dadce0';x.fillRect(P,y,CW,2);y+=66;
   font(30);text(`受試者：${raw(nick)}`,L,y);
-  const d=new Date(stats.testLate||stats.t1||Date.now());text(`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`,R,y,'#5f6368','right');y+=80;
+  text(doneAt(),R,y,'#5f6368','right');y+=80;
   font(28);text('您的人格類型',W/2,y,'#5f6368','center');y+=30;
   const bw=140,bh=170,gap=22,bx=(W-(bw*4+gap*3))/2;
   [...r.type].forEach((ch,i)=>{x.fillStyle='#673ab7';x.beginPath();x.roundRect(bx+i*(bw+gap),y,bw,bh,16);x.fill();font(110,700);text(ch,bx+i*(bw+gap)+bw/2,y+bh/2+40,'#fff','center')});
@@ -1539,9 +1545,7 @@ function drawResult(){
   r.ranks.forEach(([t,p])=>{font(28,700);text(t,L,y+32);x.fillStyle='#f1f3f4';x.fillRect(L+110,y+6,TW-220,34);x.fillStyle='#673ab7';x.fillRect(L+110,y+6,(TW-220)*p/100,34);font(28);text(p+'%',R,y+32,'#5f6368','right');y+=54});
   y+=24;x.fillStyle='#dadce0';x.fillRect(P,y,CW,2);y+=64;font(28);
   const row=(k,v,c='#202124')=>{text(k,L,y,'#5f6368');wrap(v,TW-170).forEach(l=>{text(l,L+170,y,c);y+=42});y+=10};
-  // 奶蛙從第 3 頁開始每頁探頭一次，總共 N-2 = 6 次；翻太快沒看到的也算漏抓
-  const ft=N-2,fc=Math.min(FROG.caught,ft);
-  row('抓到奶蛙',`${fc} / ${ft} 次${fc===ft?'（全數捕獲）':!fc?'（一次都沒抓到）':''}`);
+  row('抓到奶蛙',frogTxt());
   row('最佳拍檔',raw(T.m));row('天敵',raw(T.e));row('作答時間',durTxt(durSec()));
   if(late){icon('moon',L,y-24,28,'#283593');text('深夜',L+36,y,'#5f6368');wrap(late,TW-170).forEach(l=>{text(l,L+170,y,'#283593');y+=42});y+=10}
   y+=36;
