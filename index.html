@@ -59,6 +59,8 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 @keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:3000;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
 #toast.show{transform:translate(-50%,0)}
+.yarm{position:absolute;overflow:hidden;opacity:.01;z-index:6}
+.yarm iframe{position:absolute;border:0}
 .vbox.vhide{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;pointer-events:none;animation:none}
 .vbox{position:relative;aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden;margin-top:12px;animation:pop .5s}
 .vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -279,7 +281,7 @@ function embed(id){
   return embedBox(id)+vfb(yt);
 }
 function embedBox(id){return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`}
-function vfb(yt){return `<div style="font-size:12px;color:#5f6368;margin-top:6px">影片沒出現或顯示錯誤？<a href="${yt}" target="_blank" rel="noopener" style="color:#1a73e8">點這裡用 YouTube 開啟</a></div>`}
+function vfb(yt){return `<div class="vfb" style="font-size:12px;color:#5f6368;margin-top:6px">影片沒出現或顯示錯誤？<a href="${yt}" target="_blank" rel="noopener" style="color:#1a73e8">點這裡用 YouTube 開啟</a></div>`}
 function hotpotHTML(){
   if(!CONFIG.hotpotFile)return embed(CONFIG.hotpotId);
   return `<div class="vbox" id="hpBox"><video src="${CONFIG.hotpotFile}" playsinline webkit-playsinline controls autoplay preload="auto" style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video></div>`;
@@ -288,22 +290,50 @@ function hotpotFallback(){const b=$('#hpBox');if(!b)return;const v=b.querySelect
   v.addEventListener('error',()=>{b.outerHTML=embed(CONFIG.hotpotId)});
   const p=v.play();if(p&&p.catch)p.catch(()=>{});}
 
-// 手機上 YouTube 會忽略 autoplay=1，只有「在使用者點擊當下對已載入的 player 呼叫 playVideo()」才會有聲播放，
-// 所以影片要先在背景載好（隱形但保留實際尺寸），點擊時再顯示並播放。
-let ytReady=false;const ytQ=[];const YTP={},YTW={};
+// 手機（尤其 IG / Threads 內建瀏覽器）只允許「手指直接點在 YouTube 播放器上」才有聲播放，
+// 從外面呼叫 playVideo() 會被擋成靜音。所以做法是：影片先在背景載好，
+// 再用幾乎透明的方式疊在「其他」選項 / 影片封面上（ytArm），使用者以為點的是選項，其實點到 YouTube 播放器，
+// 偵測到開始播放（onStateChange）後再把播放器現形（ytReveal）。
+let ytReady=false;const ytQ=[];const YTP={},YTW={},YTS={},YTCB={},YTA={},YTID={};
 function loadYT(){
   if(window.YT&&YT.Player){ytReady=true;return}if(loadYT.started)return;loadYT.started=true;
   window.onYouTubeIframeAPIReady=()=>{ytReady=true;ytQ.splice(0).forEach(f=>f())};
   const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
 }
-function ytPreload(key,id,place){
+function ytPreload(key,id,place,onPlay){
+  YTCB[key]=onPlay;
   if(location.protocol==='file:'||document.getElementById(key+'Wrap'))return;
   place(`<div class="vbox vhide" id="${key}Wrap"><div id="${key}Player"></div></div>`);
-  YTP[key]=null;YTW[key]=false;loadYT();
+  YTP[key]=null;YTW[key]=false;YTS[key]=false;YTID[key]=id;loadYT();
   const go=()=>{if(!document.getElementById(key+'Player'))return;
     new YT.Player(key+'Player',{videoId:id,playerVars:{playsinline:1,rel:0,origin:location.origin},
-      events:{onReady:e=>{YTP[key]=e.target;if(YTW[key])ytStart(key)}}})};
+      events:{onReady:e=>{YTP[key]=e.target;if(YTW[key])ytStart(key);else ytPlace(key)},
+        onStateChange:e=>{if((e.data===1||e.data===3)&&!YTS[key]){YTS[key]=true;YTCB[key]&&YTCB[key]()}}}})};
   ytReady?go():ytQ.push(go);
+}
+// 把隱形播放器疊到 target 上。mode 'cover'：播放器放大 1.6 倍蓋住封面（把 YouTube 標題列、logo 等會跳轉的地方裁掉）；
+// mode 'small'：480x270 的播放器中心對準小小的選項列。
+function ytArm(key,card,getTarget,mode){
+  const old=YTA[key];if(old&&old.ro)old.ro.disconnect();
+  const a=YTA[key]={card,getTarget,mode};
+  if(window.ResizeObserver){a.ro=new ResizeObserver(()=>ytPlace(key));a.ro.observe(card)}
+  ytPlace(key);
+}
+function ytPlace(key){
+  const a=YTA[key],w=document.getElementById(key+'Wrap');if(!a||!w||YTS[key])return;
+  const t=a.getTarget(),f=w.querySelector('iframe');
+  if(!t||!f||!YTP[key]||!document.body.contains(t)){w.className='vbox vhide';w.removeAttribute('style');return}
+  const c=a.card,cr=c.getBoundingClientRect(),r=t.getBoundingClientRect();
+  w.className='yarm';
+  Object.assign(w.style,{left:r.left-cr.left-c.clientLeft+'px',top:r.top-cr.top-c.clientTop+'px',width:r.width+'px',height:r.height+'px'});
+  const fw=a.mode==='cover'?r.width*1.6:480,fh=a.mode==='cover'?r.height*1.6:270;
+  Object.assign(f.style,{width:fw+'px',height:fh+'px',left:(r.width-fw)/2+'px',top:(r.height-fh)/2+'px'});
+}
+addEventListener('resize',()=>Object.keys(YTA).forEach(ytPlace));
+function ytReveal(key){
+  const w=document.getElementById(key+'Wrap');const a=YTA[key];if(a&&a.ro)a.ro.disconnect();delete YTA[key];
+  if(!w)return;w.className='vbox';w.removeAttribute('style');const f=w.querySelector('iframe');if(f)f.removeAttribute('style');
+  const n=w.nextElementSibling;if(!(n&&n.classList.contains('vfb')))w.insertAdjacentHTML('afterend',vfb(`https://www.youtube.com/watch?v=${YTID[key]}`));
 }
 function ytStart(key){
   const p=YTP[key];YTW[key]=false;
@@ -311,20 +341,35 @@ function ytStart(key){
   // 瀏覽器還是擋有聲播放的話（多半是 iOS），改成靜音播放，至少畫面會動
   setTimeout(()=>{try{const s=p.getPlayerState();if(s===-1||s===5){p.mute();p.playVideo();toast('🔊 點一下影片就有聲音')}}catch(e){}},2000);
 }
+// 備用路線：播放器還沒載好、點擊落在底下的選項/封面時才會走這裡（可能被擋成靜音）
 function ytShow(key,id,fallback){
+  YTS[key]=true;
   const w=document.getElementById(key+'Wrap');
   if(!w){fallback(embed(id));return}
-  w.classList.remove('vhide');w.insertAdjacentHTML('afterend',vfb(`https://www.youtube.com/watch?v=${id}`));
+  ytReveal(key);
   if(YTP[key])return ytStart(key);
   YTW[key]=true;
   setTimeout(()=>{if(YTP[key]||!document.body.contains(w))return;YTW[key]=false;w.outerHTML=embedBox(id)},5000);
 }
+function rickTarget(card){return card.querySelector(`.opt[data-k="${Q.j3.opts.length-1}"]`)}
 function preloadRick(card){
   if(stats.rolled)return;
-  ytPreload('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h));
+  ytPreload('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h),()=>{ytReveal('rick');rickRolled(card)});
+  if(!extras.length)ytArm('rick',card,()=>rickTarget(card),'small');
+}
+function rickRolled(card){
+  const q=Q.j3,other=q.opts.length-1;stats.rolled=true;
+  q.opts[other]='其他（你已經知道會發生什麼了）';const s=card.querySelector(`.opt[data-k="${other}"] span`);if(s)s.textContent=q.opts[other];
+  mark('spawn','RICK',7,`受試者連續點擊「其他」共 ${stats.spawn+1} 次，對未知選項展現強烈探索動機，最終被導向一段 1987 年的音樂錄影帶。`);
 }
 function playRick(card){
   ytShow('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h));
+}
+function hotStarted(){const th=$('#thumb');stopAll();ytReveal('hot');if(th)th.remove();hotDone()}
+function hotDone(){
+  stats.vidPlayed=true;
+  const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
+  mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。');
 }
 
 const FROG={shown:0,caught:0,seen:{},off:false,t:[]};
@@ -558,9 +603,7 @@ document.addEventListener('click',e=>{
   if(th){stopAll();
     if(CONFIG.hotpotFile){th.outerHTML=hotpotHTML();hotpotFallback()}
     else{ytShow('hot',CONFIG.hotpotId,h=>th.insertAdjacentHTML('afterend',h));th.remove()}
-    stats.vidPlayed=true;
-    const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
-    mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。')}
+    hotDone()}
 });
 
 const AR={
@@ -630,7 +673,9 @@ const hooks={
   role(){checkAR(true)},
   m2(card){listen(card)},
   j3(card){preloadRick(card)},
-  vid(card){if(!CONFIG.hotpotFile)ytPreload('hot',CONFIG.hotpotId,h=>card.querySelector('#thumb').insertAdjacentHTML('afterend',h))},
+  vid(card){if(CONFIG.hotpotFile)return;
+    ytPreload('hot',CONFIG.hotpotId,h=>card.querySelector('#thumb').insertAdjacentHTML('afterend',h),hotStarted);
+    ytArm('hot',card,()=>card.querySelector('#thumb'),'cover')},
   q2(card,q){
     const t=(ans.mytype||'').trim().toUpperCase();if(!MB_OK.test(t))return;
     q.opts[3]=`「你是不是 ${t}」`;card.querySelector('.opt[data-k="3"] span').textContent=q.opts[3];
@@ -706,11 +751,11 @@ const picks={
       q.opts.splice(other,0,extras.shift());stats.spawn++;
       card.querySelector('.opts').innerHTML=q.opts.map((o,k)=>optHTML(q,o,k,k===other?' pop':'')).join('');play('boing');
       mark('spawn','RICK',stats.spawn*.6,`受試者連續點擊「其他」共 ${stats.spawn} 次，對未知選項展現強烈探索動機。`);
+      // 下一次點「其他」就是 Rick roll：把隱形播放器疊到「其他」上（pop 動畫結束後再對位一次）
+      if(!extras.length){ytArm('rick',card,()=>rickTarget(card),'small');setTimeout(()=>ytPlace('rick'),700)}
     }else if(!stats.rolled){
-      t.checked=false;ans.j3=cur.filter(k=>k!==other);stats.rolled=true;
-      q.opts[other]='其他（你已經知道會發生什麼了）';card.querySelector(`.opt[data-k="${other}"] span`).textContent=q.opts[other];
-      playRick(card);
-      mark('spawn','RICK',7,`受試者連續點擊「其他」共 ${stats.spawn+1} 次，對未知選項展現強烈探索動機，最終被導向一段 1987 年的音樂錄影帶。`);
+      t.checked=false;ans.j3=cur.filter(k=>k!==other);
+      playRick(card);rickRolled(card);
     }
   },
   j4(v){if(v===3){play('fart');toast('感謝您的誠實。')}
