@@ -59,7 +59,7 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 @keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:3000;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
 #toast.show{transform:translate(-50%,0)}
-.vbox.vhide{height:0;aspect-ratio:auto;margin:0;animation:none}
+.vbox.vhide{position:absolute;left:0;right:0;top:0;margin:0;opacity:0;pointer-events:none;animation:none}
 .vbox{position:relative;aspect-ratio:16/9;background:#000;border-radius:6px;overflow:hidden;margin-top:12px;animation:pop .5s}
 .vbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .tr{background:#f8f9fa;border-left:3px solid #673ab7;border-radius:4px;padding:12px 14px;font-size:14px;line-height:1.9;margin-bottom:16px;min-height:48px}
@@ -111,7 +111,26 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 .cta{border-top:10px solid #673ab7;text-align:center}
 .cta .rt{font-size:18px}
 .cta .ctab{justify-content:center;margin:16px 0 0}
-@media(max-width:520px){.head h1{font-size:24px}.card{padding:20px 16px}.head .meta,.score{margin-left:-16px;margin-right:-16px;padding-left:16px;padding-right:16px}.scale .lb{font-size:11px;max-width:56px}.prog{margin-left:0}.slots span{width:50px;height:62px;font-size:34px;line-height:58px}}
+.foot .pw{text-align:left}
+/* 手機版：比照 Google 表單手機排版（卡片寬 90%、內距 24px、16px 字、進度條在按鈕上方獨立一列） */
+@media(max-width:520px){
+  .wrap{width:90%;max-width:none;padding:0;margin:12px auto 32px}
+  .head h1{font-size:30px;line-height:1.25;margin-bottom:16px}
+  .head .desc{font-size:16px;line-height:1.45}
+  .head .meta{padding:16px 24px 0}
+  .qt{font-size:16px;margin-bottom:22px}
+  .qd{font-size:14px}
+  .opt{font-size:16px;padding:10px 0;gap:16px}
+  .ti{width:100%;min-width:0;font-size:16px;padding:8px 0}
+  .scale .lb{font-size:11px;max-width:56px}
+  .nav{margin:16px 0 8px;gap:12px}
+  .nav .btn{padding:12px 24px;font-size:15px}
+  .prog{order:-1;width:100%;justify-content:center;margin:0 0 8px;font-size:15px;color:#202124;gap:16px}
+  .pb{flex:0 1 180px;height:10px}
+  .clear{margin-left:auto;font-size:15px}
+  .foot{font-size:13px;margin-top:20px}
+  .slots span{width:50px;height:62px;font-size:34px;line-height:58px}
+}
 </style>
 </head>
 <body>
@@ -251,8 +270,9 @@ function mark(key,type,pts,ana){if(!type)delete marks[key];else marks[key]={type
 function embed(id){
   const yt=`https://www.youtube.com/watch?v=${id}`;
   if(location.protocol==='file:')return `<div class="vbox" style="display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;text-align:center;padding:20px;line-height:1.8">影片無法在此播放。<br><a href="${yt}" target="_blank" rel="noopener" style="color:#b39ddb">先在 YouTube 看這支影片</a></div>`;
-  return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>${vfb(yt)}`;
+  return embedBox(id)+vfb(yt);
 }
+function embedBox(id){return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`}
 function vfb(yt){return `<div style="font-size:12px;color:#5f6368;margin-top:6px">影片沒出現或顯示錯誤？<a href="${yt}" target="_blank" rel="noopener" style="color:#1a73e8">點這裡用 YouTube 開啟</a></div>`}
 function hotpotHTML(){
   if(!CONFIG.hotpotFile)return embed(CONFIG.hotpotId);
@@ -262,24 +282,43 @@ function hotpotFallback(){const b=$('#hpBox');if(!b)return;const v=b.querySelect
   v.addEventListener('error',()=>{b.outerHTML=embed(CONFIG.hotpotId)});
   const p=v.play();if(p&&p.catch)p.catch(()=>{});}
 
-let ytReady=false;const ytQ=[];const RICK={p:null};
+// 手機上 YouTube 會忽略 autoplay=1，只有「在使用者點擊當下對已載入的 player 呼叫 playVideo()」才會有聲播放，
+// 所以影片要先在背景載好（隱形但保留實際尺寸），點擊時再顯示並播放。
+let ytReady=false;const ytQ=[];const YTP={},YTW={};
 function loadYT(){
   if(window.YT&&YT.Player){ytReady=true;return}if(loadYT.started)return;loadYT.started=true;
   window.onYouTubeIframeAPIReady=()=>{ytReady=true;ytQ.splice(0).forEach(f=>f())};
   const t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
 }
-function preloadRick(card){
-  if(stats.rolled||location.protocol==='file:'||card.querySelector('#rickWrap'))return;
-  card.querySelector('.opts').insertAdjacentHTML('afterend','<div class="vbox vhide" id="rickWrap"><div id="rickPlayer"></div></div>');
-  RICK.p=null;loadYT();
-  const go=()=>{if(!document.getElementById('rickPlayer'))return;
-    new YT.Player('rickPlayer',{videoId:CONFIG.rickId,playerVars:{playsinline:1,rel:0,origin:location.origin},events:{onReady:e=>RICK.p=e.target}})};
+function ytPreload(key,id,place){
+  if(location.protocol==='file:'||document.getElementById(key+'Wrap'))return;
+  place(`<div class="vbox vhide" id="${key}Wrap"><div id="${key}Player"></div></div>`);
+  YTP[key]=null;YTW[key]=false;loadYT();
+  const go=()=>{if(!document.getElementById(key+'Player'))return;
+    new YT.Player(key+'Player',{videoId:id,playerVars:{playsinline:1,rel:0,origin:location.origin},
+      events:{onReady:e=>{YTP[key]=e.target;if(YTW[key])ytStart(key)}}})};
   ytReady?go():ytQ.push(go);
 }
+function ytStart(key){
+  const p=YTP[key];YTW[key]=false;
+  try{p.unMute();p.playVideo()}catch(e){return}
+  // 瀏覽器還是擋有聲播放的話（多半是 iOS），改成靜音播放，至少畫面會動
+  setTimeout(()=>{try{const s=p.getPlayerState();if(s===-1||s===5){p.mute();p.playVideo();toast('🔊 點一下影片就有聲音')}}catch(e){}},2000);
+}
+function ytShow(key,id,fallback){
+  const w=document.getElementById(key+'Wrap');
+  if(!w){fallback(embed(id));return}
+  w.classList.remove('vhide');w.insertAdjacentHTML('afterend',vfb(`https://www.youtube.com/watch?v=${id}`));
+  if(YTP[key])return ytStart(key);
+  YTW[key]=true;
+  setTimeout(()=>{if(YTP[key]||!document.body.contains(w))return;YTW[key]=false;w.outerHTML=embedBox(id)},5000);
+}
+function preloadRick(card){
+  if(stats.rolled)return;
+  ytPreload('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h));
+}
 function playRick(card){
-  const w=card.querySelector('#rickWrap');
-  if(w&&RICK.p){w.classList.remove('vhide');w.style.animation='pop .5s';RICK.p.playVideo();return}
-  if(w)w.remove();card.querySelector('.opts').insertAdjacentHTML('afterend',embed(CONFIG.rickId));
+  ytShow('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h));
 }
 
 const FROG={shown:0,caught:0,seen:{},off:false,t:[]};
@@ -458,7 +497,7 @@ function render(){
   if(p.title)h+=`<div class="card sec"><div class="tab">第 ${page+1} 部分，共 ${N} 部分</div><div class="st">${p.title}</div>${p.desc?`<div class="sd">${p.desc}</div>`:''}</div>`;
   h+=p.qs.map(qHTML).join('');
   h+=`<div class="nav">${page>0?'<button class="btn w" id="back">返回</button>':''}<button class="btn" id="next">${page===N-1?'提交':'下一頁'}</button><div class="prog"><span class="pb"><i style="width:${(page+1)/N*100}%"></i></span>第 ${page+1} 頁，共 ${N} 頁</div><a class="clear" id="clear">清除表單內容</a></div>`;
-  h+=`<div class="foot">請勿透過這份表單提交密碼。<br>本問卷由研究小組自行建立，僅供學術研究使用。</div>`;
+  h+=`<div class="foot"><div class="pw">請勿透過這份表單提交密碼。</div><div style="margin-top:14px">本問卷由研究小組自行建立，僅供學術研究使用。</div></div>`;
   $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
   p.qs.forEach(q=>{
     const card=$('#q_'+q.id);
@@ -510,7 +549,10 @@ document.addEventListener('click',e=>{
     const c=$('#q_ig');c.querySelector(`input[value="${k}"]`).checked=true;c.classList.remove('bad');picks.ig(k,c);return;
   }
   const th=e.target.closest('#thumb');
-  if(th){stopAll();th.outerHTML=hotpotHTML();hotpotFallback();stats.vidPlayed=true;
+  if(th){stopAll();
+    if(CONFIG.hotpotFile){th.outerHTML=hotpotHTML();hotpotFallback()}
+    else{ytShow('hot',CONFIG.hotpotId,h=>th.insertAdjacentHTML('afterend',h));th.remove()}
+    stats.vidPlayed=true;
     const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
     mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。')}
 });
@@ -566,11 +608,15 @@ function listen(card){
   if(stats.listened){box.innerHTML=LINES.map(l=>`<div>${l}</div>`).join('');return}
   const go=()=>{stats.listened=true;let i=0;(function nx(){if(i>=LINES.length||!document.body.contains(box))return;
     box.insertAdjacentHTML('beforeend',`<div>${LINES[i]}</div>`);i++;setTimeout(nx,i<6?550:i<15?320:600)})()};
-  box.innerHTML='<div style="color:#9aa0a6">📞 通話接通中…</div>';let tm;
+  box.innerHTML='<div style="color:#9aa0a6">📞 通話接通中…</div>';let tm,cap;
+  // 觸發條件：對話框「完整」出現在畫面上方 10% ～ 下方 20% 之間（一般閱讀時放它的位置），而且停住 1 秒才開始。
+  // 滑過去不算，一離開就重新計時，所以不會在使用者還沒看到時就先跑完。
+  const start=()=>{if(stats.listened)return;clearTimeout(tm);io.disconnect();
+    if(!document.body.contains(box))return;box.innerHTML='';go()};
   const io=new IntersectionObserver(es=>{
-    if(es[0].isIntersecting)tm=setTimeout(()=>{io.disconnect();if(!document.body.contains(box))return;box.innerHTML='';go()},1200);
-    else clearTimeout(tm);
-  },{rootMargin:'-35% 0px -35% 0px'});
+    clearTimeout(tm);
+    if(es[0].isIntersecting&&es[0].intersectionRatio>=.99)tm=setTimeout(start,1000);
+  },{rootMargin:'-10% 0px -20% 0px',threshold:[0,1]});
   io.observe(box);
 }
 
@@ -578,6 +624,7 @@ const hooks={
   role(){checkAR(true)},
   m2(card){listen(card)},
   j3(card){preloadRick(card)},
+  vid(card){if(!CONFIG.hotpotFile)ytPreload('hot',CONFIG.hotpotId,h=>card.querySelector('#thumb').insertAdjacentHTML('afterend',h))},
   q2(card,q){
     const t=(ans.mytype||'').trim().toUpperCase();if(!MB_OK.test(t))return;
     q.opts[3]=`「你是不是 ${t}」`;card.querySelector('.opt[data-k="3"] span').textContent=q.opts[3];
