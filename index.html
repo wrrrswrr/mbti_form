@@ -132,6 +132,7 @@ const CONFIG={
   igUrl:'https://www.instagram.com/mbti_survivalguide/',
   videoUrl:'https://www.youtube.com/watch?v=xCZVvScZX70',
   hotpotId:'dMTy6C4UiQ4',                 // 「研究說明影片」＝統神端火鍋
+  hotpotFile:'',                          // 想最穩：把影片存成 mp4 放進 videos/，這裡填 'videos/hotpot.mp4'（失敗會自動改用 YouTube）
   rickId:'dQw4w9WgXcQ'                    // 「其他」點到底＝Rick Roll
 };
 
@@ -168,8 +169,18 @@ const FROG_IMG={peek:"data:image/webp;base64,UklGRhQ2AABXRUJQVlA4WAoAAAAQAAAAswA
 
 /* ---------- 音效引擎 ---------- */
 let ac;
-function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
-['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{A()}catch(e){}}));
+/* iPhone 開靜音模式時，網頁音效預設會被靜音；這行讓它照樣出聲（Safari 17+） */
+try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended'||ac.state==='interrupted')ac.resume();return ac}
+/* 第一次碰螢幕時解鎖音效，並把 mp3 先載好（IG / LINE 內建瀏覽器、iPhone 才不會在計時器裡擋音效） */
+let unlocked=false;
+['pointerdown','touchend','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{
+  const a=A();if(unlocked)return;unlocked=true;
+  const s=a.createBufferSource();s.buffer=a.createBuffer(1,1,22050);s.connect(a.destination);s.start(0);   // 播一個無聲音效＝解鎖
+  Object.keys(SOUND_FILES).forEach(loadBuf);
+}catch(e){}},true));
+/* 切回這個分頁時，音效重新喚醒（iOS 切 App 回來會被暫停） */
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ac)try{ac.resume()}catch(e){}});
 function tone(f,dur,type='sine',vol=.3,fEnd,delay=0){
   const a=A(),t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();
   o.type=type;o.frequency.setValueAtTime(f,t);if(fEnd)o.frequency.exponentialRampToValueAtTime(fEnd,t+dur);
@@ -189,7 +200,7 @@ const FREE={frog:1};   // 獨立音效：不會停掉別人，也不會被別人
 let freeNow=false;
 function out(){const a=A();if(freeNow)return a.destination;if(!bus){bus=a.createGain();bus.connect(a.destination)}return bus}
 function stopAll(){
-  live.forEach(au=>{au.pause();au.currentTime=0});live.clear();
+  live.forEach(h=>h.stop());live.clear();
   Object.keys(chan).forEach(k=>chan[k]=[]);
   if(bus){const b=bus;bus=null;try{b.gain.setTargetAtTime(0,ac.currentTime,.01);setTimeout(()=>b.disconnect(),120)}catch(e){}}
 }
@@ -214,16 +225,30 @@ const SYN={
 };
 const fileBad={};
 const chan={};
+/* mp3 先解碼成 Web Audio 的聲音資料：比 new Audio() 穩定很多，社群 App 內建瀏覽器也比較不會擋 */
+const BUF={};
+function loadBuf(k){
+  if(BUF[k])return BUF[k];
+  if(fileBad[k]||!SOUND_FILES[k]||location.protocol==='file:'){fileBad[k]=true;return BUF[k]=Promise.resolve(null)}
+  return BUF[k]=fetch(SOUND_FILES[k]).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()})
+    .then(b=>new Promise((res,rej)=>A().decodeAudioData(b,res,rej)))
+    .catch(()=>{fileBad[k]=true;return null});
+}
 function play(k,ch){   // 播新音效前，先停掉所有還沒播完的（tick 滴答聲除外）
   const free=!!FREE[k];
   if(k!=='tick'&&!free)stopAll();
   const syn=()=>{if(!SYN[k])return;freeNow=free;try{SYN[k]()}finally{freeNow=false}};
-  const f=SOUND_FILES[k];
-  if(f&&!fileBad[k]){const au=new Audio(f);au.volume=.9;if(!free){live.add(au);au.onended=()=>live.delete(au)}
-    au.play().catch(()=>{live.delete(au);fileBad[k]=true;syn()});if(ch&&!free)(chan[ch]=chan[ch]||[]).push(au);return au}
-  else syn();
+  if(!SOUND_FILES[k]||fileBad[k])return syn();
+  const h={dead:false,src:null,stop(){h.dead=true;if(h.src)try{h.src.stop()}catch(e){}}};
+  if(!free)live.add(h);if(ch&&!free)(chan[ch]=chan[ch]||[]).push(h);
+  loadBuf(k).then(buf=>{
+    if(h.dead)return;if(!buf){live.delete(h);return syn()}
+    const a=A(),s=a.createBufferSource(),g=a.createGain();s.buffer=buf;g.gain.value=.9;
+    s.connect(g).connect(free?a.destination:out());s.onended=()=>live.delete(h);s.start();h.src=s;
+  });
+  return h;
 }
-function stopCh(ch){if(chan[ch]){chan[ch].forEach(a=>{a.pause();a.currentTime=0});chan[ch]=[]}}
+function stopCh(ch){if(chan[ch]){chan[ch].forEach(h=>h.stop());chan[ch]=[]}}
 
 /* ---------- 工具 ---------- */
 const $=s=>document.querySelector(s);
@@ -247,8 +272,18 @@ function mark(key,type,pts,ana){if(!type)delete marks[key];else marks[key]={type
 function embed(id){
   const yt=`https://www.youtube.com/watch?v=${id}`;
   if(location.protocol==='file:')return `<div class="vbox" style="display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;text-align:center;padding:20px;line-height:1.8">（開發者提示）你目前是直接打開本機檔案，YouTube 會拒絕播放。<br>上傳到網站，或用 Live Server 開啟後就會正常顯示。<br><a href="${yt}" target="_blank" rel="noopener" style="color:#b39ddb">先在 YouTube 看這支影片</a></div>`;
-  return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
+  return `<div class="vbox"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>${vfb(yt)}`;
 }
+/* 影片底下的小字備案：某些 App 內建瀏覽器擋 YouTube 嵌入時，至少還能看 */
+function vfb(yt){return `<div style="font-size:12px;color:#5f6368;margin-top:6px">影片沒出現或顯示錯誤？<a href="${yt}" target="_blank" rel="noopener" style="color:#1a73e8">點這裡用 YouTube 開啟</a></div>`}
+/* 研究說明影片：有放本機 mp4 就優先用（所有瀏覽器都能播），讀不到再改用 YouTube */
+function hotpotHTML(){
+  if(!CONFIG.hotpotFile)return embed(CONFIG.hotpotId);
+  return `<div class="vbox" id="hpBox"><video src="${CONFIG.hotpotFile}" playsinline webkit-playsinline controls autoplay preload="auto" style="position:absolute;inset:0;width:100%;height:100%;background:#000"></video></div>`;
+}
+function hotpotFallback(){const b=$('#hpBox');if(!b)return;const v=b.querySelector('video');
+  v.addEventListener('error',()=>{b.outerHTML=embed(CONFIG.hotpotId)});
+  const p=v.play();if(p&&p.catch)p.catch(()=>{});}
 
 /* ---------- Rick Roll：先把播放器藏在題目下面載好，點下去的瞬間直接播（iPhone 也比較不會擋） ---------- */
 let ytReady=false;const ytQ=[];const RICK={p:null};
@@ -513,7 +548,7 @@ document.addEventListener('click',e=>{
     const c=$('#q_ig');c.querySelector(`input[value="${k}"]`).checked=true;c.classList.remove('bad');picks.ig(k,c);return;
   }
   const th=e.target.closest('#thumb');
-  if(th){stopAll();th.outerHTML=embed(CONFIG.hotpotId);stats.vidPlayed=true;   // 直接在本頁播放，不跳出去
+  if(th){stopAll();th.outerHTML=hotpotHTML();hotpotFallback();stats.vidPlayed=true;   // 直接在本頁播放，不跳出去
     const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
     mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。')}
 });
@@ -833,7 +868,7 @@ function vidObs(){
 /* 結果頁的大笑奶蛙：點一下笑一聲（不重疊），點太多次會變臉逃走 */
 function frogWin(fw){
   let n=0,au=null,gone=false;
-  const card=fw.closest('.card'),laugh=()=>{if(au){au.pause();au.currentTime=0}au=play('frog')||null};
+  const card=fw.closest('.card'),laugh=()=>{if(au)au.stop();au=play('frog')||null};
   setTimeout(()=>{if(!gone)laugh()},1400);
   fw.onclick=()=>{if(gone)return;n++;laugh();
     if(n===5)warn(card,'fw','奶蛙笑太多，有點喘不過氣了。');
