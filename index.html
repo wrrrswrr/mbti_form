@@ -307,8 +307,12 @@ function ytPreload(key,id,place,onPlay){
   YTP[key]=null;YTW[key]=false;YTS[key]=false;YTID[key]=id;loadYT();
   const go=()=>{if(!document.getElementById(key+'Player'))return;
     new YT.Player(key+'Player',{videoId:id,playerVars:{playsinline:1,rel:0,origin:location.origin},
-      events:{onReady:e=>{YTP[key]=e.target;if(YTW[key])ytStart(key);else ytPlace(key)},
-        onStateChange:e=>{if((e.data===1||e.data===3)&&!YTS[key]){YTS[key]=true;YTCB[key]&&YTCB[key]()}}}})};
+      // YouTube 會把「靜音」狀態記在手機裡（之前的靜音備案呼叫過 mute() 就會一直被記住），所以載好時先強制解除靜音
+      events:{onReady:e=>{YTP[key]=e.target;try{e.target.unMute();e.target.setVolume(100)}catch(x){}
+          if(YTW[key])ytStart(key);else ytPlace(key)},
+        onStateChange:e=>{
+          if(e.data===1){try{if(e.target.isMuted()){e.target.unMute();e.target.setVolume(100)}}catch(x){}}
+          if((e.data===1||e.data===3)&&!YTS[key]){YTS[key]=true;YTCB[key]&&YTCB[key]()}}}})};
   ytReady?go():ytQ.push(go);
 }
 // 把隱形播放器疊到 target 上。mode 'cover'：播放器放大 1.6 倍蓋住封面（把 YouTube 標題列、logo 等會跳轉的地方裁掉）；
@@ -338,8 +342,8 @@ function ytReveal(key){
 function ytStart(key){
   const p=YTP[key];YTW[key]=false;
   try{p.unMute();p.playVideo()}catch(e){return}
-  // 瀏覽器還是擋有聲播放的話（多半是 iOS），改成靜音播放，至少畫面會動
-  setTimeout(()=>{try{const s=p.getPlayerState();if(s===-1||s===5){p.mute();p.playVideo();toast('🔊 點一下影片就有聲音')}}catch(e){}},2000);
+  // 瀏覽器擋住播放的話不改成靜音（mute 會被 YouTube 記住、害之後都沒聲音），改提示使用者自己點影片
+  setTimeout(()=>{try{const s=p.getPlayerState();if(s===-1||s===5)toast('▶ 點一下影片播放')}catch(e){}},1500);
 }
 // 備用路線：播放器還沒載好、點擊落在底下的選項/封面時才會走這裡（可能被擋成靜音）
 function ytShow(key,id,fallback){
