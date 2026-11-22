@@ -156,6 +156,7 @@ const CONFIG={
   showName:'MBTI生存指南',
   igHandle:'@mbti_survivalguide',
   igUrl:'https://www.instagram.com/mbti_survivalguide/',
+  videoThankSec:30, // 點進最新影片後待超過幾秒就感謝他（影片 10 分鐘，不強求看完）
   ytChannelUrl:'https://youtube.com/channel/UCPcDNWfqmAapUuud4d6ahCg',
   videoUrl:'https://www.youtube.com/watch?v=xCZVvScZX70',
   hotpotId:'dMTy6C4UiQ4',
@@ -915,12 +916,18 @@ document.addEventListener('visibilitychange',()=>{
 const awayTxt=s=>s<1?'不到 1 秒':`${s} 秒`;
 // 結果頁上點出去又回來時，即時吐槽
 function ctaBack(k,s){
-  const t=$('#ctaT'),b=$('#ctaB');if(!t||!b)return;
+  const t=$('#ctaT'),b=$('#ctaB');if(!t||!b||stats.oldFan)return;
   const where={ig:'IG',yt:'YouTube',video:'影片'}[k];
+  const p=txt=>`<p class="rp" style="margin:6px 0 0">${txt}</p>`;
+  if(k==='video'){
+    if(s<CONFIG.videoThankSec){t.textContent='……回來得好快喔';b.innerHTML=p(`你在影片那邊只待了 ${awayTxt(s)}。研究小組實測，這個時間連片頭都看不完。`);play('bruh')}
+    else{t.textContent='🥹 謝謝你，你是好人';b.innerHTML=p(`你在影片那邊待了 ${awayTxt(s)}。影片有 10 分鐘，我們不強求，有點進來看就是愛。`)}
+    return;
+  }
   if(s<4){t.textContent='……回來得好快喔';
-    b.innerHTML=`<p class="rp" style="margin:6px 0 0">你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間${k==='video'?'連片頭都看不完':'不太夠按追蹤'}。</p>`;play('bruh')}
+    b.innerHTML=p(`你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間不太夠按追蹤。`);play('bruh')}
   else{t.textContent='🥹 謝謝你，你是好人';
-    b.innerHTML=`<p class="rp" style="margin:6px 0 0">你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有${k==='video'?'看完':'按下去'}。</p>`}
+    b.innerHTML=p(`你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有按下去。`)}
 }
 // 結果頁的情勒追蹤卡：依第六部分「支持我們」那題的回答 + 有沒有真的點過按鈕，給不同的台詞
 function ctaCard(nick){
@@ -932,7 +939,7 @@ function ctaCard(nick){
   else if(went.ig)lines=[`謝謝你點進我們的 IG，${nick}${aw.ig?`，還待了 ${awayTxt(aw.ig)}`:''}。`,'如果你沒有按追蹤就跑回來了……','我們看不到，但你自己知道。'];
   else lines=['這份表單我們熬了好幾個晚上做出來，你只花了五分鐘填完。','追蹤只需要一秒。','我們算過了，這很划算。'];
   if(saidVid&&!went.video)lines.push('另外，你也說你看完新影片了，但你沒點過影片連結。我們也很想相信你。');
-  else if(saidVid&&aw.video!==undefined&&aw.video<20)lines.push(`另外，你說你看完新影片了。你在影片那邊待了 ${awayTxt(aw.video)}。我們的影片沒有那麼短。`);
+  else if(saidVid&&aw.video!==undefined&&aw.video<CONFIG.videoThankSec)lines.push(`另外，你說你看完新影片了。你在影片那邊待了 ${awayTxt(aw.video)}。我們的影片有 10 分鐘。`);
   return `<div class="card cta" id="cta"><div class="rt" id="ctaT">在你離開之前……</div>
     <div id="ctaB">${lines.map(l=>`<p class="rp" style="margin:6px 0 0">${l}</p>`).join('')}</div>
     <div class="ctab" id="ctaBtns"><a class="btn" data-r="ig" href="${CONFIG.igUrl}" target="_blank" rel="noopener">追蹤 IG ${esc(CONFIG.igHandle)}</a><a class="btn" data-r="yt" href="${CONFIG.ytChannelUrl}" target="_blank" rel="noopener">訂閱 YouTube</a><a class="btn w" data-r="video" href="${CONFIG.videoUrl}" target="_blank" rel="noopener">看最新影片</a></div>
@@ -941,16 +948,19 @@ function ctaCard(nick){
 }
 function bindCta(nick){
   const t=$('#ctaT'),b=$('#ctaB'),no=$('#ctaNo');let refused=0;
-  $('#ctaBtns').addEventListener('click',e=>{const a=e.target.closest('[data-r]');if(!a)return;
+  $('#ctaBtns').addEventListener('click',e=>{const a=e.target.closest('[data-r]');if(!a||stats.oldFan)return;
     play('ding');
     t.textContent='🥹 謝謝你，你是好人';
     b.innerHTML=`<p class="rp" style="margin:6px 0 0">${refused?'我們就知道你剛剛只是嘴硬。':'研究小組已將您的人格類型額外標註為「善良」。'}</p>`;
     no.style.display='none'});
   const old=$('#ctaOld');
-  old.onclick=()=>{play('congcong');setTimeout(()=>play('airhorn'),350);
+  // 領過讚美之後就是老粉：之後點連結、跳出去再回來都不再觸發任何吐槽/感謝，讚美也會被保存
+  const praise=()=>{
     t.textContent='✨ 神聖讚美已降臨 ✨';
     b.innerHTML=[`${nick}，你早就追蹤了。`,'研究小組全體起立，向你致上最崇高的敬意。','你是本研究的天選之人、節目的守護神、演算法的光。','從今天起，你的 MBTI 後面可以多加一個字母：S（Supporter）。'].map(l=>`<p class="rp" style="margin:6px 0 0">${l}</p>`).join('');
     old.parentElement.style.display='none';no.style.display='none'};
+  old.onclick=()=>{stats.oldFan=true;save();play('congcong');setTimeout(()=>play('airhorn'),350);praise()};
+  if(stats.oldFan)praise();
   const msgs=['你確定嗎？做這份表單的人現在眼睛還是紅的。',`研究小組已把「${nick}」寫進小本本。`,'好吧。我們會假裝沒事。','（研究小組正在哭）'];
   no.onclick=()=>{play('sadviolin');shake($('#cta'));
     b.innerHTML=`<p class="rp" style="margin:6px 0 0">${msgs[Math.min(refused,msgs.length-1)]}</p>`;
@@ -1050,7 +1060,7 @@ function testPanel(){
     if(e.target.tagName==='B'){d.classList.toggle('min');return}
     const b=e.target.closest('button');if(!b)return;const c=S[b.dataset.i][1];
     if(c.ig)ans.ig=c.ig;else delete ans.ig;
-    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;
+    stats.went={...(c.went||{})};stats.away={...(c.away||{})};stats.goOut=null;stats.oldFan=false;
     if(!ans.nick)ans.nick='測試人';
     reveal(true);setTimeout(()=>{const x=$('#cta');if(x)x.scrollIntoView({behavior:'smooth',block:'center'})},100);
   };
