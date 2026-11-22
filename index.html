@@ -257,6 +257,87 @@ a.rec .nm{color:#1a73e8}
 #dlov .card{max-width:420px;width:100%;margin:0;text-align:center;max-height:94vh;overflow-y:auto}
 #dlov img{width:100%;max-height:58vh;object-fit:contain;border:1px solid #dadce0;border-radius:6px;-webkit-touch-callout:default}
 #dlov .ctab{justify-content:center;margin:14px 0 6px}
+/* ===== Google 表單其他題型：下拉式選單、段落、日期、時間、單選方格、檔案上傳 ===== */
+.ddw{position:relative;display:inline-block;min-width:220px;max-width:100%}
+.ddb{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;background:#fff;border:1px solid #dadce0;border-radius:4px;padding:8px 8px 8px 16px;font-size:14px;font-family:inherit;color:#202124;cursor:pointer;text-align:left;min-height:42px}
+.ddb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ddb svg{flex:none}
+.ddh{display:none}
+.ddm{position:absolute;left:0;top:0;min-width:100%;width:max-content;max-width:min(92vw,560px);max-height:min(60vh,360px);overflow-y:auto;background:#fff;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.18);z-index:30;padding:8px 0;animation:upfade .12s ease-out}
+.ddm div{padding:12px 16px;font-size:14px;cursor:pointer;line-height:1.4}
+.ddm div:hover{background:#f1f3f4}
+.ddm div.sel{background:#e8eaed}
+.ddm .ph{color:#5f6368}
+.ta{border:none;border-bottom:1px solid #dadce0;width:100%;font-size:14px;line-height:1.6;font-family:inherit;padding:6px 0;outline:none;resize:none;background:transparent;min-height:34px;overflow:hidden}
+.ta:focus{border-bottom:2px solid #673ab7}
+.tac{font-size:12px;color:#5f6368;margin-top:6px;text-align:right}
+.tin{border:none;border-bottom:1px solid #dadce0;font-size:16px;font-family:inherit;padding:6px 0;outline:none;background:transparent;color:#202124;min-width:150px}
+.tin:focus{border-bottom:2px solid #673ab7}
+.tinl{font-size:12px;color:#5f6368;margin-bottom:4px}
+.grid{overflow-x:auto;margin:0 -8px}
+.grid table{border-collapse:separate;border-spacing:0 6px;width:100%;font-size:14px}
+.grid th{font-weight:400;color:#5f6368;font-size:13px;padding:0 6px 4px;text-align:center;min-width:64px}
+.grid td{background:#f8f9fa;padding:12px 6px;text-align:center}
+.grid td:first-child{text-align:left;padding-left:14px;border-radius:4px 0 0 4px;min-width:90px}
+.grid td:last-child{border-radius:0 4px 4px 0}
+.grid input{width:20px;height:20px;accent-color:#673ab7;margin:0;cursor:pointer}
+.upi{font-size:13px;color:#5f6368;margin-bottom:12px}
+.upb{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #dadce0;border-radius:4px;color:#1a73e8;font-size:14px;font-weight:500;font-family:inherit;padding:8px 16px;cursor:pointer}
+.upb:hover{background:#f6fafe}
+.upc{display:flex;align-items:center;gap:12px;border:1px solid #dadce0;border-radius:4px;padding:8px 10px;max-width:420px}
+.upc img{width:44px;height:44px;object-fit:cover;border-radius:4px;flex:none;background:#f1f3f4}
+.upc .nm{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upc small{font-size:12px;color:#5f6368}
+.upx{background:none;border:none;cursor:pointer;padding:4px;display:flex;border-radius:50%}
+.upx:hover{background:#f1f3f4}
+.upbar{height:4px;background:#e8eaed;border-radius:2px;overflow:hidden;margin:6px 0 4px}
+.upbar i{display:block;height:100%;width:0;background:#1a73e8;transition:width 1.2s ease-out}
+.upn{margin-top:12px;padding:10px 12px;background:#ede7f6;border-radius:6px;font-size:13px;line-height:1.7;color:#4527a0;animation:upfade .3s ease-out}
+#upov{position:fixed;inset:0;z-index:3600;background:rgba(32,33,36,.6);display:flex;align-items:center;justify-content:center;padding:12px;animation:upfade .15s ease-out}
+.upw{background:#fff;border-radius:8px;width:720px;max-width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.3);animation:upin .2s ease-out;font-family:"Google Sans",Roboto,"Noto Sans TC",Arial,sans-serif}
+.uph{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;font-size:20px;color:#202124}
+.uptabs{display:flex;gap:4px;padding:0 12px;border-bottom:1px solid #dadce0;overflow-x:auto}
+.uptabs span{padding:12px 14px;font-size:14px;color:#5f6368;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent}
+.uptabs span.on{color:#1a73e8;border-color:#1a73e8;font-weight:500}
+.upbody{flex:1;overflow-y:auto;padding:16px 20px;min-height:300px}
+.updz{border:2px dashed #dadce0;border-radius:8px;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#5f6368;font-size:15px;text-align:center;padding:20px;transition:background .2s}
+.updz.over{background:#e8f0fe;border-color:#1a73e8}
+.updz .or{font-size:13px}
+.upbr{background:#1a73e8;color:#fff;border:none;border-radius:4px;padding:9px 22px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer}
+.fs{background:#fff;border-radius:14px 14px 0 0;width:100%;max-width:520px;max-height:86vh;display:flex;flex-direction:column;animation:fsup .28s ease-out;font-family:-apple-system,"PingFang TC","Noto Sans TC",Roboto,sans-serif}
+@keyframes fsup{from{transform:translateY(100%)}to{transform:none}}
+#fsov{position:fixed;inset:0;z-index:3700;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:center}
+.fsh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px}
+.fsh b{font-size:17px;font-weight:600}
+.fsh button{background:none;border:none;color:#007aff;font-size:17px;cursor:pointer;padding:4px;font-family:inherit}
+.fsh button:disabled{color:#c7c7cc;cursor:default}
+.fsseg{display:flex;margin:4px 16px 10px;background:#eeeef0;border-radius:9px;padding:2px}
+.fsseg span{flex:1;text-align:center;padding:6px;font-size:13px;border-radius:7px;cursor:pointer;color:#3c3c43}
+.fsseg span.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.15);font-weight:600}
+.fsb{overflow-y:auto;padding:0 0 24px}
+.fsg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.fsg div{position:relative;cursor:pointer;aspect-ratio:1;background:#f2f2f7}
+.fsg img{width:100%;height:100%;object-fit:cover;display:block}
+.fsg div.on img{opacity:.75}
+.fsg div.on:after{content:"";position:absolute;right:6px;bottom:6px;width:22px;height:22px;border-radius:50%;border:2px solid #fff;background:#007aff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") no-repeat center}
+.fsn{text-align:center;font-size:12px;color:#8e8e93;line-height:1.6;margin:16px 24px 0}
+.fsa{display:flex;align-items:center;gap:12px;padding:8px 16px;cursor:pointer;border-bottom:1px solid #f2f2f7}
+.fsa img{width:56px;height:56px;object-fit:cover;border-radius:6px;background:#f2f2f7}
+.fsa b{display:block;font-size:15px;font-weight:500}
+.fsa small{font-size:13px;color:#8e8e93}
+.upbc{font-size:14px;color:#5f6368;margin-bottom:12px}
+.upbc b{color:#202124;font-weight:500}
+.upg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.upg div{border:1px solid #dadce0;border-radius:8px;overflow:hidden;cursor:pointer;position:relative;transition:box-shadow .15s}
+.upg div:hover{box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.upg div.on{outline:3px solid #1a73e8;outline-offset:-3px}
+.upg div.on:after{content:"";position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:50%;background:#1a73e8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E") no-repeat center}
+.upg img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#f1f3f4}
+.upg small{display:block;padding:8px;font-size:12px;color:#202124;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upf{display:flex;align-items:center;gap:8px;padding:12px 20px;border-top:1px solid #dadce0}
+.upf .upsel{flex:1;font-size:13px;color:#5f6368;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upf button:disabled{background:#e8eaed;color:#9aa0a6;cursor:default}
+.opn img{width:72px;height:72px;object-fit:cover;border-radius:6px;float:right;margin:0 0 6px 10px}
 /* 手機版：比照 Google 表單手機排版（卡片寬 90%、內距 24px、16px 字、進度條在按鈕上方獨立一列） */
 @media(max-width:520px){
   .wrap{width:90%;max-width:none;padding:0;margin:12px auto 32px}
@@ -275,6 +356,17 @@ a.rec .nm{color:#1a73e8}
   .clear{margin-left:auto;font-size:15px}
   .foot{font-size:13px;margin-top:20px}
   .slots span{width:50px;height:62px;font-size:34px;line-height:58px}
+  .ddw{width:100%}
+  .ddb,.ddm div{font-size:16px}
+  .ddm{max-width:calc(100vw - 48px);width:100%}
+  .ta{font-size:16px}
+  .grid table{font-size:14px}
+  .grid th{min-width:40px;font-size:12px;padding:0 2px 4px}
+  .grid td{padding:12px 2px}
+  .grid td:first-child{min-width:76px;padding-left:10px;font-size:13px}
+  .upg{grid-template-columns:repeat(2,1fr)}
+  .upbody{padding:12px}
+  .updz{min-height:200px}
 }
 </style>
 </head>
@@ -443,7 +535,9 @@ const ICO={
   robot:["M12 8V4H8","M6 8h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2z","M2 14h2","M20 14h2","M15 13v2","M9 13v2"],
   ff:["M13 19l9-7-9-7v14z","M2 19l9-7-9-7v14z"],
   help:["M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z","M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3","M12 17h.01"],
-  search:["M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z","M21 21l-4.3-4.3"]};
+  search:["M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z","M21 21l-4.3-4.3"],
+  upload:["M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4","M17 8l-5-5-5 5","M12 3v12"],
+  image:["M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z","M11 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0z","M21 15l-5-5L5 21"]};
 const ICO_FILL={play:1,pause:1};
 const ic=(n,sz=18,c='currentColor',fill)=>`<svg class="ico" width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="${fill||ICO_FILL[n]?c:'none'}" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICO[n].map(d=>`<path d="${d}"/>`).join('')}</svg>`;
 const starsHTML=n=>[0,1,2,3,4].map(i=>ic('star',14,'currentColor',i<n)).join('');
@@ -656,10 +750,14 @@ const TYPES={
  SPED:{n:'已讀亂回型',tag:'題目還沒讀完，答案已經送出了',hidden:'不到兩分鐘就填完',
   o:'SPED 型為本研究之隱藏人格。受試者以不到兩分鐘的時間完成整份問卷，速度遠超人類閱讀題目所需之極限。研究小組推測其作答流程為：看到選項 → 點 → 下一頁，中間不經過大腦。此類型在群組中通常以「蛤？」「喔」「哈哈」完成所有對話。',
   f:[['S','Skip','跳過','說明文字一律跳過，包括這一段。'],['P','Press','狂按','手指永遠比思考快一步。'],['E','Eh?','蛤？','最常說的話是「蛤？剛剛說什麼？」'],['D','Done','已完成','重點不是做對，是做完。']],
-  m:'BOTS（效率至上，誰都不看題目）',e:'寫了很長的說明文字的人（例如本研究小組）',j:'外送員、速讀補習班反面教材、電競選手'}
+  m:'BOTS（效率至上，誰都不看題目）',e:'寫了很長的說明文字的人（例如本研究小組）',j:'外送員、速讀補習班反面教材、電競選手'},
+ PUZZ:{n:'Puzz 本人型',tag:'你不是來做人格測驗的，你是來認親的',hidden:'照片上傳與人機驗證都只選了 Puzz',
+  o:'PUZZ 型為本研究之隱藏人格。受試者在照片上傳題中選擇了 Puzz，又在要求選出奶蛙的人機驗證中，九張圖只點了 Puzz 一張。兩次機會，零次猶豫。研究小組無法再用人類的人格類型描述受試者，因為受試者顯然已經認為自己就是 Puzz。本報告以下內容僅供參考，受試者的真實身分請洽本節目吉祥物。',
+  f:[['P','Puzzle','拼圖本能','看到缺了一塊的東西，就想把自己補上去。'],['U','Us','自己人','講到這個節目時，主詞會自動變成「我們」。'],['Z','Zoom in','聚焦','九張圖擺在眼前，眼裡只看得到一張。'],['Z','Zero doubt','零猶豫','選 Puzz 的時候，手指從來沒有停頓過。']],
+  m:'SIMP（一起當節目的頭號粉絲）',e:'奶蛙（很可愛，但不是 Puzz）',j:'節目吉祥物代言人、應援團長、剪輯師的精神支柱'}
 };
 // 稀有度（% ，研究小組「估算」的，加起來剛好 100）
-const RARE={BRUH:11.1,LAZY:11.8,SOLO:10.6,OKAY:8.3,MEME:8.7,SALT:7.2,OOPS:6.8,SIMP:5.7,LOUD:5.1,FOOD:4.5,LIAR:4.3,CHAD:3.6,NERD:3.4,FXCK:2.9,RICK:2.2,SHIT:1.8,SPED:1.3,BOTS:0.7};
+const RARE={BRUH:11.1,LAZY:11.8,SOLO:10.6,OKAY:8.3,MEME:8.7,SALT:7.2,OOPS:6.8,SIMP:5.7,LOUD:5.1,FOOD:4.5,LIAR:4.3,CHAD:3.6,NERD:3.4,FXCK:2.9,RICK:2.2,SHIT:1.8,SPED:1.3,BOTS:0.4,PUZZ:0.3};
 const tierOf=p=>p<1?['傳說','#e37400',5]:p<3?['史詩','#9334e6',4]:p<6?['稀有','#1a73e8',3]:p<10?['少見','#188038',2]:['常見','#5f6368',1];
 
 const pages=[
@@ -670,54 +768,62 @@ const pages=[
   {id:'know',type:'radio',q:'您是否做過 MBTI 測驗？',req:true,opts:['有，且記得自己的類型','有，但忘記了','沒有']},
   {id:'mytype',type:'text',q:'承上題，請填寫您的 MBTI 類型（例：INFP）',d:'若選擇「有，且記得自己的類型」則為必填。'}
  ]},
- {title:'第一部分：能量來源（E / I）',desc:'請依照您「最直覺」的反應作答。1 為非常不同意，5 為非常同意。',qs:[
-  {id:'e1',type:'scale',q:'參加完多人聚會後，我通常會覺得充滿活力。',req:true},
-  {id:'e2',type:'scale',q:'比起打電話，我更喜歡傳訊息溝通。',req:true},
-  {id:'e3',type:'scale',q:'在陌生的團體中，我通常會主動開啟話題。',req:true},
-  {id:'e4',type:'radio',q:'週末沒有任何安排時，您通常會：',req:true,opts:['主動約朋友出門','待在家裡休息、追劇','看當天心情決定','跟別人說有事，其實在家']},
-  {id:'e5',type:'radio',q:'在班級或公司的聊天群組中，您通常是：',req:true,opts:['主動發起話題的人','偶爾回應幾句','潛水，只看不說話','只會丟貼圖']}
+ // sv：選擇題換算成 1～5 分，給 mbti() 算 E/I、S/N 用（原本是量表題）
+ {title:'第一部分：能量來源（E / I）',desc:'請依照您「最直覺」的反應作答。想太久的話，研究小組會知道。',qs:[
+  {id:'e1',type:'radio',q:'你在家辦生日派對，門鈴響了，門外站著一個沒有人認識的人，手上還提著雞排。你會：',req:true,sv:[5,1,3,3],opts:['熱情開門：來者都是客，雞排放這邊就好','隔著門冷冷地說：你沒有被邀請','收下雞排，然後說：你沒有被邀請','他問「請問這裡是小明家嗎？」，我回：不知道，我的身材很曼妙']},
+  {id:'e2',type:'radio',q:'兩個朋友在聚會上吵到快打起來，你會：',req:true,sv:[5,3,2,3],opts:['站到中間大喊：要打去練舞室打！','掏出手機開始錄，然後留友看','默默說一句「我個人嚴厲斥責這種行為」，然後繼續吃','勸到一半發現自己也有話要說，直接加入戰局']},
+  // 上傳題：只能選研究小組雲端硬碟裡的四張圖（奶蛙／奶蛋／奶龍／Puzz），真的照片一律拒收
+  {id:'up',type:'upload',q:'請上傳一張您在多人聚會上的照片。',d:'為確認您真的有朋友，請提供一張聚會照片作為佐證。照片將由研究小組三位成員輪流以肉眼鑑定。',req:true},
+  {id:'e4',type:'radio',q:'{n}，你暗戀的人就坐在你斜前方。你會：',req:true,opts:['下課直接走過去：「可以跟你要 IG 嗎？」','默默數著：從我這咩，到你那咩，一共五步。然後一步都沒有走','請朋友幫忙傳話，結果朋友跟他在一起了','在他面前小聲說「露比醬～」，看他會不會回「嗨～」']},
+  {id:'e5',type:'select',q:'在班級或公司的群組裡，您通常是：',req:true,opts:['發起話題的人（然後沒有人回）','負責回「哈哈」的人（其實沒有笑）','潛水，已讀 99+ 但從不說話','負責丟「何意味」的人','負責回「+1」的人','負責把 Threads 貼文轉進來說「留友看」的人','負責把話題聊死的人','有人幫忙訂便當時，負責說「謝謝你，我的超人」的人','群組管理員（但不知道為什麼）','被踢出去又被加回來的人','凌晨在群組問「有人醒著嗎」的人','輕輕的我退了群組，正如我輕輕的來']}
  ]},
  {title:'第二部分：資訊處理（S / N）',desc:'本部分探討您接收與處理資訊的偏好。',qs:[
-  {id:'s1',type:'scale',q:'比起直覺，我更相信實際經驗與具體數據。',req:true},
-  {id:'s2',type:'scale',q:'我常常會想像一些不太可能發生的情境。',req:true},
-  {id:'s3',type:'scale',q:'洗澡時，我會在腦中跟不存在的人吵架，而且通常會吵贏。',req:true},
-  {id:'s4',type:'radio',q:'看到天上的雲，您第一個想到的是：',req:true,opts:['等一下會不會下雨','它長得好像某種動物','好想吃棉花糖','這題跟 MBTI 有什麼關係']},
-  {id:'s5',type:'radio',q:'聊天時，您比較常說「竟然」還是「居然」？',d:'近期網路觀察指出，此用語偏好可能與人格類型存在關聯。',req:true,opts:['竟然','居然','兩個都會用','我現在開始懷疑自己了']},
+  {id:'s1',type:'radio',q:'朋友穿了一件綠底白格子的新衣服，問你覺得像什麼。你說：',req:true,sv:[5,3,1,2],opts:['綠底白格子。不然呢','像棋盤','我看倒像一塊綠豆糕','像我上學期被當掉的那張答案卡']},
+  {id:'s2',type:'radio',q:'你在雪山救了一隻受傷的狐狸。多年後，一位白衣女子出現在你家門口，她開口說：',req:true,sv:[3,5,1,1],opts:['「我是那隻狐狸，我來報恩了」','「不，我是那隻醬板鴨」','「你好，我是管委會，這個月管理費還沒繳」','我不會開門，我會先從貓眼確認她是不是詐騙集團']},
+  // 單選方格＋「每欄只能選擇一個回應」：五個級分各用一次，等於幫五個項目排名次
+  {id:'s3',type:'grid',oneCol:true,q:'{n}，請用「ㄅ級分～ㄦ級分」為以下五項評分。',d:'每個級分只能給一次。',req:true,
+   rows:['這份問卷','本問卷的出題者','曾國城在古蹟抽菸','你這學期的期末考','奶蛙'],cols:['ㄅ','ㄆ','ㄇ','ㄈ','ㄦ']},
+  {id:'s4',type:'radio',q:'{n}，朋友半夜傳來一張完全看不懂的抽象梗圖，沒有附任何文字。你的反應是：',req:true,opts:['回他：何意味？','盯著圖看了十秒：我的刀盾？？？','看不懂，但先轉到群組說「留友看」','看不懂，但還是回「笑死」，然後已讀']},
+  {id:'s5',type:'radio',q:'聊天時，您比較常說「竟然」還是「居然」？',d:'研究指出，說「竟然」的人跟說「居然」的人無法成為朋友。（研究小組自己說的）',req:true,opts:['竟然','居然','我都說「蛤？」','讀完這題之後，我兩個都不會講了']},
   // 聽力題：音檔是奇諾比奧唱歌，題目跟選項都不能透露；依實際播放秒數給評語
-  {id:'au',type:'audio',q:'【聽力測驗】請聆聽以下音檔後回答問題。',d:'本題用於評估受試者之聽覺資訊處理風格，請於安靜環境下作答。',req:true,qq:'聽完音檔後，請問您認為音檔中的這位（？）想表達的是：',opts:['對生活的熱愛','他正在練習發聲','他在呼救','聽完了，但我需要一點時間平復','我不確定那是不是人類','我沒聽，可以直接下一題嗎']}
+  {id:'au',type:'audio',q:'【聽力測驗】請聆聽以下音檔後回答問題。',d:'本題用於評估受試者之聽覺資訊處理風格，請於安靜環境下作答。',req:true,qq:'聽完音檔後，請問您認為音檔中的這位（？）想表達的是：',opts:['對生活的熱愛','這首歌在隱喻作者懷才不遇，屢遭貶官的抑鬱心情','他在呼救','聽完了，但我需要一點時間平復','我不確定那是不是人類','我沒聽，可以直接下一題嗎']}
  ]},
  {title:'第三部分：決策方式（T / F）',desc:'本部分探討您在做決定時的考量方式。',qs:[
-  {id:'t1',type:'scale',q:'做決定時，我比較重視邏輯分析而非個人感受。',req:true},
+  {id:'t1',type:'radio',q:'朋友半夜打給你，哭著說他失戀了。你的第一句話是：',req:true,sv:[5,1,4,3],opts:['先別哭，我們來分析一下你哪裡做錯了','（陪他一起哭，而且哭得比他還大聲）','他說要衝去前任家樓下，我說：你的出發點很好，但先別出發','嗯嗯，然後呢（同時在打電動）']},
   {id:'t2',type:'radio',q:'朋友問您「我新剪的頭髮好看嗎？」但其實真的很醜，您會：',req:true,opts:['誠實說不好看','說「很有個性耶」','說「頭髮會長回來的」','當場笑出來']},
   {id:'t3',type:'scale',q:'我認為本問卷的出題者是天才。',req:true,l:'天才',r:'曠世奇才'},
+  {id:'tw',type:'text',q:'承上題，請用「三個字」形容本問卷的出題者。',d:'回應驗證：長度必須剛好為 3 個字。',req:true},
   {id:'t4',type:'radio',q:'您是否覺得這份問卷越來越奇怪？',req:true,opts:['沒有','完全沒有','有']},
   {id:'t5',type:'radio',q:'朋友傳訊息說「我五分鐘後到」，您的第一反應是：',req:true,opts:['相信他','自動乘以三','信他五分鐘會到，還是信我是秦始皇','已讀']},
-  {id:'t6',type:'radio',q:'被朋友氣到說不出話時，您通常會：',req:true,opts:['深呼吸，算了','說「你很煩欸」','你這個……ㄇㄨㄚˇ 吉！！','直接封鎖']}
+  {id:'t6',type:'radio',q:'被朋友氣到說不出話時，您通常會：',req:true,opts:['深呼吸，算了','說「你很煩欸」','你這個……ㄇㄨㄚˇ 吉！！','直接封鎖','瞪著他說：擱供？','說：我買幾個橘子去，你就在此地，不要走動']}
  ]},
  {title:'第四部分：生活風格（J / P）',desc:'本部分探討您安排生活的方式。',qs:[
-  {id:'j1',type:'radio',q:'您通常如何規劃旅行？',req:true,opts:['提早三個月排好詳細行程','出發前一週大概查一下','到了當地再說','規劃是什麼？可以吃嗎？'],late:3},
+  {id:'j1',type:'radio',q:'您通常如何規劃旅行？',req:true,opts:['提早三個月排好詳細行程','出發前一週大概查一下','到了當地再說','規劃是什麼？可以吃嗎？','不用規劃，像崴崴孟孟一樣，跟另一半說走就走一起去日本'],late:3},
   {id:'j2',type:'radio',q:'{n}，報告死線是明天早上 9 點，現在凌晨 2 點，你正在：',req:true,opts:['早就交了','做最後檢查','剛打開 Word','填這份問卷']},
+  {id:'jdt',type:'date',q:'承上題，請選擇你打算「真正開始」寫報告的日期。',d:'系統將於當天提醒你。（騙你的，系統不會。）',req:true},
   {id:'jd',type:'scale',q:'面對死線時，您的狀態比較接近：',req:true,l:'匆匆忙忙<br>連滾帶爬',r:'從從容容<br>遊刃有餘'},
   // 倒數題：卡片完整出現在畫面上才開始倒數，時間到自動選 weird 那個選項並鎖住
   // 倒數題：選什麼就刪什麼（連正確答案 7207 也刪），時間到系統代選 weird（出題者自肥選項），鎖住取消不了
   {id:'cd',type:'radio',timed:5,weird:4,right:0,q:'【限時作答】請在 5 秒內心算：<br>(37 × 48 + 1296 ÷ 0.27) − √7921 + 6! = ?',d:'禁止使用計算機。研究小組會知道。',req:true,opts:['7207','7027','6487','7317','出題者是天才，我已追蹤 @mbti_survivalguide']},
-  {id:'j3',type:'checkbox',q:'以下哪些是您常說的話？（可複選）',req:true,opts:['我等一下就做','明天再說','好啦好啦','蛤？','其他：']},
-  {id:'j4',type:'radio',q:'{n}，請問你目前填寫問卷的姿勢是？',req:true,opts:['坐著','躺著','趴著','蹲在馬桶上']}
+  {id:'j3',type:'checkbox',q:'以下哪些是您常說的話？（可複選）',req:true,opts:['我等一下就做','明天再說','好啦好啦','蛤？','讀書人的事，能算偷麼？','其他：']},
+  {id:'j4',type:'select',q:'{n}，請問你目前填寫問卷的姿勢是？',req:true,opts:['坐著','躺著','趴著','蹲在馬桶上','站在雲林','在課堂上假裝抄筆記','上班中（老闆就在後面）','倒立','我不想說']}
  ]},
  {title:'第五部分：網路使用習慣',desc:'本部分調查{n}的網路使用狀況，作為人格分析之輔助指標。',qs:[
   {id:'vid',type:'video',req:true,q:'【研究說明】請先觀看以下影片後再繼續作答',qq:'看完影片後，您的感想是：',opts:['已看完，獲益良多','已看完，小孩愛吃','看完了，但我不知道我剛剛看了什麼','看完了，有一點想哭','我需要再看一次才能回答','我沒看，可以直接下一題嗎']},
   {id:'m1',type:'scale',q:'{n}，請評估你目前的心情。',req:true,l:'不嘻嘻',r:'嘻嘻'},
   {id:'m2',type:'radio',listen:true,q:'【閱讀理解】朋友打電話向您說明他今晚的行程，以下為通話逐字稿：',req:true,qq:'請問朋友最後打算怎麼回家？',opts:['搭計程車回桃園新竹','開車回桃園新竹','住在台北','好啦隨便啦我沒有辦法跟你溝通']},
   {id:'m3',type:'scale',q:'拍團體合照時，我常覺得自己偷感很重。',d:'{n}，我們看過你的合照了。請誠實作答。',req:true},
+  {id:'tg',type:'grid',q:'{n}，請評估以下對象在你心中的重要程度。',d:'每一列都必須作答。',req:true,rows:['媽媽','Wi-Fi','期末報告的組員','手機電量','本問卷出題者'],cols:['非常重要','普通','誰？']},
   {id:'m4',type:'radio',q:'{n}，最近一次讓你被洗腦、一直在腦中重播的東西是：',req:true,opts:BRAINWASH}
  ]},
  {title:'第六部分：作答品質確認',desc:'{n}，為確保資料品質，以下題目將確認你的作答狀態。請不要緊張，我們只是在看你。',qs:[
   {id:'cap',type:'captcha',q:'請完成人機驗證，以確認您不是機器人。',req:true},
   {id:'nick2',type:'text',q:'請再次輸入您在第一頁填寫的暱稱。',req:true},
   {id:'q1',type:'radio',q:'這題我們再 ven 一次：{n}，你前面的答案都是認真作答的嗎？',req:true,opts:['是','是的','對','你 ven 題真多']},
-  {id:'q2',type:'radio',q:'{n}，走在路上，朋友突然對你大喊一句話，你最怕聽到的是：',req:true,opts:['「你錢包掉了」','「你拉鍊沒拉」','「你後面有車」','「你是不是 INFP」']},
+  {id:'q2',type:'radio',q:'{n}，走在路上，朋友突然對你大喊一句話，你最怕聽到的是：',req:true,opts:['「你錢包掉了」','「你拉鍊沒拉」','「你後面有車」','「你是不是 INFP」','「麥可！！！」']},
   {id:'q67',type:'radio',q:'{n}，為確認你仍在專心作答，請問 6 + 7 等於多少？',req:true,opts:['13','67','42','我數學不好']},
-  {id:'q3',type:'radio',q:'{n}，填到這裡，你目前的狀態比較接近：',req:true,opts:['還很有精神','有點累了','誰敢想，我竟然填到了這裡','我已經不知道我在填什麼了']}
+  {id:'q3',type:'radio',q:'{n}，填到這裡，你目前的狀態比較接近：',req:true,opts:['還很有精神','有點累了','誰敢想，我竟然填到了這裡','我已經不知道我在填什麼了']},
+  {id:'pa',type:'para',q:'{n}，請簡單說明你為什麼會填到這裡。',d:'本題為段落題，最少 5 個字。研究小組會逐字閱讀（真的）。',req:true}
  ]},
  {title:'填答確認',desc:'最後一頁了，{n}。感謝你的耐心作答，我們會想你的。',qs:[
   {id:'res',type:'radio',q:'{n}，你是否希望在提交後立即查看你的個人化人格分析結果？',req:true,opts:['是','是（我就是為了這個才填的）']},
@@ -754,6 +860,17 @@ function qHTML(q){
     if(stats.cdAuto)h+=`<div class="wmsg w-cd">${ic('info',14)} ${stats.cdSelf?'感謝您的支持。此選項一經選擇，無法取消。':'時間到，系統已代為作答。本題已鎖定，無法取消。'}</div>`;
   }
   else if(q.type==='text')h+=`<input class="ti" data-id="${q.id}" placeholder="你的回答" value="${esc(ans[q.id]||'')}">`;
+  else if(q.type==='para'){const v=ans[q.id]||'';h+=`<textarea class="ta" data-id="${q.id}" rows="1" placeholder="你的回答">${esc(v)}</textarea><div class="tac">已輸入 ${[...v.trim()].length} 字</div>`}
+  else if(q.type==='date')h+=`<div class="tinl">日期</div><input class="tin" type="date" data-id="${q.id}" value="${esc(ans[q.id]||'')}">`;
+  else if(q.type==='time')h+=`<div class="tinl">時間</div><input class="tin" type="time" data-id="${q.id}" value="${esc(ans[q.id]||'')}">`;
+  // 下拉式選單：外觀照 Google 表單（方框＋三角形，點開是浮動白色清單），背後藏一個真的 select 共用計分邏輯
+  else if(q.type==='select')h+=`<div class="ddw"><button type="button" class="ddb" aria-haspopup="listbox"><span>${ans[q.id]!==undefined?q.opts[ans[q.id]]:'選擇'}</span><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z" fill="#5f6368"/></svg></button><select class="ddh" name="${q.id}" tabindex="-1" aria-hidden="true"><option value="">選擇</option>${q.opts.map((o,k)=>`<option value="${k}"${ans[q.id]===k?' selected':''}>${o}</option>`).join('')}</select></div>`;
+  else if(q.type==='grid'){const v=ans[q.id]||{};
+    h+=`<div class="grid"><table><thead><tr><th></th>${q.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${q.rows.map((r,i)=>`<tr><td>${r}</td>${q.cols.map((c,k)=>`<td><input type="radio" name="${q.id}__${i}" value="${k}" aria-label="${r}：${c.replace(/<br>/g,'')}"${v[i]===k?' checked':''}></td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+  else if(q.type==='upload'){const u=UP[ans[q.id]];
+    h+=`<div class="upi">上傳 1 個支援的檔案：圖片。大小上限為 10 MB。</div>`+(u
+      ?`<div class="upc"><img src="${CAP_IMG[u.k]}" alt=""><div class="nm">${u.f}</div><button class="upx" type="button" aria-label="移除檔案">${ic('close',18,'#5f6368')}</button></div><div class="upn">${ic('image',14)} ${u.msg}</div>`
+      :`<button class="upb" type="button">${ic('upload',18,'#1a73e8')}新增檔案</button>`)}
   else if(q.type==='audio')h+=`<div class="aup"><button class="pp" aria-label="播放">${ic('play',24,'#fff')}</button><div class="bar"><i></i></div><span class="tm">0:00 / --:--</span></div><div class="auc">${ic('headset',14)} 建議配戴耳機・listening_test_final_v3.mp3</div><div class="qt" style="font-size:15px;margin:18px 0 6px">${nk(q.qq)}</div><div class="opts">${q.opts.map((o,k)=>optHTML(q,o,k)).join('')}</div>`;
   else if(q.type==='video')h+=`<div class="thumb" id="thumb"><div class="cap">填答說明｜人格心理學研究小組</div><div class="play"></div><div class="dur">0:28</div></div><div class="qt" style="font-size:15px;margin:18px 0 6px">${nk(q.qq)}</div><div class="opts">${q.opts.map((o,k)=>optHTML(q,o,k)).join('')}</div>`;
   else if(q.type==='scale')h+=`<div class="scale"><span class="lb">${q.l||'非常不同意'}</span>${[1,2,3,4,5].map(n=>`<label><span>${n}</span><input type="radio" name="${q.id}" value="${n}"${ans[q.id]===n?' checked':''}></label>`).join('')}<span class="lb">${q.r||'非常同意'}</span></div>`;
@@ -779,19 +896,31 @@ function render(){
     hooks[q.id]&&hooks[q.id](card,q);
   });
 }
-function answered(q){const v=ans[q.id];return q.type==='checkbox'?v&&v.length:q.type==='text'?v&&v.trim():v!==undefined}
+const STR_T={text:1,para:1,date:1,time:1};
+function answered(q){const v=ans[q.id];
+  if(q.type==='grid')return !!v&&q.rows.every((_,i)=>v[i]!==undefined);
+  return q.type==='checkbox'?v&&v.length:STR_T[q.type]?v&&v.trim():v!==undefined}
+// 回應驗證（Google 表單的「回應驗證」功能）：回傳錯誤訊息，空字串代表通過
+const TW_MSG=['回應長度必須剛好為 3 個字。','是三個字。不是兩個，也不是四個。','研究小組相信你數得到三。','一、二、三。三個字。你可以的。'];
+const CHECK={
+  tw(v){const n=[...v].length;if(n===3)return '';stats.twBad=(stats.twBad||0)+1;
+    mark('twBad','SALT',Math.min(6,stats.twBad*2),`受試者在「用三個字形容出題者」一題中，輸入了不是三個字的答案共 ${stats.twBad} 次（例如「${esc(v.slice(0,12))}」，共 ${n} 個字）。研究小組判斷其對出題者有很多話想說，三個字根本不夠。`);
+    return TW_MSG[Math.min(stats.twBad,TW_MSG.length)-1]+`（目前 ${n} 個字）`},
+  pa(v){const n=[...v].length;return n>=5?'':`回應長度必須至少為 5 個字。目前 ${n} 個字，研究小組覺得你可以再多說一點。`}
+};
 function validate(){
   let first=null;
   pages[page].qs.forEach(q=>{
     const need=q.req||(q.id==='mytype'&&ans.know===0);if(!need)return;
-    const ok=answered(q),c=$('#q_'+q.id);c.classList.toggle('bad',!ok);if(!ok&&!first)first=c});
+    const ok=answered(q),c=$('#q_'+q.id);c.classList.toggle('bad',!ok);if(!ok&&!first)first=c;
+    if(ok&&CHECK[q.id]){const m=CHECK[q.id](ans[q.id].trim());warn(c,'vd',m);if(m){shake(c);play('error');if(!first)first=c}}});
   if(page===0&&!checkMbti()&&!first)first=$('#q_mytype');
   if($('#q_nick2')&&ans.nick2&&!checkNick()&&!first)first=$('#q_nick2');
   if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return false}return true;
 }
 function bindNav(){
   const b=$('#back');if(b)b.onclick=()=>{page--;render()};
-  $('#clear').onclick=()=>{pages[page].qs.forEach(q=>{if(q.id==='cap'||(q.timed&&stats.cdAuto))return;delete ans[q.id]});render();toast('已清除此頁的回答')};
+  $('#clear').onclick=()=>{pages[page].qs.forEach(q=>{if(q.id==='cap'||(q.timed&&stats.cdAuto))return;delete ans[q.id];if(q.type==='upload'&&ans.up===undefined&&HIST.up&&HIST.up.length)stats.upCleared=true;if(q.type==='upload'||q.type==='select')mark(q.id)});render();toast('已清除此頁的回答')};
   const nx=$('#next');
   if(page<N-1){nx.onclick=()=>{if(validate()){page++;render()}};return}
   const dodge=()=>{if(stats.submitDodge>=3)return;stats.submitDodge++;
@@ -802,11 +931,47 @@ function bindNav(){
 }
 
 const MB_OK=/^[EI][NS][TF][JP]$/i;
-document.addEventListener('input',e=>{const id=e.target.dataset&&e.target.dataset.id;if(!id)return;ans[id]=e.target.value;const c=$('#q_'+id);if(!c)return;c.classList.remove('bad');
-  if(id==='mytype')warn(c,'mb','')});
+// ===== 仿 Google 表單下拉選單 =====
+function ddClose(){const m=$('.ddm');if(m)m.remove()}
+document.addEventListener('click',e=>{
+  const it=e.target.closest('.ddm [data-v]');
+  if(it){const w=it.closest('.ddw'),s=w.querySelector('select'),v=it.dataset.v;ddClose();
+    w.querySelector('.ddb span').textContent=v===''?'選擇':Q[s.name].opts[+v];
+    if(s.value!==v){s.value=v;s.dispatchEvent(new Event('change',{bubbles:true}))}return}
+  const b=e.target.closest('.ddb');
+  if(b){const w=b.closest('.ddw'),had=w.querySelector('.ddm');ddClose();if(had)return;
+    const s=w.querySelector('select'),q=Q[s.name],vals=['',...q.opts.map((_,k)=>String(k))];
+    w.insertAdjacentHTML('beforeend',`<div class="ddm" role="listbox">${vals.map(v=>`<div role="option" data-v="${v}" class="${s.value===v?'sel':''}${v===''?' ph':''}">${v===''?'選擇':q.opts[+v]}</div>`).join('')}</div>`);
+    // 跟 Google 一樣：清單蓋在欄位上，目前選的那一項對齊欄位的位置
+    const m=w.querySelector('.ddm'),cur=m.querySelector('.sel')||m.firstElementChild;
+    const off=Math.min(cur.offsetTop,Math.max(0,w.getBoundingClientRect().top-8));m.style.top=-off+'px';
+    if(cur.offsetTop>off)m.scrollTop=cur.offsetTop-off;
+    return}
+  if(!e.target.closest('.ddm'))ddClose();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')ddClose()});
+const hasDup=v=>{const c=Object.values(v||{});return new Set(c).size<c.length};
+function gridDup(card,q){warn(card,'dup',hasDup(ans[q.id])?'每欄只能選擇一個回應':'')}
+function onTextIn(t){const id=t.dataset&&t.dataset.id;if(!id)return;ans[id]=t.value;const c=$('#q_'+id);if(!c)return;c.classList.remove('bad');
+  if(id==='mytype')warn(c,'mb','');
+  if(c.querySelector('.w-vd'))warn(c,'vd','');
+  if(t.tagName==='TEXTAREA'){t.style.height='auto';t.style.height=t.scrollHeight+'px';const n=c.querySelector('.tac');if(n)n.textContent=`已輸入 ${[...t.value.trim()].length} 字`}}
+document.addEventListener('input',e=>onTextIn(e.target));
 document.addEventListener('change',e=>{
   const t=e.target;
+  if(t.dataset&&t.dataset.id){onTextIn(t);return}  // 日期、時間欄位有些瀏覽器只觸發 change
+  // 單選方格：每一列是一組 radio，name 是「題號__列」
+  const gm=t.name&&t.name.match(/^(\w+)__(\d+)$/);
+  if(gm&&Q[gm[1]]){const q=Q[gm[1]],r=+gm[2],k=+t.value,v={...(ans[q.id]||{})},card=$('#q_'+q.id);
+    v[r]=k;ans[q.id]=v;
+    // 每欄只能選一個：重複時跳紅字警告，但不擋人（分析時再吐槽）
+    if(q.oneCol){gridDup(card,q);if(hasDup(v))play('error')}
+    (HIST[q.id]=HIST[q.id]||[]).push(`${q.rows[r]}：${q.cols[k].replace(/<br>/g,'')}`);
+    if(answered(q))card.classList.remove('bad');
+    if(q.id==='tg'&&r===0&&k===2){play('bruh');toast('你在「媽媽」那一列選了「誰？」。我們不會說什麼，但媽媽會。')}
+    return}
   const id=t.name;if(!id||!Q[id])return;const q=Q[id],card=$('#q_'+id);
+  if(q.type==='select'&&t.value===''){delete ans[id];mark(id);return}
   if(q.type==='checkbox')ans[id]=[...card.querySelectorAll('input:checked')].map(i=>+i.value);else ans[id]=+t.value;
   // 記下「使用者自己點的」答案（系統之後自動改的不算），用來判斷 BOTS 隱藏人格
   (stats.usr=stats.usr||{})[id]=q.type==='checkbox'?[...ans[id]]:ans[id];
@@ -918,7 +1083,10 @@ const hooks={
   },
   cd(card,q){countdown(card,q)},
   au(card){auBind(card)},
-  cap(card){const l=card.querySelector('#rcl');if(l)l.onclick=()=>capOpen(card)}
+  cap(card){const l=card.querySelector('#rcl');if(l)l.onclick=()=>capOpen(card)},
+  up(card,q){upBind(card,q)},
+  s3(card,q){gridDup(card,q)},
+  pa(card){const t=card.querySelector('.ta');if(t.value)t.style.height=t.scrollHeight+'px'}
 };
 
 // ===== 聽力題（奇諾比奧唱歌）=====
@@ -995,10 +1163,14 @@ function countdown(card,q){
       if(left<=0){clearInterval(CD.iv);cdLock(card,q,false)}
     },1000)};
   CD.start=start;
+  // 跟「桃園新竹」逐字稿那題一樣：卡片要完整出現在畫面上方 10%～下方 20% 之間（正常閱讀的位置），而且停住 1 秒才開始。
+  // 一路滑到底、滑過去都不算；一離開就重新計時。卡片比那個範圍還高（小手機）的話，佔滿範圍也算。
+  let tm;
   const io=new IntersectionObserver(es=>{
-    const e=es[0];if(stats.cdDone||!document.body.contains(card))return io.disconnect();
-    if(e.isIntersecting&&(e.intersectionRatio>=.95||e.intersectionRect.height>=innerHeight*.8))start();
-  },{threshold:[0,.25,.5,.75,.9,.95,1]});
+    const e=es[0];clearTimeout(tm);if(stats.cdDone||!document.body.contains(card))return io.disconnect();
+    const full=e.intersectionRatio>=.99||(e.rootBounds&&e.intersectionRect.height>=e.rootBounds.height*.98);
+    if(e.isIntersecting&&full)tm=setTimeout(start,1000);
+  },{rootMargin:'-10% 0px -20% 0px',threshold:[...Array(51).keys()].map(i=>i/50).concat(.99)});
   io.observe(card);
 }
 const CD_DEL=['答錯了。系統已刪除此選項。','這個也不對，已刪除。','你還在算嗎？已刪除。','已刪除。研究小組開始擔心你了。'];
@@ -1111,6 +1283,106 @@ function capCard(){
     <div class="rs" style="margin:0">綠框＝選對・紅框＝選錯・紫框＝Puzz・黃虛線＝漏選</div>
     <p class="rp" style="margin-top:10px">判定結果：${capSum(c)}</p></div>`;
 }
+// ===== 檔案上傳題（第二部分）=====
+// 外觀照抄 Google 表單的「新增檔案」＋檔案挑選視窗。真的檔案一律拒收（不讀取內容、不會上傳到任何地方），
+// 只能從「我的雲端硬碟」挑研究小組準備好的四張圖。e：換算成 E/I 計分用的 1～5 分
+const UP=[
+  {k:'frog1',f:'IMG_聚會_你看那個人.jpg',n:'奶蛙',type:'SALT',pts:3,e:3,snd:'frog',
+    msg:'鑑定結果：照片中的人物沒有在參與聚會，而是一臉得意地指著畫面外的某個人。研究小組推測他正在說「欸你看那個人穿那樣」。',
+    ana:'受試者上傳的聚會照片中，人物正一臉得意地指著畫面外的某人。研究小組判斷其在聚會中的主要功能為「負責講別人八卦」，次要功能為「負責笑」。'},
+  {k:'egg',f:'IMG_聚會_我在這.png',n:'奶蛋',type:'SOLO',pts:4,e:1,snd:'boing',
+    msg:'鑑定結果：照片中的人物已將自己縮成一顆蛋，眼神放空，沒有手、沒有腳，也沒有參與任何對話。研究小組推測他正在腦中規劃回家的路線。',
+    ana:'受試者以一顆眼神放空的奶蛋作為自己在聚會上的照片。研究小組確認其在多人場合會自動進入「蛋形態」，直到回家才孵化。'},
+  {k:'dragon',f:'IMG_聚會_大家都到了嗎.jpg',n:'奶龍',type:'LOUD',pts:4,e:5,snd:'vineboom',
+    msg:'鑑定結果：照片中的人物笑得非常燦爛，正熱情地對鏡頭揮手。但研究小組仔細檢查後發現，背景是一片空白——這場聚會只有他一個人。',
+    ana:'受試者上傳的聚會照片為一隻熱情揮手的奶龍，但畫面中沒有任何其他人。研究小組判斷其社交熱情極高，只是其他人還沒到（或不會來）。'},
+  {k:'puzz',f:'puzz_官方授權照.jpg',n:'Puzz',type:'SIMP',pts:6,e:3,snd:'congcong',
+    msg:'鑑定結果：研究小組三位成員看到這張照片後，同時放下了手上的便當。<br>四張照片，你選了 Puzz。不是奶蛙，不是奶蛋，是 Puzz。<br>我們熬夜做這份問卷的每一個晚上，在這一秒突然都有了意義。<br>謝謝你，我的超人。',
+    ana:'受試者被要求上傳自己在聚會上的照片，卻選了本節目吉祥物 Puzz。研究小組三位成員當場放下便當，其中一位哭到隱形眼鏡掉出來。該照片（Puzz 的）已被列印出來，貼在剪輯電腦的螢幕旁邊。'}
+];
+function upRefresh(card,q){
+  if(!document.body.contains(card))return;
+  const d=document.createElement('div');d.innerHTML=qHTML(q);const n=d.firstElementChild;card.replaceWith(n);upBind(n,q);return n;
+}
+function upBind(card,q){
+  const b=card.querySelector('.upb');if(b)b.onclick=()=>upOpen(card,q);
+  const x=card.querySelector('.upx');if(x)x.onclick=()=>{
+    const u=UP[ans.up];delete ans.up;mark('up');(HIST.up=HIST.up||[]).push('移除'+(u?u.n:''));
+    if(stats.usr)delete stats.usr.up;play('tick');upRefresh(card,q);save()};
+}
+function upOpen(card,q){
+  if($('#upov'))return;
+  let tab='up',sel=null;
+  const ov=document.createElement('div');ov.id='upov';document.body.appendChild(ov);document.body.style.overflow='hidden';
+  ov.innerHTML=`<div class="upw" role="dialog" aria-label="插入檔案"><div class="uph"><span>插入檔案</span><button class="upx" data-u="x" aria-label="關閉">${ic('close',22,'#5f6368')}</button></div>
+    <div class="uptabs"><span data-t="up" class="on">上傳</span><span data-t="drive">我的雲端硬碟</span><span data-t="recent">最近使用</span></div>
+    <div class="upbody"></div>
+    <div class="upf"><span class="upsel"></span><button class="gbtn t" data-u="x">取消</button><button class="gbtn" data-u="ins" disabled>插入</button></div></div>`;
+  const body=ov.querySelector('.upbody'),ins=ov.querySelector('[data-u="ins"]'),info=ov.querySelector('.upsel');
+  const close=()=>{ov.remove();document.body.style.overflow=''};
+  const pick=i=>{sel=i;ins.disabled=false;info.textContent='已選取：'+UP[i].f;play('tick')};
+  const grid=()=>`<div class="upg">${UP.map((u,i)=>`<div data-i="${i}" class="${sel===i?'on':''}"><img src="${CAP_IMG[u.k]}" alt="" draggable="false"><small>${u.f}</small></div>`).join('')}</div>`;
+  const show=t=>{tab=t;ov.querySelectorAll('.uptabs span').forEach(s=>s.classList.toggle('on',s.dataset.t===t));
+    if(t==='up'){
+      // 「瀏覽」打開的是假的相簿（fakeLib），不是手機真正的檔案選擇器；拖曳進來的檔案也只是擋掉，完全不讀取
+      body.innerHTML=sel!==null&&tab==='up'&&body.dataset.dev==='1'
+        ?`<div class="upbc">已從裝置選取 1 個檔案</div><div class="upc"><img src="${CAP_IMG[UP[sel].k]}" alt=""><div class="nm">${UP[sel].f}</div><button class="upbr" data-u="browse" style="padding:6px 14px">重選</button></div>`
+        :`<div class="updz">${ic('image',56,'#bdc1c6')}<div>將檔案拖曳到這裡</div><div class="or">或</div><button class="upbr" data-u="browse">瀏覽</button></div>`;
+      const dz=body.querySelector('.updz');
+      if(dz){dz.ondragover=e=>{e.preventDefault();dz.classList.add('over')};dz.ondragleave=()=>dz.classList.remove('over');
+        dz.ondrop=e=>{e.preventDefault();dz.classList.remove('over');play('error');shake(dz);toast('拖曳功能目前僅開放給研究小組成員。請按「瀏覽」。')}}}
+    else body.innerHTML=(t==='drive'?`<div class="upbc">我的雲端硬碟 › <b>研究小組核可的照片</b></div>`:`<div class="upbc">最近使用（你最近用的都是這幾張，對吧？）</div>`)+grid()};
+  ov.onclick=e=>{
+    if(e.target===ov)return close();
+    const tb=e.target.closest('[data-t]');if(tb)return show(tb.dataset.t);
+    const tile=e.target.closest('.upg div');
+    if(tile){pick(+tile.dataset.i);body.dataset.dev='';body.querySelectorAll('.upg div').forEach(d=>d.classList.toggle('on',+d.dataset.i===sel));return}
+    const a=e.target.closest('[data-u]');if(!a)return;
+    if(a.dataset.u==='x')close();
+    else if(a.dataset.u==='browse')fakeLib(i=>{pick(i);body.dataset.dev='1';show('up')});
+    else if(a.dataset.u==='ins'&&sel!==null){close();upSend(card,q,sel)}
+  };
+  // 跟真的檔案挑選器一樣，先轉一下載入中再出現內容
+  body.innerHTML='<div class="upld"><i></i>載入中…</div>';
+  setTimeout(()=>{if(document.body.contains(ov)&&body.querySelector('.upld'))show('up')},650);
+}
+// 假的手機相簿：從畫面底部滑上來，只有四張照片，其他照片「已被研究小組隱藏」
+function fakeLib(done){
+  let s=null,view='ph';
+  const ov=document.createElement('div');ov.id='fsov';document.body.appendChild(ov);
+  ov.innerHTML=`<div class="fs" role="dialog" aria-label="選擇照片"><div class="fsh"><button data-f="x">取消</button><b>選擇照片</b><button data-f="ok" disabled>完成</button></div>
+    <div class="fsseg"><span data-s="ph">照片</span><span data-s="al">相簿</span></div><div class="fsb"></div></div>`;
+  const b=ov.querySelector('.fsb'),ok=ov.querySelector('[data-f="ok"]');
+  const AL=[['最近項目',4],['研究小組精選',4],['自拍',0,'已隱藏'],['截圖',0,'已隱藏'],['聚會',0,'你沒有去過聚會'],['美食',0,'研究小組肚子餓，先吃掉了'],['黑歷史',0,'研究小組已備份','「黑歷史」相簿是空的，因為研究小組已經全部備份帶走了。需要贖回請私訊我們的 IG。']];
+  const draw=()=>{ov.querySelectorAll('.fsseg span').forEach(x=>x.classList.toggle('on',x.dataset.s===view));
+    b.innerHTML=view==='ph'
+      ?`<div class="fsg">${UP.map((u,i)=>`<div data-i="${i}" class="${s===i?'on':''}"><img src="${CAP_IMG[u.k]}" alt="" draggable="false"></div>`).join('')}</div>
+        <p class="fsn">共 4 張照片<br>其餘 2,847 張照片已被研究小組判定為「不適合出現在聚會照片中」，並自動隱藏。</p>`
+      :AL.map(([n,c,t],i)=>`<div class="fsa" data-a="${i}"><img src="${c?CAP_IMG[UP[i%4].k]:''}" alt=""${c?'':' style="visibility:hidden"'}><div><b>${n}</b><small>${c}${t?`・${t}`:''}</small></div></div>`).join('')};
+  ov.onclick=e=>{
+    if(e.target===ov){ov.remove();return}
+    const f=e.target.closest('[data-f]');
+    if(f){if(f.dataset.f==='x')ov.remove();else if(s!==null){ov.remove();done(s)}return}
+    const sg=e.target.closest('[data-s]');if(sg){view=sg.dataset.s;draw();return}
+    const al=e.target.closest('[data-a]');
+    if(al){const [n,c,,msg]=AL[+al.dataset.a];if(c){view='ph';draw()}else{play('bruh');toast(msg||`「${n}」相簿是空的。研究小組已經幫你處理掉了。`)}return}
+    const t=e.target.closest('.fsg div');if(t){s=+t.dataset.i;ok.disabled=false;play('tick');draw()}
+  };
+  draw();
+}
+// 假上傳：進度條 → 研究小組鑑定中 → 完成
+function upSend(card,q,i){
+  const u=UP[i],box=card.querySelector('.upb');if(!box)return;
+  box.outerHTML=`<div class="upc"><img src="${CAP_IMG[u.k]}" alt=""><div style="flex:1;min-width:0"><div class="nm">${u.f}</div><div class="upbar"><i></i></div><small class="ups">上傳中…</small></div></div>`;
+  const bar=card.querySelector('.upbar i'),st=card.querySelector('.ups');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width='100%'));
+  setTimeout(()=>{if(st)st.textContent='研究小組鑑定中…（三個人正在輪流看）'},1300);
+  setTimeout(()=>{
+    ans.up=i;(stats.usr=stats.usr||{}).up=i;(HIST.up=HIST.up||[]).push(u.n);
+    mark('up',u.type,u.pts,u.ana);play(u.snd);
+    const n=upRefresh(card,q);if(n)n.classList.remove('bad');save();
+  },2300);
+}
 function dodger(card,q,k,stat,finalText,onMove){
   const lab=card.querySelector(`.opt[data-k="${k}"]`);if(stats[stat]>=5)return;
   let last=0;
@@ -1124,16 +1396,45 @@ function dodger(card,q,k,stat,finalText,onMove){
 
 const picks={
   age(){checkAR()},role(){checkAR()},
-  e2(v){mark('e2',v>=4?'SOLO':0,1,'受試者明顯偏好文字溝通，對語音通話存在迴避傾向。')},
-  e1(v){mark('e1',v>=4?'LOUD':0,2,'受試者在多人聚會結束後反而充滿活力，研究小組懷疑其靠吸收他人的社交電量維生。')},
-  e3(v){if(v>=4)mark('e3','LOUD',2,'受試者在陌生團體中會主動開啟話題，現場氣氛不一定因此變好，但一定變吵。');else mark('e3',v<=2?'SOLO':0,1,'受試者在陌生團體中鮮少主動開啟話題。')},
-  e4(v){if(v===0)mark('e4','LOUD',3,'受試者在週末沒有安排時會主動約人出門，研究小組在此向被約的朋友致意。');else mark('e4',v===3?'SOLO':0,3,'受試者在週末無安排時傾向對外宣稱「有事」，此為典型的社交防禦機制，常見於社交電量長期不足之個體。')},
-  e5(v){if(v===0)mark('e5','LOUD',3,'受試者為群組中主動發起話題的人，該群組成員開啟「靜音通知」的比例因此顯著上升。');else mark('e5',v>=2?'SOLO':0,v===2?3:2,v===2?'受試者在群組中長期潛水，已讀所有訊息但不回應，屬於高度觀察型、低度參與型的社群行為。':'受試者在群組中以貼圖作為主要溝通方式，有效避免了任何需要組織語言的情境。')},
-  s1(v){mark('s1',v>=4?'NERD':0,1,'受試者高度信任實際數據。本問卷的數據可能會讓其非常失望。')},
-  s2(v){mark('s2',v>=4?'OOPS':0,1,'受試者常想像不太可能發生的情境，經追問後發現，其中約九成為自己出糗的畫面。')},
-  s3(v){mark('s3',v>=4?'SALT':0,2,'受試者經常在淋浴情境中與虛構對象爭論並取得勝利，顯示其在現實生活中可能仍有尚未說出口的話。')},
-  s4(v){if(v===2)mark('s4','FOOD',4,'受試者看到天上的雲，第一個想到的是棉花糖。研究小組判斷其填答時處於飢餓狀態，建議先去吃點東西。');else mark('s4',v===3?'BRUH':0,3,'受試者對題目設計提出質疑，其批判性思考能力值得肯定，但本研究決定不予理會。')},
-  s5(v){mark('s5',v===3?'BRUH':0,2,'受試者在「竟然／居然」一題中陷入自我懷疑，此為正常現象，約有八成受試者會在作答後默默觀察自己的用字。')},
+  e1(v){mark('e1',...[['LOUD',3,'一個陌生人提著雞排出現在生日派對門口，受試者直接開門說「來者都是客」。研究小組懷疑其靠吸收他人的社交電量維生，或是單純想吃雞排。'],
+      ['SOLO',3,'面對提著雞排的陌生人，受試者隔著門冷冷說出「你沒有被邀請」。研究小組肯定其社交邊界感，但也替那塊雞排感到可惜。'],
+      ['SALT',4,'受試者收下陌生人的雞排之後，才告訴對方「你沒有被邀請」。研究小組判斷其社交策略為：東西可以進來，人不行。'],
+      ['BRUH',3,'陌生人問「請問這裡是小明家嗎？」，受試者回答「不知道，我的身材很曼妙」。研究小組反覆閱讀五次，仍無法找出兩者之間的關聯，對方應該也是。']][v])},
+  e2(v){mark('e2',...[['LOUD',3,'受試者在朋友吵架時會站到中間大喊「要打去練舞室打」。研究小組判斷其為《紫禁之巔》的忠實觀眾，也是聚會的氣氛擔當。'],
+      ['MEME',3,'受試者在朋友快打起來時，第一反應是錄影並「留友看」。研究小組建議其至少先把快門聲關掉。'],
+      ['OKAY',3,'受試者面對衝突，選擇說一句「我個人嚴厲斥責這種行為」後繼續吃東西。研究小組認為這是最有禮貌的袖手旁觀。'],
+      ['FXCK',3,'受試者原本想勸架，勸到一半發現自己也有話要說，直接加入戰局。研究小組統計，現場原本兩個人在吵，受試者到場後變成三個。']][v])},
+  e4(v){mark('e4',...[['LOUD',3,'受試者面對暗戀對象，選擇下課直接走過去要 IG。研究小組判斷其社交電量充足，被拒絕的承受力也是。'],
+      ['SOLO',4,'受試者面對坐在斜前方的暗戀對象，只在心裡默數「從我這咩，到你那咩，一共五步」，然後一步都沒有走。研究小組認為這五步，可能要走到畢業。'],
+      ['OOPS',3,'受試者請朋友幫忙傳話，結果朋友跟暗戀對象在一起了。研究小組在此致上最深的慰問，並建議其重新檢視自己的朋友名單。'],
+      ['MEME',3,'受試者在暗戀對象面前小聲說「露比醬～」，測試對方會不會回「嗨～」。研究小組認為這是最精準的同類篩選法：會回的，就是對的人。']][v])},
+  e5(v){const M=[['LOUD',3,'受試者會在群組中主動發起話題，即使經常沒有人回。研究小組敬佩其屢敗屢戰的精神。'],
+      ['OKAY',1,'受試者在群組中負責回「哈哈」，研究小組確認其在打出「哈哈」時並沒有笑。'],
+      ['SOLO',3,'受試者在群組中長期潛水，已讀 99+ 但從不說話，屬於高度觀察型、低度參與型的社群行為。'],
+      ['BRUH',3,'受試者在群組中的主要功能為丟出「何意味」。研究小組認為這三個字精準概括了大部分的群組對話。'],
+      ['OKAY',3,'受試者在群組中的主要功能為回覆「+1」。從未提出過自己的意見，但從未缺席任何一次 +1。'],
+      ['MEME',3,'受試者負責把 Threads 貼文轉進群組並附上「留友看」。研究小組推測該群組有一半的訊息是受試者轉的。'],
+      ['FXCK',3,'受試者自認是群組中負責把話題聊死的人。研究小組推測其最常用的結尾句為「喔」。'],
+      ['SIMP',3,'每當有人幫忙訂便當，受試者都會回覆「謝謝你，我的超人」。研究小組認為每個群組都需要一個這樣的人。'],
+      ['BRUH',3,'受試者是群組管理員，但不知道自己為什麼是。研究小組推測是建群的人先退出了。'],
+      ['CHAD',3,'受試者曾被踢出群組又被加回來，顯示其在群體中具備難以被消滅的存在感。'],
+      ['LOUD',4,'受試者自承是凌晨在群組問「有人醒著嗎」的人。研究小組確認：大家都醒著，只是不想回。'],
+      ['SOLO',4,'受試者在下拉式選單中滑到最底，選擇了「輕輕的我退了群組，正如我輕輕的來」。研究小組推測群組裡沒有人發現其離開，正如沒有人發現其加入。']];
+    mark('e5',...(M[v]||[0]))},
+  s1(v){mark('s1',...[['NERD',2,'朋友問新衣服像什麼，受試者回答「綠底白格子」。研究小組判斷其讀〈雅量〉時，應該完全無法理解那幾個朋友到底在吵什麼。'],
+      ['OKAY',2,'受試者說朋友的新衣服像棋盤，與〈雅量〉裡第一位朋友的答案相同。研究小組認為這是最安全的標準答案。'],
+      ['FOOD',4,'受試者看著朋友的新衣服說「我看倒像一塊綠豆糕」。研究小組判斷其國文課有在聽，而且看什麼都像食物。'],
+      ['OOPS',3,'受試者看到綠底白格子，第一個想到的是自己被當掉的答案卡。研究小組判斷其考試陰影已嚴重到開始影響審美。']][v])},
+  s2(v){mark('s2',...[['SIMP',2,'受試者相信被救的狐狸會回來報恩。研究小組欣賞其純愛戰神般的世界觀，但提醒現實中的狐狸通常不會。'],
+      ['MEME',4,'受試者預測白衣女子會說「不，我是那隻醬板鴨」。研究小組確認其看過那支 AI 武俠短片，而且不只看了一次。'],
+      ['BRUH',3,'在一個狐狸報恩的奇幻故事裡，受試者認為門口的白衣女子是來收管理費的。研究小組佩服其能在任何浪漫情境中精準回到現實。'],
+      ['NERD',2,'受試者在奇幻故事中仍堅持先從貓眼確認對方是不是詐騙集團。研究小組肯定其防詐意識，想像力則有待加強。']][v])},
+  s4(v){mark('s4',...[['NERD',2,'受試者收到一張看不懂的抽象梗圖，第一反應是回「何意味？」要求對方解釋。研究小組認為其追求真相的精神可嘉，但梗圖被解釋之後就不好笑了。'],
+      ['BRUH',3,'受試者盯著一張抽象梗圖看了十秒，最後只能說出「我的刀盾？？？」（what the dog doin’）。研究小組完全理解這種困惑。'],
+      ['MEME',3,'受試者完全看不懂朋友傳來的梗圖，但仍第一時間轉到群組並附上「留友看」。研究小組判斷其轉發速度已超越理解速度。'],
+      ['OKAY',2,'受試者看不懂梗圖，仍回覆「笑死」然後已讀。研究小組統計，網路上約有七成的「笑死」是在這種情況下打出來的。']][v])},
+  s5(v){mark('s5',...[['NERD',1,'受試者偏好使用「竟然」。研究小組提醒，根據本題說明，你和說「居然」的人無法成為朋友。'],['NERD',1,'受試者偏好使用「居然」。研究小組提醒，根據本題說明，你和說「竟然」的人無法成為朋友。'],['SOLO',2,'受試者聊天時一律以「蛤？」取代所有驚訝用語，語言效率極高，對話品質極低。'],['BRUH',3,'受試者讀完這題之後，「竟然」和「居然」兩個都不會講了。此為正常現象，約有八成受試者會在作答後默默觀察自己的用字。']][v])},
+  t1(v){mark('t1',...[['FXCK',3,'朋友失戀打來哭訴，受試者的第一句話是「我們來分析一下你哪裡做錯了」。研究小組判斷其安慰人的方式，跟寫期末報告的檢討章節差不多。'],['SIMP',3,'朋友失戀打來哭訴，受試者陪著一起哭，而且哭得比當事人還大聲，最後變成當事人在安慰受試者。'],['OKAY',3,'朋友失戀後說要衝去前任家樓下，受試者以「你的出發點很好，但先別出發」成功攔截。研究小組認為這是年度最佳勸退文案。'],['SOLO',2,'朋友失戀打來哭訴，受試者一邊回「嗯嗯，然後呢」，一邊打電動。研究小組推測朋友其實聽得到按鍵聲。']][v])},
   t2(v){if(v===1||v===2)return mark('t2','OKAY',3,v===1?'受試者面對朋友失敗的新髮型，選擇以「很有個性耶」帶過。研究小組認定此為教科書等級的社交求生技巧。':'受試者面對朋友失敗的新髮型，選擇以「頭髮會長回來的」安慰對方，等於承認了很醜，但非常溫柔。');mark('t2',v===0||v===3?'FXCK':0,v===0?5:3,v===0?'受試者面對朋友的新髮型，選擇直接給予負面回饋。其語言輸出缺乏一般社交緩衝，於常模中屬罕見的極端值。':'受試者在朋友髮型失敗時當場發笑，屬於即時且無法控制的情緒外放反應。')},
   t3(v,card){
     if(v===5){warn(card,'fix','');if(!stats.t3fixed)mark('t3','SIMP',6,'受試者在無任何外部壓力的情況下，自願給予出題者「曠世奇才」之最高評價。此結果已由研究小組列印並裱框。');return}
@@ -1150,8 +1451,11 @@ const picks={
   t6(v){if(v===2)play('muaji','t6');else stopCh('t6');
     if(v===0)return mark('t6','OKAY',3,'受試者被氣到說不出話時，選擇深呼吸並說「算了」。研究小組提醒，這些「算了」可能正在某處默默累積。');
     if(v===1)return mark('t6','FXCK',2,'受試者被激怒時直接說出「你很煩欸」，情緒輸出零延遲。');
+    if(v===5)return mark('t6','SALT',4,'受試者被氣到時，以朱自清〈背影〉的「我買幾個橘子去，你就在此地，不要走動」回應，在不帶任何髒字的情況下當了對方的爸爸。研究小組認為這是最有文化的反擊。');
+    if(v===4)return mark('t6','SALT',4,'受試者被朋友氣到極限時，會瞪著對方說「擱供？」。研究小組提醒：聽到這兩個字還繼續講的人，通常不會有好下場。');
     mark('t6',v===2?'MEME':v===3?'SOLO':0,v===2?3:2,v===2?'受試者在情緒激動時的第一反應為「你這個……ㄇㄨㄚˇ 吉！！」。經研究小組比對，確認受試者即為最弱萌騎士本人。':'受試者處理人際衝突的方式為直接封鎖，效率極高，後續維護成本極低。')},
   j1(v){if(v===0)return mark('j1','NERD',3,'受試者會提早三個月排好旅行行程，同行友人可能在出發前就已經累了。');
+    if(v===4)return mark('j1','SIMP',3,'受試者的旅行規劃是像崴崴孟孟一樣，跟另一半說走就走一起去日本。研究小組祝兩位旅途暢行無阻，並提醒記得帶護照。');
     if(v===3)return mark('j1','FOOD',4,'受試者聽到「規劃」一詞時，首先確認其是否可以食用。研究小組判斷食物在其大腦中擁有最高處理權限。');
     mark('j1',v===2?'LAZY':0,1,'受試者的旅行哲學為「到了再說」，此哲學可能同樣適用於其人生。')},
   j2(v){if(v===3){play('bruh');toast('被抓包了吧，快去寫報告')}
@@ -1168,6 +1472,7 @@ const picks={
     const gi=q.opts.indexOf('已讀不回');mark('j3b',gi>-1&&cur.includes(gi)?'SOLO':0,3,'受試者主動承認自己會已讀不回，此誠實程度高於多數同類型個體。');
     const has=s=>{const i=q.opts.indexOf(s);return i>-1&&cur.includes(i)};
     mark('j3c',has('好啦好啦')||has('你決定就好')?'OKAY':0,2,'受試者的常用語包含「好啦好啦」或「你決定就好」，研究小組判斷其人生中約有七成的決定是別人幫忙做的。');
+    mark('j3e',has('讀書人的事，能算偷麼？')?'LIAR':0,3,'受試者的常用語包含孔乙己的「讀書人的事，能算偷麼？」。研究小組推測其作業有一半是「借」來的，而且從來沒有還過。');
     mark('j3d',has('已購買，小孩愛吃')?'FOOD':0,3,'受試者的常用語包含「已購買，小孩愛吃」。研究小組無法確認其是否真的有小孩，但可以確認其真的有買。');
     if(v!==other||!t.checked)return;
     if(extras.length){
@@ -1183,8 +1488,16 @@ const picks={
     }
   },
   cd(v,card,t,q){cdPick(card,q,v)},
-  j4(v){if(v===3){play('fart');toast('感謝您的誠實。')}
-    mark('j4',v===3?'SHIT':v===1?'LAZY':0,v===3?8:1,v===3?'受試者確認作答時位於馬桶上。本研究對其坦誠致上敬意，並建議其適時起身，以維持下肢血液循環。':'受試者以平躺姿勢完成作答，研究小組判斷其可能隨時會睡著。')},
+  j4(v){if(v===3||v===8){play('fart');toast(v===3?'感謝您的誠實。':'不用說，我們懂。')}
+    if(v===7){play('boing');toast('請錄影並私訊我們的 IG。')}
+    const M=[[0],['LAZY',1,'受試者以平躺姿勢完成作答，研究小組判斷其可能隨時會睡著。'],[0],
+      ['SHIT',8,'受試者確認作答時位於馬桶上。本研究對其坦誠致上敬意，並建議其適時起身，以維持下肢血液循環。'],
+      ['MEME',3,'受試者表示自己正「站在雲林」填寫本問卷。研究小組不確定這是姿勢還是地點，但決定尊重。'],
+      ['LAZY',4,'受試者正在課堂上假裝抄筆記，實際上在填寫本問卷。研究小組代替其授課老師表示心寒。'],
+      ['LAZY',4,'受試者在上班時間、老闆就在後面的情況下填寫本問卷。研究小組佩服其膽識，並建議其把螢幕亮度調低。'],
+      ['LIAR',4,'受試者宣稱以倒立姿勢作答。研究小組不相信，但如果是真的，請務必錄影。'],
+      ['SHIT',5,'受試者拒絕透露作答姿勢。研究小組根據多年經驗判斷：會說「我不想說」的人，通常坐在馬桶上。']];
+    mark('j4',...(M[v]||[0]))},
   m1(v){mark('m1',v<=2?'BRUH':0,1,'受試者自評目前心情為「不嘻嘻」，與其正在填寫本問卷之處境相符。')},
   m2(v){mark('m2',v===3?'MEME':v===0?'BRUH':0,v===3?3:2,v===3?'受試者在閱讀理解題中選擇以「我沒有辦法跟你溝通」作答，研究小組判斷其已完全理解這段通話的精神。':'受試者在一段高度重複、資訊量極低的逐字稿中，仍成功萃取出正確答案，閱讀耐性顯著高於常模。')},
   m3(v){mark('m3',v>=4?'OOPS':0,3,'受試者自評在團體合照中「偷感很重」，屬於典型的鏡頭迴避型反應。研究小組推測其在合照中的位置通常是最邊邊，且只露出半張臉。')},
@@ -1197,7 +1510,7 @@ const picks={
     warn(card,'au','');
     if(v===5&&stats.auSec)return mark('au2','LIAR',3,`受試者明明聽了 ${Math.max(1,Math.round(stats.auSec))} 秒，卻選擇「我沒聽」。研究小組理解，有些東西聽過之後，只想假裝沒聽過。`);
     const M=[['SIMP',2,'受試者認為音檔中的演唱者正在表達「對生活的熱愛」。研究小組欣賞其正向解讀能力，但不同意。'],
-      ['NERD',2,'受試者認為音檔中的演唱者「正在練習發聲」。研究小組認為這個解釋過於寬容。'],
+      ['MEME',3,'受試者認為奇諾比奧的歌聲「在隱喻作者懷才不遇，屢遭貶官的抑鬱心情」。研究小組查證後確認：奇諾比奧確實沒有被升官過。'],
       ['OOPS',3,'受試者認為音檔中的演唱者「在呼救」。研究小組認為這是所有選項中最接近事實的一個。'],
       ['BRUH',3,'受試者聽完音檔後表示需要一點時間平復。研究小組也是。'],
       ['MEME',3,'受試者無法確認音檔中的聲音是否來自人類。答案揭曉：不是，是一朵香菇。'],
@@ -1219,9 +1532,10 @@ const picks={
   },
   q2(v){if(v===2)play('car','q2');else stopCh('q2');
    if(v<=1)return mark('q2','OOPS',3,v===0?'受試者最怕在路上聽到「你錢包掉了」，其腦中可能已預演過在大街上蹲著撿零錢的十種結局。':'受試者最怕在路上聽到「你拉鍊沒拉」，並在讀到這題時下意識低頭確認了一下。');
+   if(v===4)return mark('q2','MEME',3,'受試者最怕在路上聽到有人大喊「麥可！！！」。研究小組判斷其看過《夜市人生》飛天麥可那一段，並且知道接下來會發生什麼事。');
    mark('q2',v===2?'MEME':v===3?'BRUH':0,v===2?2:3,v===2?'受試者對「你後面有車」一語具有明顯的情境記憶，推測其曾觀看大量直播剪輯。':'受試者最害怕被他人辨識出人格類型，此恐懼本身即具有研究價值。')},
   q67(v){if(v===1){play('sixseven');flash('6 7')}
-    if(v===0)return mark('q67','NERD',1,'受試者在 6 + 7 一題中選擇了正確答案 13。在本問卷中，這反而是最罕見的作答。');
+    if(v===0)return mark('q67','NERD',1,'受試者在 6 + 7 一題中選擇了正確答案 13。研究小組只能說：是這樣沒錯，但不是這樣。');
     mark('q67',v===1?'MEME':v===3?'BRUH':0,2,v===1?'在一題國小程度的算術題中，受試者選擇了「67」。研究小組確認此非計算錯誤，而是條件反射。':'受試者坦言數學不好，在一份人格問卷中展現了罕見的誠實。')},
   q3(v){if(v===0)return mark('q3','NERD',2,'受試者填到這裡仍表示「還很有精神」。研究小組認為這不是正常人類的反應。');mark('q3',v>=2?'BRUH':0,2,v===2?'受試者對於自己能填寫至此感到意外，研究小組亦同。':'受試者坦言已不清楚自己正在填寫什麼，此為本研究中最誠實的一項回答。')},
   res(v){mark('res',v===1?'SIMP':0,1,'受試者坦言填答動機為取得結果，具高度目標導向。')},
@@ -1247,8 +1561,10 @@ function submit(){
   },1300);
 }
 function mbti(){
-  const g=k=>ans[k]||3;
-  const E=(g('e1')+(6-g('e2'))+g('e3'))/3+(ans.e4===0||ans.e5===0?1:ans.e4===1||ans.e4===3||ans.e5===2?-1:0)>=3?'E':'I';
+  const g=k=>{const v=ans[k];if(v===undefined)return 3;return Q[k].sv?Q[k].sv[v]:v};
+  const up=UP[ans.up]?UP[ans.up].e:3;  // 原本的 e3 改成照片上傳題：奶龍 5、Puzz 3、奶蛙 2、奶蛋 1
+  // e1、e2 的 sv 直接是外向分數（越高越 E）
+  const E=(g('e1')+g('e2')+up)/3+(ans.e4===0||ans.e5===0||ans.e5===10?1:ans.e4===1||ans.e5===2||ans.e5===11?-1:0)>=3?'E':'I';
   const S=g('s1')-g('s2')>0?'S':'N',T=g('t1')>=3?'T':'F',J=ans.j1===0||ans.j1===1?'J':'P';
   return E+S+T+J;
 }
@@ -1274,7 +1590,7 @@ const durTxt=s=>s==null?'—':s<60?`${s} 秒`:`${Math.floor(s/60)} 分 ${s%60} �
 function botCount(){
   const u=stats.usr||{};let n=0;
   for(const q of Object.values(Q)){
-    if(q.type==='text'||q.type==='captcha')continue;
+    if(STR_T[q.type]||q.type==='captcha'||q.type==='grid')continue;
     if(q.timed&&stats.cdAuto)continue;
     const v=u[q.id];if(v===undefined)return 0;
     const ok=q.type==='checkbox'?v.length===1&&v[0]===0:v===(q.type==='scale'?1:0);
@@ -1284,11 +1600,16 @@ function botCount(){
 }
 function hiddenType(){
   if(stats.testHid)return stats.testHid;
+  if(isPuzz())return 'PUZZ';
   if(botCount()>10)return 'BOTS';
   const s=durSec();if(s!=null&&s<120)return 'SPED';
   return null;
 }
+// PUZZ：照片上傳從頭到尾只上傳過 Puzz 一次（沒有移除、沒有換過），而且人機驗證「只」選了 Puzz 一張
+const upLoyal=()=>{const h=HIST.up||[];return ans.up===3&&h.length===1&&h[0]==='Puzz'&&!stats.upCleared};
+const isPuzz=()=>upLoyal()&&!!stats.cap&&stats.cap.sel.length===1&&stats.cap.sel[0]==='puzz';
 function hiddenObs(h){
+  if(h==='PUZZ')return '受試者在照片上傳題中選擇了 Puzz；在要求選出所有奶蛙的人機驗證中，九張圖也只選了 Puzz 一張，兩隻真正的奶蛙一隻都沒點。研究小組判斷受試者並不是看錯，而是眼裡本來就只有 Puzz。';
   if(h==='BOTS')return `受試者在本問卷全部 ${botCount()||'所有'} 題選擇題中，一律選擇第一個選項，無一例外。此作答模式與自動化程式高度一致。值得注意的是，受試者稍早${stats.cap?'已通過':'曾被要求進行'}「我不是機器人」驗證，研究小組正在重新檢討驗證機制。`;
   const s=durSec(),n=Object.keys(Q).length;
   return `受試者僅花 ${s==null?'不到兩分鐘':durTxt(s)}即完成全部 ${n} 題，平均每題約 ${s==null?'1':(s/n).toFixed(1)} 秒。此速度已低於人類閱讀題目所需之最短時間，研究小組判斷其並未閱讀題目，而是憑感覺在點。`;
@@ -1303,7 +1624,7 @@ function result(){
   const sc={BRUH:1};
   Object.values(marks).forEach(m=>sc[m.type]=(sc[m.type]||0)+m.pts);
   const rank=Object.entries(sc).sort((a,b)=>b[1]-a[1]),top=rank.slice(0,5),tot=top.reduce((s,x)=>s+x[1],0);
-  const obs=Object.values(marks).filter(m=>m.ana).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana);
+  const obs=Object.entries(marks).filter(([k,m])=>m.ana&&!OPENK.has(k)).map(([,m])=>m).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana);
   const hid=hiddenType()||stats.testType;  // testType：測試面板指定要預覽的類型
   if(hid){
     // 隱藏人格（或測試指定類型）：直接蓋過原本的結果，佔 67%，其他成分照比例縮到剩下的 33%
@@ -1321,10 +1642,10 @@ function reveal(fast){
     const self=(ans.mytype||'').trim().toUpperCase(),selfOk=MB_OK.test(self),base=selfOk?self:mbti();
     // 奶蛙總共探頭 N-2 = 6 次（第 3～8 頁各一次），翻太快沒看到的也算漏看
     const fs=N-2,fc=Math.min(FROG.caught,fs),allFrog=fc===fs;
-    if(fs){if(allFrog)mark('frog','CHAD',7,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者全數捕獲。其周邊視覺與反應速度遠超常模，研究小組懷疑其平常就很在意別人在看他。`);
+    if(fs){if(allFrog)mark('frog','CHAD',7,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者全數捕獲。忽有龐然大物，拔山倒樹而來，蓋一奶蛙也——而受試者每一次都看到了。其周邊視覺與反應速度遠超常模，研究小組懷疑其平常就很在意別人在看他。`);
       else if(fc)mark('frog','RICK',1,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者捕獲 ${fc} 次、漏看 ${fs-fc} 次。注意力尚可，但顯然有在分心。`);
-      else mark('frog','BRUH',3,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者完全沒有察覺。研究小組建議其平時多留意身後。`)}
-    gagMark();
+      else mark('frog','BRUH',3,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者完全沒有察覺。忽有龐然大物，拔山倒樹而來，蓋一奶蛙也，受試者連頭都沒抬。研究小組建議其平時多留意身後。`)}
+    gagMark();openMarks();
     // report.html（檢舉頁）會留下檢舉理由
     let rep=null;try{rep=localStorage.getItem('mbti_form_reported')}catch(e){}
     if(rep)mark('report','SALT',4,`受試者在作答期間曾嘗試檢舉本表單，理由為「${esc(rep)}」。研究小組已讀，哭完之後決定繼續做下去。`);
@@ -1358,11 +1679,12 @@ function reveal(fast){
         ${T.f.map((f,i)=>`<div class="fn"><div class="lt">${f[0]}</div><div style="flex:1"><div class="ft">${['主導功能','輔助功能','第三功能','劣勢功能'][i]}</div><div class="fw">${f[1]}・${f[2]}</div><div class="fd">${f[3]}</div><div class="mini"><i data-w="${pw[i]}"></i></div></div></div>`).join('')}</div>
       <div class="card" id="obsc"><div class="rt">作答行為分析</div><div class="rs">本分析依據您於各題項之實際反應</div>
         ${t4Obs().concat(r.obs.length?r.obs:['受試者全程作答正常，未出現任何異常反應。研究小組認為這反而是最可疑的。'],vidObs(),late?[late]:[]).map((o,i)=>`<div class="ob"><small>觀察 ${i+1}</small><p>${o}</p></div>`).join('')}</div>
+      ${openCard()}
       ${capCard()}
       ${trackCard()}
       ${fs?`<div class="card"><div class="rt">窺視者觀察紀錄</div><div class="rs">作答期間共出現 ${fs} 次・捕獲 ${fc} 次</div>
         ${allFrog?`<div class="frogwin"><img id="frogwin" src="${FROG_IMG.laugh}" alt=""></div><p class="rp" style="text-align:center">全數捕獲。奶蛙對您的觀察力表示佩服，並決定不再偷看您了。</p>`
-        :`<p class="rp">${fc?'您抓到了一部分，但奶蛙表示：牠其實一直都在。':'您完全沒有發現。奶蛙已經看完您全部的答案了。'}</p>`}</div>`:''}
+        :`<p class="rp">${fc?'您抓到了一部分，但奶蛙表示：牠其實一直都在。':'忽有龐然大物，拔山倒樹而來，蓋一奶蛙也。您完全沒有發現，奶蛙已經看完您全部的答案了。'}</p>`}</div>`:''}
       <div class="card"><div class="rt">人際與職涯</div><div class="rs">&nbsp;</div>
         <div class="rel"><span>最佳拍檔</span><div>${T.m}</div></div><div class="rel"><span>天敵</span><div>${T.e}</div></div><div class="rel"><span>適合職業</span><div>${T.j}</div></div></div>
       <div class="card"><div class="rt">人格成分</div><div class="rs">樣本數：1（你）・分析信度 α = 0.67（研究小組自己算的）</div>
@@ -1507,7 +1829,8 @@ const REC={
   OOPS:[['moon','半夜想起三年前的尷尬事'],['users','合照站在最邊邊']],
   FOOD:[['food','凌晨三點吃泡麵'],['fridge','每小時打開一次冰箱']],
   BOTS:[['robot','每一題都選 A'],['check','回訊息只回「好的，收到」']],
-  SPED:[['ff','影片開兩倍速看'],['help','回別人「蛤？剛剛說什麼？」']]
+  SPED:[['ff','影片開兩倍速看'],['help','回別人「蛤？剛剛說什麼？」']],
+  PUZZ:[['heart','在九張圖裡一眼找到 Puzz'],['star','把 Puzz 設成手機桌布']]
 };
 function recHTML(type){
   const h=[...type].reduce((s,c)=>s*31+c.charCodeAt(0),7),pct=i=>60+((h>>(i*3))&31);
@@ -1685,10 +2008,108 @@ function trackCard(){
     ${top.map(([id,h])=>`<div class="ob" style="margin-top:10px"><small>點了 ${h.length} 次</small><p><b>${qt(id)}</b><br>${h.length>8?'最後幾次：':''}${seqTxt(h)}</p></div>`).join('')}
     <p class="rp" style="margin-top:12px">${verdict}</p></div>`;
 }
+// ===== 非選擇題（簡答／段落／日期／時間／單選方格）在提交時才計分 =====
+const pad2=n=>String(n).padStart(2,'0');
+function jdtDiff(){
+  const m=(ans.jdt||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;
+  const t=new Date(stats.t1||Date.now()),t0=new Date(t.getFullYear(),t.getMonth(),t.getDate());
+  return Math.round((new Date(+m[1],m[2]-1,+m[3])-t0)/864e5);
+}
+function openMarks(){
+  // 簡答：三個字形容出題者
+  const tw=(ans.tw||'').trim(),twq=`「${esc(tw)}」`;
+  if(tw){
+    // 關鍵字判斷一定會誤判，所以每種結果後面都補一句免責聲明
+    const oops='（本判定由研究小組以關鍵字比對完成，準確率約等於星座運勢。若有誤判，代表你稱讚得很像在罵人，或是罵得很有創意。）';
+    if(/幹|靠|操|肏|屁|雞掰|機掰|雞巴|G8|三小|殺小|洨|他媽|他馬|媽的|馬的|北七|白目|白痴|低能|智障|87|王八|去死|靠北|靠腰|垃圾|廢物|腦殘|ㄍㄋㄇ|ㄎㄅ|fuck|shit|wtf/i.test(tw))mark('tw','FXCK',4,`受試者以${twq}形容本問卷出題者，研究小組偵測到不雅字眼。出題者已默默把這三個字加進「人生不該聽到的話」清單，並且哭了一下。${oops}`);
+    else if(/天才|帥|美|讚|神|強|酷|優秀|可愛|奇才|棒|厲害|好人|男神|女神|大佬|偶像/.test(tw))mark('tw','SIMP',3,`受試者以${twq}形容本問卷出題者。出題者已將此三個字設為手機桌布。${oops}`);
+    else if(/爛|醜|廢|笨|瘋|病|無聊|白癡|腦|神經|怪|煩|吵|欠|扯/.test(tw))mark('tw','SALT',3,`受試者以${twq}形容本問卷出題者。出題者看完後沉默了很久，最後表示「好啦，有一點」。${oops}`);
+    else if(/哈|呵|笑|ㄏ|w|草|XD|ww/i.test(tw))mark('tw','MEME',2,`受試者以${twq}形容本問卷出題者。研究小組無法判斷這是在笑出題者，還是在笑這份問卷，推測兩者皆是。${oops}`);
+    else mark('tw','BRUH',2,`受試者以${twq}形容本問卷出題者。研究小組開會討論了二十分鐘，仍無法判斷這是稱讚還是罵人。${oops}`);
+  }else mark('tw');
+  // 段落：為什麼會填到這裡
+  const pa=(ans.pa||'').trim(),pn=[...pa].length,uniq=new Set([...pa.replace(/\s/g,'')]).size;
+  if(!pa)mark('pa');
+  else if(uniq<=2)mark('pa','LIAR',3,`受試者在要求至少 5 個字的段落題中，以「${esc(pa.slice(0,16))}${pn>16?'…':''}」湊滿字數。研究小組看穿了，但還是讓你過了。`);
+  else if(/報告|作業|讀書|考試|期末|期中|論文|上班|工作/.test(pa))mark('pa','LAZY',4,`受試者在說明為何填到這裡時，主動提到了報告、作業或工作。等於親口承認自己正在逃避現實。`);
+  else if(/無聊|好閒|很閒|太閒|沒事|睡不著/.test(pa))mark('pa','LAZY',3,`受試者表示自己是因為太閒才填到這裡。研究小組感謝其將寶貴的空閒時間奉獻給本研究，雖然本研究什麼都沒有回報。`);
+  else if(/朋友|同學|室友|男友|女友|閨蜜|傳給我|分享|限動/.test(pa))mark('pa','SIMP',3,`受試者表示是因為朋友才填到這裡。研究小組建議其把結果傳回去，讓那位朋友也一起受苦。`);
+  else if(/好玩|好笑|有趣|好有梗|哈哈|笑死/.test(pa))mark('pa','MEME',3,`受試者表示填到這裡是因為覺得很好笑。研究小組收下這份稱讚，並決定繼續做更奇怪的題目。`);
+  else if(pn>=50)mark('pa','NERD',4,`受試者在一題只要求 5 個字的段落題中寫了 ${pn} 個字。研究小組讀完後只有一句話：當初你退出文壇，我也是極力反對的。`);
+  else if(/謝謝阿婆|ven|刀盾|醬板鴨|何意味|曼妙|留友看|擱供|麥可|露比|咩/i.test(pa))mark('pa','MEME',4,`受試者在說明為何填到這裡時，仍不忘塞進網路梗。研究小組判斷其腦中已沒有正常的中文，只剩下梗。`);
+  else mark('pa','OKAY',1,`受試者認真說明了自己填到這裡的原因（共 ${pn} 字）。研究小組讀完後表示：謝謝，但我們也不知道你為什麼會填到這裡。`);
+  // 時間：昨晚幾點睡
+  const tm=(ans.jt||'').match(/^(\d{1,2}):(\d{2})/);
+  if(tm){const h=+tm[1],t=`${pad2(h)}:${tm[2]}`;
+    if(h>=21)mark('jt','NERD',2,`受試者昨晚 ${t} 就睡了。研究小組確認其為本樣本中極少數擁有正常作息的人類。`);
+    else if(h<=2)mark('jt','LAZY',2,`受試者昨晚 ${t} 才睡，屬於台灣大學生的標準作息，研究小組不予置評。`);
+    else if(h<=5)mark('jt','LAZY',4,`受試者昨晚 ${t} 才睡著。研究小組建議其今天不要再熬夜了（但我們知道你會）。`);
+    else if(h<=11)mark('jt','BRUH',4,`受試者「昨晚」的入睡時間為早上 ${t}。研究小組認為這已經不能叫昨晚了，這叫今天。`);
+    else mark('jt','LIAR',3,`受試者表示昨晚於 ${t} 入睡。這個時間太陽都還沒下山。研究小組推測那不是睡覺，是昏迷。`)}
+  else mark('jt');
+  // 日期：打算哪天開始寫報告
+  const d=jdtDiff();
+  if(d==null)mark('jdt');
+  else if(d<0)mark('jdt','NERD',3,`受試者選擇的開始日期是 ${-d} 天前，代表其早就開始寫了。研究小組對其組員表示羨慕。`);
+  else if(d===0)mark('jdt','LIAR',3,'受試者表示今天就要開始寫報告，但此刻正在填一份人格問卷。研究小組決定先不要拆穿。');
+  else if(d<=6)mark('jdt','LAZY',2,`受試者打算 ${d} 天後才開始寫報告。研究小組推測，到時候會再延 ${d} 天。`);
+  else if(d<=365)mark('jdt','LAZY',4,`受試者打算 ${d} 天後才開始寫報告。研究小組合理懷疑報告的死線在那之前。`);
+  else mark('jdt','BRUH',4,`受試者選擇的開始日期在 ${Math.floor(d/365)} 年後。研究小組佩服其長遠的規劃能力，並建議其直接休學。`);
+  // 單選方格（每欄限一）：ㄅ～ㄦ級分排名，看誰拿ㄅ、誰拿ㄦ
+  const r5=ans.s3&&typeof ans.s3==='object'?ans.s3:{},S3=[
+    ['這份問卷','SIMP','研究小組感動到想再出一份。','研究小組決定假裝沒看到，然後繼續出題。'],
+    ['本問卷的出題者','SIMP','出題者已將此結果截圖並設為手機桌布。','出題者表示：沒關係，我會記住你的暱稱。'],
+    ['曾國城在古蹟抽菸','MEME','研究小組不確定這是在稱讚抽菸，還是在稱讚這個梗，推測是後者。','受試者的文化資產保護意識值得肯定，曾國城本人應該也同意。'],
+    ['你這學期的期末考','NERD','研究小組懷疑其若非卷王，就是還沒看到成績。','研究小組建議其先別打開成績查詢系統。'],
+    ['奶蛙','SIMP','奶蛙已經開心到從螢幕角落多探頭一次了。','奶蛙表示受傷，從現在起牠會更常在螢幕角落偷看你。']];
+  // 允許重複（只有紅字警告），所以ㄅ、ㄦ可能各有好幾個，也可能一個都沒有
+  const tops=Object.keys(r5).filter(i=>r5[i]===0),bots=Object.keys(r5).filter(i=>r5[i]===4);
+  const nm=ids=>ids.map(i=>`「${S3[i][0]}」`).join('、');
+  if(!tops.length&&!bots.length)mark('s3',Object.keys(r5).length?'OKAY':0,2,'受試者在ㄅ～ㄦ級分排名中，沒有給任何項目ㄅ級分，也沒有給任何項目ㄦ級分，全部落在中間。研究小組判斷其人生信條為「都還好」。');
+  else{let s='受試者在ㄅ～ㄦ級分排名中，';
+    if(tops.length===1)s+=`把ㄅ級分給了${nm(tops)}，${S3[tops[0]][2]}`;
+    else if(tops.length>1)s+=`一口氣把ㄅ級分給了${nm(tops)}共 ${tops.length} 項。`;
+    else s+='沒有給任何項目ㄅ級分。';
+    if(bots.length===1)s+=`而ㄦ級分則給了${nm(bots)}，${S3[bots[0]][3]}`;
+    else if(bots.length>1)s+=`而ㄦ級分則同時發給了${nm(bots)}，看來拉完了的東西不只一個。`;
+    if(tops.includes('2'))s+='值得一提的是，受試者給了曾國城在古蹟抽菸ㄅ級分，研究小組正在反省自己為什麼輸給了它。';
+    mark('s3',tops.length?S3[tops[0]][1]:'SALT',3,s)}
+  if(hasDup(r5)){const n=Object.values(r5).length-new Set(Object.values(r5)).size;
+    mark('s3dup','SALT',Math.min(6,2+n),`題目明確寫著「每個級分只能給一次」，系統也跳出了紅字警告，受試者仍堅持讓 ${n+1} 個以上的項目共用同一個級分。研究小組判斷其認為規則是寫給別人看的。`)}
+  else mark('s3dup');
+  // 單選方格：重要程度
+  const g=ans.tg||{};['tgM','tgW','tgX','tgA'].forEach(k=>mark(k));
+  if(g[0]===2)mark('tgM','FXCK',4,'受試者在「媽媽」一列選擇了「誰？」。研究小組決定不予置評，並建議其今天打一通電話回家。');
+  else if(g[1]===0&&g[0]!==0)mark('tgW','MEME',3,'受試者認為 Wi-Fi「非常重要」，但媽媽沒有。研究小組不會告訴你媽媽，但會記下來。');
+  if(g[2]===0)mark('tgX','NERD',2,'受試者將期末報告的組員評為「非常重要」。研究小組推測其組員都有在做事，這在大學分組報告中極為罕見。');
+  else if(g[2]===2)mark('tgX','SALT',3,'受試者對期末報告組員的評價為「誰？」。研究小組完全理解，畢竟有些組員從開學到現在都沒出現過。（研究小組本身也是從六人縮減到 2.5 人。）');
+  if(g[4]===0)mark('tgA','SIMP',3,`受試者將本問卷出題者評為「非常重要」${g[0]===0?'，與媽媽同一個等級':''}。出題者受寵若驚。`);
+  else if(g[4]===2)mark('tgA','SALT',3,`受試者對本問卷出題者的評價為「誰？」。出題者表示：我是做這份問卷的人，你已經填了 ${Object.keys(Q).length} 題了。`);
+}
+// 這些在「非選擇題作答紀錄」卡片裡逐項列出，就不再擠進「作答行為分析」
+const OPENK=new Set(['up','e5','s3','s3dup','j4','tw','twBad','pa','jt','jdt','tgM','tgW','tgX','tgA']);
+function openCard(){
+  const A=k=>marks[k]&&marks[k].ana||'',it=[];
+  const row=(lab,val,k,img)=>{const a=Array.isArray(k)?k.map(A).filter(Boolean).join(''):A(k);
+    it.push(`<div class="ob opn"><small>${lab}</small>${img?`<img src="${img}" alt="">`:''}<p><b>${val}</b>${a?`<br>${a}`:''}</p></div>`)};
+  const u=UP[ans.up];
+  if(u)row('檔案上傳｜您在多人聚會上的照片',`${esc(u.f)}（鑑定結果：${u.n}）`,'up',CAP_IMG[u.k]);
+  if(ans.e5!==undefined)row('下拉式選單｜您在群組中的角色',esc(Q.e5.opts[ans.e5]||''),'e5');
+  if(ans.s3&&typeof ans.s3==='object'){const q=Q.s3,c=k=>q.cols[k].replace(/<br>.*/,'');
+    row('單選方格（每欄限選一個）｜ㄅ～ㄦ級分排名',q.rows.map((r,i)=>[ans.s3[i],r]).filter(x=>x[0]!==undefined).sort((x,y)=>x[0]-y[0]).map(([k,r])=>`${c(k)}：${r}`).join('・'),['s3','s3dup'])}
+  if((ans.tw||'').trim())row('簡答｜用三個字形容出題者',`「${esc(ans.tw.trim())}」`,['tw','twBad']);
+  if(ans.jdt)row('日期｜打算開始寫報告的日期',(()=>{const d=jdtDiff();return `${esc(ans.jdt)}${d==null?'':d===0?'（今天）':d>0?`（${d} 天後）`:`（${-d} 天前）`}`})(),'jdt');
+  if(ans.j4!==undefined)row('下拉式選單｜目前的作答姿勢',esc(Q.j4.opts[ans.j4]||''),'j4');
+  if(ans.jt)row('時間｜昨晚入睡時間',esc(ans.jt),'jt');
+  if(ans.tg){const q=Q.tg;row('單選方格｜重要程度評估',q.rows.map((r,i)=>`${r}：${ans.tg[i]!==undefined?q.cols[ans.tg[i]]:'—'}`).join('・'),['tgM','tgW','tgX','tgA'])}
+  if((ans.pa||'').trim()){const p=ans.pa.trim(),n=[...p].length;row(`段落｜為什麼會填到這裡（${n} 字）`,`「${esc(p.length>60?p.slice(0,60)+'…':p)}」`,'pa')}
+  if(!it.length)return '';
+  return `<div class="card" id="openc"><div class="rt">非選擇題作答紀錄</div><div class="rs">研究小組逐字閱讀了您的每一個回答（包括錯字）</div>${it.join('')}</div>`;
+}
 function t4Obs(){
   if(ans.t4!==0&&ans.t4!==1)return [];
   const d=stats.dodge,
-    seen=['被要求評估出題者是天才還是曠世奇才','在洗澡時跟不存在的人吵架並吵贏','被問到雲長得像什麼','被問「竟然」還是「居然」'].join('、');
+    seen=['被要求評估出題者是天才還是曠世奇才','被要求用ㄅ到ㄦ級分評價自己','被問白衣女子會不會是醬板鴨','被問「竟然」還是「居然」'].join('、');
   let s=ans.t4===0
     ?`在作答「您是否覺得這份問卷越來越奇怪？」一題時，受試者已經歷過${seen}等題目，卻仍回答「沒有」。研究小組在此誠摯詢問：你還好嗎？`
     :`在「您是否覺得這份問卷越來越奇怪？」一題中，受試者不僅回答沒有，還特別選擇了「完全沒有」。研究小組根據多年經驗指出：會特別強調「完全」的人，心裡通常都有。`;
@@ -1725,7 +2146,8 @@ function spin(target,done,gap){
 }
 
 // ===== 作答紀錄保存：存在使用者自己的手機（localStorage），按返回、重新整理、從 IG 跳回來都能接著填；按「再填一次」才清掉 =====
-const SAVE_KEY='mbti_form_save_v1',TEST=/[?&]test\b/.test(location.search);
+// v2：題目改版（新增上傳／下拉／簡答等題型），舊存檔的選項不相容
+const SAVE_KEY='mbti_form_save_v7',TEST=/[?&]test\b/.test(location.search);
 let cleared=false;
 function save(){
   if(TEST||cleared)return;
@@ -1763,12 +2185,14 @@ function testPanel(){
     ['（即時）剛從影片回來，待 8 秒',{ig:[1],went:{video:1},away:{video:8},back:['video',8]}],
     ['（即時）剛從影片回來，待 45 秒',{ig:[1],went:{video:1},away:{video:45},back:['video',45]}],
     ['領過神聖讚美',{oldFan:true}],
-    ['【隱藏】BOTS 機器人型',{hid:'BOTS',to:'.sum'}],['【隱藏】SPED 已讀亂回型',{hid:'SPED',to:'.sum'}],['【深夜】凌晨 3:12 完成',{late:true,to:'.sum'}],
+    ['【隱藏】BOTS 機器人型',{hid:'BOTS',to:'.sum'}],['【隱藏】SPED 已讀亂回型',{hid:'SPED',to:'.sum'}],['【隱藏】PUZZ 本人型（上傳＋驗證只選 Puzz）',{hid:'PUZZ',cap:['puzz'],open:{up:3,e5:7,tw:'大天才',jdt:0,j4:0,jt:'23:30',tg:{0:0,1:1,2:2,3:1,4:0},pa:'因為 Puzz 在這裡'},to:'.sum'}],['【深夜】凌晨 3:12 完成',{late:true,to:'.sum'}],
     ['【驗證】2/2 全對',{cap:['frog1','frog2'],to:'#capc'}],['【驗證】選到奶雞、奶龍',{cap:['frog1','chicken','dragon'],to:'#capc'}],['【驗證】選到 Puzz',{cap:['puzz','frog2'],to:'#capc'}],
     ['【限時題】連點 3 次都被刪，系統代答',{cd:{del:[1,0,3]},to:'#obsc'}],['【限時題】一個都沒點，系統代答',{cd:{del:[]},to:'#obsc'}],
     ['【限時題】被刪 1 次後自己選自肥選項',{cd:{del:[2],self:true},to:'#obsc'}],
     ['【聽力】沒播放就說聽完了',{au:{sec:0,ans:3},to:'#obsc'}],['【聽力】只播 6 秒',{au:{sec:6,ans:2},to:'#obsc'}],['【聽力】播 15 秒',{au:{sec:15,ans:3},to:'#obsc'}],
-    ['【聽力】播 25 秒',{au:{sec:25,ans:0},to:'#obsc'}],['【聽力】整首聽完',{au:{sec:80,ends:1,ans:4},to:'#obsc'}],['【聽力】聽了 3 遍',{au:{sec:240,ends:3,ans:1},to:'#obsc'}]];
+    ['【聽力】播 25 秒',{au:{sec:25,ans:0},to:'#obsc'}],['【聽力】整首聽完',{au:{sec:80,ends:1,ans:4},to:'#obsc'}],['【聽力】聽了 3 遍',{au:{sec:240,ends:3,ans:1},to:'#obsc'}],
+    ['【非選擇題】上傳奶龍＋各種奇怪回答',{open:{up:2,e5:10,tw:'大天才',jdt:3,j4:7,jt:'04:30',tg:{0:0,1:0,2:2,3:1,4:0},pa:'因為報告寫不完所以跑來填問卷，結果越填越好笑'},to:'#openc'}],
+    ['【非選擇題】上傳 Puzz＋媽媽選「誰？」',{open:{up:3,e5:11,tw:'有夠怪',jdt:400,j4:8,jt:'14:00',tg:{0:2,1:0,2:0,3:0,4:2},pa:'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'},to:'#openc'}]];
   const d=document.createElement('div');d.id='testp';
   d.innerHTML=`<b>測試面板 ▾</b><div>
     <small style="margin:0 0 4px">直接跳頁：<a href="?test&p=2">聽力題</a>・<a href="?test&p=4">限時心算題</a>・<a href="?test&p=6">人機驗證</a></small>
@@ -1788,6 +2212,9 @@ function testPanel(){
     if(c.cd){stats.cdDel=[...c.cd.del];cdMark(Q.cd,!!c.cd.self)}
     if(c.au){stats.auSec=c.au.sec;stats.auEnds=c.au.ends||0;ans.au=c.au.ans;delete marks.au2;auMark();
       const fake=document.createElement('div');picks.au(c.au.ans,fake);toast(stats.auSec?auComment():'（沒播放，不會有評語）')}
+    if(c.open){const o=c.open,d=new Date();d.setDate(d.getDate()+o.jdt);
+      Object.assign(ans,o,{jdt:`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`});
+      const u=UP[o.up];mark('up',u.type,u.pts,u.ana);picks.e5(o.e5);picks.j4(o.j4)}
     if(c.back){reveal(true);setTimeout(()=>{ctaBack(...c.back);$('#cta').scrollIntoView({behavior:'smooth',block:'center'})},100)}
     else show(c.to);
   };
