@@ -243,7 +243,7 @@ body{font-variant-emoji:text}
 .tier{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:10px;color:#fff;margin-left:6px;vertical-align:1px}
 .note{margin-top:12px;padding:10px 14px;border-radius:6px;font-size:14px;line-height:1.7}
 .note.late{background:#e8eaf6;color:#283593}
-.note.hidn{background:#fef7e0;color:#b06000}
+.note.hidn{background:#ede7f6;color:#4527a0;border-left:3px solid #673ab7}
 .fbtn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#1a73e8;border:1px solid #dadce0;border-radius:4px;padding:8px 16px;font:500 14px Roboto,"Noto Sans TC",sans-serif;cursor:pointer;margin-top:4px}
 .fbtn:hover{background:#f6fafe;border-color:#d2e3fc}
 .rec{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid #f1f3f4;color:inherit;text-decoration:none}
@@ -648,13 +648,13 @@ const TYPES={
   o:'FOOD 型人格的思考系統以食物為核心運作。受試者看到雲會聯想到棉花糖，聽到「規劃」一詞的第一反應為詢問能否食用。研究小組推測其填寫本問卷的同時正在吃東西，且本報告讀到一半就會起身去冰箱看看。',
   f:[['F','Fridge','冰箱巡邏','明知道裡面沒東西，還是每小時打開一次。'],['O','Om nom','進食本能','「吃了嗎」對你來說不是問候語，是真心的問題。'],['O','Order','外送成癮','外送平台的會員等級比你的學期成績還高。'],['D','Dessert','甜點胃','吃飽了，但甜點是另一個胃。']],
   m:'LAZY（一起叫外送，一起躺）',e:'說「我不餓」然後吃掉你一半的人',j:'美食 YouTuber、試吃員、夜市巡察員'},
- // ===== 隱藏結局：只能靠作答模式觸發（全選第一個 / 兩分鐘內填完） =====
+ // ===== 隱藏人格：只能靠作答模式觸發（全選第一個 / 兩分鐘內填完） =====
  BOTS:{n:'機器人型',tag:'您通過了「我不是機器人」驗證，但我們不信',hidden:'每一題都選第一個選項',
-  o:'BOTS 型人格為本研究之隱藏結局。受試者在整份問卷中，每一題都選擇了第一個選項，展現出近乎機械的一致性。研究小組無法判斷其為懶得看題目的人類，還是一支學會填表單的程式。無論是哪一種，研究小組都對其效率表示敬意，並已重新檢討人機驗證機制。',
+  o:'BOTS 型為本研究之隱藏人格。受試者在整份問卷中，每一題都選擇了第一個選項，展現出近乎機械的一致性。研究小組無法判斷其為懶得看題目的人類，還是一支學會填表單的程式。無論是哪一種，研究小組都對其效率表示敬意，並已重新檢討人機驗證機制。',
   f:[['B','Beep','嗶','開口之前會先發出系統提示音。'],['O','Option A','永遠選 A','人生的每一題都選第一個，包括菜單。'],['T','Template','罐頭回覆','已讀之後的回覆永遠是「好的，收到」。'],['S','Script','照劇本走','你不是在生活，你是在執行。']],
   m:'SPED（一個不看題目，一個不看選項）',e:'人機驗證',j:'自動化測試、客服機器人、打卡機'},
  SPED:{n:'已讀亂回型',tag:'題目還沒讀完，答案已經送出了',hidden:'不到兩分鐘就填完',
-  o:'SPED 型人格為本研究之隱藏結局。受試者以不到兩分鐘的時間完成整份問卷，速度遠超人類閱讀題目所需之極限。研究小組推測其作答流程為：看到選項 → 點 → 下一頁，中間不經過大腦。此類型在群組中通常以「蛤？」「喔」「哈哈」完成所有對話。',
+  o:'SPED 型為本研究之隱藏人格。受試者以不到兩分鐘的時間完成整份問卷，速度遠超人類閱讀題目所需之極限。研究小組推測其作答流程為：看到選項 → 點 → 下一頁，中間不經過大腦。此類型在群組中通常以「蛤？」「喔」「哈哈」完成所有對話。',
   f:[['S','Skip','跳過','說明文字一律跳過，包括這一段。'],['P','Press','狂按','手指永遠比思考快一步。'],['E','Eh?','蛤？','最常說的話是「蛤？剛剛說什麼？」'],['D','Done','已完成','重點不是做對，是做完。']],
   m:'BOTS（效率至上，誰都不看題目）',e:'寫了很長的說明文字的人（例如本研究小組）',j:'外送員、速讀補習班反面教材、電競選手'}
 };
@@ -808,7 +808,7 @@ document.addEventListener('change',e=>{
   const t=e.target;
   const id=t.name;if(!id||!Q[id])return;const q=Q[id],card=$('#q_'+id);
   if(q.type==='checkbox')ans[id]=[...card.querySelectorAll('input:checked')].map(i=>+i.value);else ans[id]=+t.value;
-  // 記下「使用者自己點的」答案（系統之後自動改的不算），用來判斷 BOTS 隱藏結局
+  // 記下「使用者自己點的」答案（系統之後自動改的不算），用來判斷 BOTS 隱藏人格
   (stats.usr=stats.usr||{})[id]=q.type==='checkbox'?[...ans[id]]:ans[id];
   const lab=q.type==='scale'?`${t.value} 分`:(q.opts&&q.opts[+t.value])||t.value;
   (HIST[id]=HIST[id]||[]).push(q.type==='checkbox'?(t.checked?'勾選':'取消')+lab:lab);
@@ -1244,7 +1244,7 @@ function mbti(){
   const S=g('s1')-g('s2')>0?'S':'N',T=g('t1')>=3?'T':'F',J=ans.j1===0||ans.j1===1?'J':'P';
   return E+S+T+J;
 }
-// ===== 隱藏結局判定 =====
+// ===== 隱藏人格判定 =====
 // 作答秒數：只算「問卷真的顯示在畫面上」的時間（stats.act，毫秒）。
 // 切到別的 App／分頁、螢幕關掉、關掉網頁都會暫停；提交後就停止計時。
 // 每秒累加一次，兩次之間如果隔超過 5 秒（手機休眠、計時器被暫停）就不算那段。
@@ -1298,7 +1298,7 @@ function result(){
   const obs=Object.values(marks).filter(m=>m.ana).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana);
   const hid=hiddenType()||stats.testType;  // testType：測試面板指定要預覽的類型
   if(hid){
-    // 隱藏結局（或測試指定類型）：直接蓋過原本的結果，佔 67%，其他成分照比例縮到剩下的 33%
+    // 隱藏人格（或測試指定類型）：直接蓋過原本的結果，佔 67%，其他成分照比例縮到剩下的 33%
     const isHid=!!TYPES[hid].hidden,rest=top.filter(([t])=>t!==hid).slice(0,4);
     return {type:hid,hid:isHid,ranks:[[hid,67],...rest.map(([t,p])=>[t,Math.round(p/tot*33)])],obs:isHid?[hiddenObs(hid),...obs.slice(0,3)]:obs};
   }
@@ -1336,7 +1336,7 @@ function reveal(fast){
         <div class="rel"><span>最佳拍檔</span><div>${T.m}</div></div>
         <div class="rel"><span>天敵</span><div>${T.e}</div></div>
         <div class="rel"><span>作答時間</span><div>${durTxt(durSec())}</div></div>
-        ${r.hid?`<div class="note hidn">${ic('unlock',16)} <b>隱藏結局解鎖：${r.type}</b><br>觸發條件：${T.hidden}。全體受試者中只有 ${rare}% 的人走到這裡。</div>`:''}
+        ${r.hid?`<div class="note hidn">${ic('unlock',16)} <b>隱藏人格解鎖：${r.type}</b><br>觸發條件：${T.hidden}。全體受試者中只有 ${rare}% 的人走到這裡。</div>`:''}
         ${late?`<div class="note late">${ic('moon',16)} ${late}</div>`:''}
       </div>
       <div class="card"><div class="qt" style="margin-bottom:6px">下載您的人格分析結果</div><div class="qd" style="margin:0 0 14px">系統已將結果整理成一張圖片，可儲存後分享到限時動態。檔案類型：PNG・檔案大小上限：1 個人格</div>
@@ -1375,7 +1375,7 @@ function reveal(fast){
     }
     spin(base,()=>{
       $('#sn').textContent=`初步結果：${base}`;
-      setTimeout(()=>{play('error');$('#sn').textContent=r.hid?'偵測到隱藏作答模式，正在解鎖隱藏結局…':'偵測到大量異常作答，改以《網路人格資料庫》重新判定…';
+      setTimeout(()=>{play('error');$('#sn').textContent=r.hid?'偵測到隱藏作答模式，正在解鎖隱藏人格…':'偵測到大量異常作答，改以《網路人格資料庫》重新判定…';
         setTimeout(()=>spin(r.type,()=>{
           $('#slots').classList.add('flip','final');play('vineboom');setTimeout(()=>play('airhorn'),500);
           $('#sl').textContent='重新判定後，您的人格類型為';
@@ -1540,7 +1540,7 @@ function drawResult(){
   const tw=x.measureText(pill).width,SZ=28,pw=tw+16+SZ*5+64,px=(W-pw)/2;
   x.fillStyle=tc;x.beginPath();x.roundRect(px,y-42,pw,62,31);x.fill();text(pill,px+32,y,'#fff');
   for(let i=0;i<5;i++)icon('star',px+32+tw+16+i*SZ,y-SZ+3,SZ,'#fff',i<ts);y+=60;
-  if(r.hid){font(28,700);const t=`隱藏結局解鎖（${T.hidden}）`,w=x.measureText(t).width+40;icon('unlock',(W-w)/2,y-27,30,'#b06000');text(t,(W-w)/2+40,y,'#b06000');y+=50}
+  if(r.hid){font(28,700);const t=`隱藏人格解鎖（${T.hidden}）`,w=x.measureText(t).width+40;icon('unlock',(W-w)/2,y-27,30,'#4527a0');text(t,(W-w)/2+40,y,'#4527a0');y+=50}
   y+=20;x.fillStyle='#dadce0';x.fillRect(P,y,CW,2);y+=64;
   font(32,700);text('人格成分',L,y);y+=28;
   r.ranks.forEach(([t,p])=>{font(28,700);text(t,L,y+32);x.fillStyle='#f1f3f4';x.fillRect(L+110,y+6,TW-220,34);x.fillStyle='#673ab7';x.fillRect(L+110,y+6,(TW-220)*p/100,34);font(28);text(p+'%',R,y+32,'#5f6368','right');y+=54});
@@ -1786,7 +1786,7 @@ function testPanel(){
 }
 
 const restored=restore();
-if(!stats.t0)stats.t0=Date.now();  // 第一次打開問卷的時間（SPED 隱藏結局用）
+if(!stats.t0)stats.t0=Date.now();  // 第一次打開問卷的時間（SPED 隱藏人格用）
 if(restored){
   const back=backFromOut();
   if(stats.done){reveal(true);if(back)setTimeout(()=>ctaBack(...back),50)}
