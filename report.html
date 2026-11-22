@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>檢舉這份表單</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f0ebf8;font-family:Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;color:#202124;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:640px;margin:12px auto 40px;padding:0 8px}
+.card{background:#fff;border:1px solid #dadce0;border-radius:8px;padding:24px;margin-bottom:12px}
+.head{border-top:10px solid #673ab7;padding-top:22px}
+.head h1{font-size:30px;font-weight:400;margin:0 0 12px;line-height:1.3}
+.desc{font-size:14px;line-height:1.7}
+.meta{border-top:1px solid #dadce0;margin:16px -24px 0;padding:12px 24px 0;font-size:14px;color:#d93025}
+.qt{font-size:16px;line-height:1.5;margin-bottom:16px}
+.req{color:#d93025}
+.opt{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:14px;cursor:pointer;width:fit-content}
+.opt input{width:20px;height:20px;accent-color:#673ab7;margin:0;flex:none}
+.reply{background:#f8f9fa;border-left:3px solid #673ab7;border-radius:4px;padding:12px 14px;font-size:14px;line-height:1.8;margin-top:14px;display:none}
+.reply.on{display:block;animation:pop .4s}
+@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:none;opacity:1}}
+.err{color:#d93025;font-size:12px;margin-top:12px;display:none}
+.bad{border-color:#d93025}.bad .err{display:block}
+.nav{display:flex;align-items:center;gap:12px;margin:8px 0;flex-wrap:wrap}
+.btn{background:#673ab7;color:#fff;border:none;border-radius:4px;padding:9px 24px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+.btn.w{background:#fff;color:#673ab7;border:1px solid #dadce0}
+.link{color:#673ab7;font-size:14px;margin-left:auto;text-decoration:none}
+.rp{font-size:14px;line-height:1.85;margin:0 0 10px}
+.ctab{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.foot{text-align:center;font-size:12px;color:#5f6368;margin-top:24px;line-height:1.8}
+.shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@media(max-width:520px){
+  .wrap{width:90%;max-width:none;padding:0}
+  .head h1{font-size:30px;line-height:1.25}
+  .desc,.qt,.opt{font-size:16px}
+  .opt{padding:10px 0;gap:16px}
+  .nav .btn{padding:12px 24px;font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const IG='https://www.instagram.com/mbti_survivalguide/',YT='https://youtube.com/channel/UCPcDNWfqmAapUuud4d6ahCg';
+// 每個檢舉理由都有一段情勒回覆
+const R=[
+  ['這份表單在收集我的個資','我們連你的名字都記不住，只記得你填了「好啦好啦」。真的。你的答案只存在你自己的手機上。'],
+  ['出題者的精神狀態堪憂','謝謝關心。出題者看到這個選項之後，精神狀態又更堪憂了一點。'],
+  ['我被 Rick roll 了','那是你自己一直按「其他」按出來的。研究小組在法律上沒有任何責任，但在道義上……也沒有。'],
+  ['我被一鍋火鍋騙了','那位先生端那鍋火鍋端得很辛苦，你這樣說他會難過。'],
+  ['這份表單太好笑，好笑到很可疑','這是我們收過最好的檢舉。研究小組已將這則檢舉列印並裱框。'],
+  ['我只是想看看按下去會怎樣','好奇心很好。但你知道還有什麼按下去會很有趣嗎？追蹤按鈕。']
+];
+let pick=null;
+const $=s=>document.querySelector(s);
+function form(){
+  $('#app').innerHTML=`
+  <div class="card head"><h1>檢舉這份表單</h1>
+    <div class="desc">您認為這份表單很可疑嗎？<br>請告訴我們原因。我們會認真閱讀每一則檢舉，然後難過一整個晚上。</div>
+    <div class="meta">* 表示必填問題</div></div>
+  <div class="card" id="q"><div class="qt">您檢舉的原因是？<span class="req"> *</span></div>
+    ${R.map((r,i)=>`<label class="opt"><input type="radio" name="r" value="${i}"><span>${r[0]}</span></label>`).join('')}
+    <div class="reply" id="reply"></div>
+    <div class="err">ⓘ 這是必填問題（檢舉也是要填原因的）</div></div>
+  <div class="nav"><button class="btn" id="send">提交檢舉</button><a class="link" href="./">算了，我回去填</a></div>
+  <div class="foot">檢舉內容只會存在你自己的手機上，研究小組其實看不到。<br>但我們想像得到。</div>`;
+  document.querySelectorAll('input[name=r]').forEach(i=>i.onchange=()=>{
+    pick=+i.value;$('#q').classList.remove('bad');const r=$('#reply');r.classList.remove('on');void r.offsetWidth;
+    r.innerHTML=`<b>研究小組回覆：</b><br>${R[pick][1]}`;r.classList.add('on')});
+  $('#send').onclick=()=>{
+    if(pick===null){const q=$('#q');q.classList.add('bad','shake');setTimeout(()=>q.classList.remove('shake'),450);return}
+    try{localStorage.setItem('mbti_form_reported',R[pick][0])}catch(e){}
+    done();
+  };
+}
+function done(){
+  window.scrollTo(0,0);
+  $('#app').innerHTML=`
+  <div class="card head"><h1>檢舉已送出</h1>
+    <div class="desc">檢舉理由：「${R[pick][0]}」</div></div>
+  <div class="card">
+    <p class="rp">研究小組已收到您的檢舉。</p>
+    <p class="rp">我們圍成一圈討論了一下，然後一起哭了。</p>
+    <p class="rp">這份表單是我們熬夜一題一題做出來的，音效是一個一個找的，那隻奶蛙也是我們親手放的。</p>
+    <p class="rp">我們不怪你。我們只是想問：</p>
+    <p class="rp" style="font-size:16px;font-weight:500;text-align:center;margin-top:18px">如果你真的覺得我們很可疑，<br>是不是更應該追蹤我們，就近監視？</p>
+    <div class="ctab"><a class="btn" href="${IG}" target="_blank" rel="noopener">追蹤 IG 就近監視</a><a class="btn" href="${YT}" target="_blank" rel="noopener">訂閱 YouTube 蒐集證據</a></div>
+  </div>
+  <div class="nav" style="justify-content:center"><a class="btn w" href="./">我錯了，回去把問卷填完</a></div>
+  <div class="foot">您的檢舉也會被列入人格分析報告。<br>研究小組就是這麼小心眼。</div>`;
+}
+form();
+</script>
+</body>
+</html>

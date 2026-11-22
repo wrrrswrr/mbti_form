@@ -558,7 +558,7 @@ function render(){
   if(p.title)h+=`<div class="card sec"><div class="tab">第 ${page+1} 部分，共 ${N} 部分</div><div class="st">${p.title}</div>${p.desc?`<div class="sd">${p.desc}</div>`:''}</div>`;
   h+=p.qs.map(qHTML).join('');
   h+=`<div class="nav">${page>0?'<button class="btn w" id="back">返回</button>':''}<button class="btn" id="next">${page===N-1?'提交':'下一頁'}</button><div class="prog"><span class="pb"><i style="width:${(page+1)/N*100}%"></i></span>第 ${page+1} 頁，共 ${N} 頁</div><a class="clear" id="clear">清除表單內容</a></div>`;
-  h+=`<div class="foot"><div class="pw">請勿利用 Gooogle 表單送出密碼。</div><div style="margin-top:14px">這份表單是在 ${esc(CONFIG.showName)} 中建立。<br>這份表單很可疑嗎？<a href="${CONFIG.ytChannelUrl}" target="_blank" rel="noopener">報告</a></div><a class="gmark" href="${CONFIG.igUrl}" target="_blank" rel="noopener">Gooogle 表單</a></div>`;
+  h+=`<div class="foot"><div class="pw">請勿利用 Gooogle 表單送出密碼。</div><div style="margin-top:14px">這份表單是在 ${esc(CONFIG.showName)} 中建立。<br>這份表單很可疑嗎？<a href="report.html">報告</a></div><a class="gmark" href="${CONFIG.igUrl}" target="_blank" rel="noopener">Gooogle 表單</a></div>`;
   $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
   p.qs.forEach(q=>{
     const card=$('#q_'+q.id);
@@ -840,6 +840,9 @@ function reveal(fast){
       else if(fc)mark('frog','RICK',1,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者捕獲 ${fc} 次、漏看 ${fs-fc} 次。注意力尚可，但顯然有在分心。`);
       else mark('frog','BRUH',3,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者完全沒有察覺。研究小組建議其平時多留意身後。`)}
     gagMark();
+    // report.html（檢舉頁）會留下檢舉理由
+    let rep=null;try{rep=localStorage.getItem('mbti_form_reported')}catch(e){}
+    if(rep)mark('report','SALT',4,`受試者在作答期間曾嘗試檢舉本表單，理由為「${esc(rep)}」。研究小組已讀，哭完之後決定繼續做下去。`);
     const r=result(),T=TYPES[r.type],nick=esc((ans.nick||'受試者').trim()),pw=[92,78,61,37];
     $('#form').innerHTML=`
     <div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1><div class="desc">已記錄您的回覆。以下為系統依據您的作答所產生之個人化人格分析報告。</div>
@@ -900,13 +903,17 @@ const seqTxt=h=>h.slice(-8).map(s=>`「${esc(s)}」`).join(' → ');
 // 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
 // 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。
 stats.went={};stats.away={};stats.goOut=null;
-function noteGo(k){stats.went[k]=true;stats.goOut={k,t:Date.now()};save()}
+// 待超過這個秒數就算「有誠意」：之後再點同一個連結就不再重新計時（也不會再跳即時吐槽）
+const passSec=k=>k==='video'?CONFIG.videoThankSec:4;
+const passed=k=>(stats.away[k]||0)>=passSec(k);
+function noteGo(k){stats.went[k]=true;if(!passed(k))stats.goOut={k,t:Date.now()};save()}
 // 回到這頁：算出在外面待了幾秒（頁面被重新載入的情況，在還原紀錄時也會呼叫）
 function backFromOut(){
   const g=stats.goOut;if(!g)return null;stats.goOut=null;
   const s=Math.round((Date.now()-g.t)/1000);stats.away[g.k]=Math.max(stats.away[g.k]||0,s);save();return [g.k,s];
 }
-document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a)return;
+// 只算最後一題與結果頁的按鈕；頂部/頁尾的 Gooogle 連結是彩蛋，不算
+document.addEventListener('click',e=>{const a=e.target.closest('a[href]');if(!a||a.closest('.gl,.foot'))return;
   const h=a.getAttribute('href');const k=h===CONFIG.igUrl?'ig':h===CONFIG.ytChannelUrl?'yt':h===CONFIG.videoUrl?'video':null;
   if(k)noteGo(k)},true);
 document.addEventListener('visibilitychange',()=>{
@@ -924,7 +931,7 @@ function ctaBack(k,s){
     else{t.textContent='🥹 謝謝你，你是好人';b.innerHTML=p(`你在影片那邊待了 ${awayTxt(s)}。影片有 10 分鐘，我們不強求，有點進來看就是愛。`)}
     return;
   }
-  if(s<4){t.textContent='……回來得好快喔';
+  if(s<passSec(k)){t.textContent='……回來得好快喔';
     b.innerHTML=p(`你在 ${where} 只待了 ${awayTxt(s)}。研究小組實測，這個時間不太夠按追蹤。`);play('bruh')}
   else{t.textContent='🥹 謝謝你，你是好人';
     b.innerHTML=p(`你在 ${where} 待了 ${awayTxt(s)}，研究小組選擇相信你有按下去。`)}
@@ -1031,7 +1038,7 @@ function save(){
     frog:{shown:FROG.shown,caught:FROG.caught,seen:FROG.seen},
     qs:Object.fromEntries(Object.values(Q).map(q=>[q.id,{opts:q.opts,lateShown:q.lateShown}]))}))}catch(e){}
 }
-function clearSave(){cleared=true;try{localStorage.removeItem(SAVE_KEY)}catch(e){}}
+function clearSave(){cleared=true;try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem('mbti_form_reported')}catch(e){}}
 function restore(){
   if(TEST)return false;
   let s=null;try{s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null')}catch(e){}
