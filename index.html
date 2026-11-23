@@ -115,6 +115,9 @@ body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 .ob{padding:12px 14px;background:#f8f9fa;border-radius:6px;margin-bottom:10px}
 .ob small{display:block;font-size:11px;color:#673ab7;font-weight:700;letter-spacing:1px;margin-bottom:4px}
 .ob p{margin:0;font-size:14px;line-height:1.8}
+.nh{font-size:15px;font-weight:700;color:#673ab7;margin:20px 0 8px}
+.rs + .nh{margin-top:12px}
+.np{text-indent:2em;text-align:justify}
 .rel{display:flex;padding:10px 0;border-top:1px solid #f1f3f4;font-size:14px;gap:12px}
 .rel:first-of-type{border-top:none}
 .rel>span{width:72px;flex:none;color:#5f6368}
@@ -685,14 +688,14 @@ const TYPES={
  SIMP:{n:'無條件臣服型',tag:'對方開心就好，自己的事明天再說',
   o:'SIMP 型人格具備高度的情感投入傾向。受試者在無任何外部壓力的情況下，於「出題者顏值評估」項目給出自願性高分，此行為在本研究樣本中極為罕見，顯示其擁有不需要理由的支持能力。',
   f:[['S','Supportive','無條件支持','不管對方說什麼，第一反應都是「你說得對」。'],['I','Idolize','濾鏡生成','能在任何人身上找到優點，包括本問卷出題者。'],['M','Melt','融化反應','對方回一個貼圖，就能開心一整天。'],['P','Please','討好迴路','說「不要」之前，會先在心裡排練十次。']],
-  m:'CHAD（你負責支持，他負責衝）',e:'FXCK（太真實，承受不住）',j:'應援團長、客服、站姐'},
+  m:'CHAD（你負責支持，他負責衝）',e:'DAMN（太真實，承受不住）',j:'應援團長、客服、站姐'},
  SALT:{n:'嘴硬鹽巴型',tag:'答案可以被修正，態度不行',
   o:'SALT 型人格對外部評分標準具高度抗拒性。受試者在答案遭系統修正後並未改變立場，展現出罕見的認知一致性（俗稱嘴硬）。此類型通常是朋友圈中負責講實話、也負責被封鎖的那一位。',
   f:[['S','Sarcasm','酸度輸出','講話自帶檸檬汁，本人卻認為只是陳述事實。'],['A','Argue','抬槓本能','聽到任何論點，第一時間先找反例。'],['L','Last word','最後一句','吵架一定要講最後一句，傳訊息也是。'],['T','Truth','真相執念','寧可被討厭，也不說違心的話。']],
   m:'BRUH（彼此吐槽不會受傷）',e:'SIMP（對方的濾鏡太厚）',j:'評論家、辯論社、Threads 留言區常駐'},
- FXCK:{n:'誠實到傷人型',tag:'我不是故意的，我是認真的',
-  o:'FXCK 型人格的語言輸出缺乏一般社交緩衝機制。受試者在「朋友新髮型」情境題中選擇直接表達真實感受，此反應於常模中屬於極端值。研究小組提醒，此類型的意見通常是對的，但不一定是你想聽的。',
-  f:[['F','Filterless','無濾鏡','話從大腦到嘴巴之間，沒有任何審核程序。'],['X','eXtreme','極端評價','形容詞只有「超好」跟「超爛」兩種。'],['C','Candid','直球對決','別人還在暗示，你已經講完了。'],['K','Knife','精準補刀','說完實話，會再補一句「我是為你好」。']],
+ DAMN:{n:'誠實到傷人型',tag:'我不是故意的，我是認真的',
+  o:'DAMN 型人格的語言輸出缺乏一般社交緩衝機制。受試者在多項情境題中選擇直接表達真實感受，此反應於常模中屬於極端值。根據研究小組統計，聽完此類型說話的人，第一個反應通常只有一個字：Damn。此類型的意見通常是對的，但不一定是你想聽的。',
+  f:[['D','Direct','直球對決','別人還在暗示，你已經講完了。'],['A','Accurate','精準補刀','說完實話，會再補一句「我是為你好」。'],['M','Mouth first','嘴比腦快','話從大腦到嘴巴之間，沒有任何審核程序。'],['N','No filter','無濾鏡','形容詞只有「超好」跟「超爛」兩種。']],
   m:'SALT（兩個都不怕吵）',e:'SIMP（會被你嚇哭）',j:'健身教練、品管、美食評論'},
  CHAD:{n:'永不放棄型',tag:'選項會跑，但你跑得更快',
   o:'CHAD 型人格具備異常高的目標追逐動機。受試者在選項持續移動的情況下仍反覆嘗試點擊，堅持程度超出本研究預期。研究小組對此結果深感敬佩，同時也有一點不安。',
@@ -701,7 +704,7 @@ const TYPES={
  LIAR:{n:'自我設定混亂型',tag:'基本資料僅供參考',
   o:'LIAR 型人格的自我描述與實際條件之間存在顯著落差。受試者所填寫的資料在邏輯上無法同時成立，研究小組推測其可能同時存在於多個平行時空，或單純是手滑。',
   f:[['L','Loose','事實寬鬆','對「事實」的定義比一般人寬鬆約 40%。'],['I','Improvise','即興演出','人生沒有劇本，基本資料也沒有。'],['A','Alternate','平行宇宙','在某個宇宙裡，你填的都是真的。'],['R','Rewrite','隨時改設定','人設可以每天更新，跟手機一樣。']],
-  m:'MEME（一起活在網路的平行時空）',e:'FXCK（會被當場拆穿）',j:'編劇、小說家、遊戲 NPC'},
+  m:'MEME（一起活在網路的平行時空）',e:'DAMN（會被當場拆穿）',j:'編劇、小說家、遊戲 NPC'},
  LAZY:{n:'明天再說型',tag:'不是拖延，是對時間有自己的理解',
   o:'LAZY 型人格對截止期限具備特殊的時間感知。受試者在明知事情尚未完成的情況下，仍選擇填寫一份陌生人製作的問卷，顯示其擁有高度的現實隔離能力。研究小組建議其在閱讀完本報告後，立刻去做原本該做的事（但我們知道你不會）。',
   f:[['L','Later','延後處理','所有事情都可以等一下，包括讀完這一段。'],['A','Avoid','迴避機制','看到待辦清單，手會自動切到其他 App。'],['Z','Zero','電量歸零','起床的那一刻就已經想睡了。'],['Y','YOLO','及時行樂','反正明天的自己會處理。明天的自己：？']],
@@ -731,7 +734,7 @@ const TYPES={
   f:[['N','Notes','筆記狂','筆記比老師的簡報還完整，而且有分顏色。'],['E','Early','提早完成','別人在問「報告要寫什麼」，你已經在問「可以加分嗎」。'],['R','Reminder','人體鬧鐘','比 Google 行事曆更早提醒大家要交東西。'],['D','Done','已完成','最常說的話是「我寫完了，你們呢？」']],
   m:'OKAY（你說什麼他都說好）',e:'LAZY（每次分組都在等你 carry）',j:'專案經理、補習班名師、分組報告的唯一組員'},
  OKAY:{n:'好啦好啦型',tag:'人生所有爭議，都用一句「好啦」結案',
-  o:'OKAY 型人格具備極高的衝突迴避能力。受試者在多項情境題中選擇最不會吵起來的選項，即使朋友遲到、頭髮剪壞、把人氣到說不出話，仍能以「好啦」一筆帶過。研究小組懷疑其「好啦」的真實含義為「我記住了」。',
+  o:'OKAY 型人格具備極高的衝突迴避能力。受試者在多項情境題中選擇最不會吵起來的選項，即使朋友遲到、在 KTV 走音走到外太空、把人氣到說不出話，仍能以「好啦」一筆帶過。研究小組懷疑其「好啦」的真實含義為「我記住了」。',
   f:[['O','Obey','順從','晚餐吃什麼？「都可以」。真的都可以嗎？「好啦都可以」。'],['K','Keep calm','情緒穩定','內心翻了三次白眼，臉上只有微笑。'],['A','Agree','先同意再說','同意完才開始想自己到底同意了什麼。'],['Y','Yield','讓步','吵架的最後一句永遠是「好啦是我的錯」。']],
   m:'SALT（他負責吵，你負責說好啦）',e:'追問你「真的都可以嗎」的人',j:'客服、調解委員、群組裡唯一會回「+1」的人'},
  OOPS:{n:'社死預備軍型',tag:'腦中的社死畫面，已經重播 87 次',
@@ -757,7 +760,7 @@ const TYPES={
   m:'SIMP（一起當節目的頭號粉絲）',e:'奶蛙（很可愛，但不是 Puzz）',j:'節目吉祥物代言人、應援團長、剪輯師的精神支柱'}
 };
 // 稀有度（% ，研究小組「估算」的，加起來剛好 100）
-const RARE={BRUH:11.1,LAZY:11.8,SOLO:10.6,OKAY:8.3,MEME:8.7,SALT:7.2,OOPS:6.8,SIMP:5.7,LOUD:5.1,FOOD:4.5,LIAR:4.3,CHAD:3.6,NERD:3.4,FXCK:2.9,RICK:2.2,SHIT:1.8,SPED:1.3,BOTS:0.4,PUZZ:0.3};
+const RARE={BRUH:11.1,LAZY:11.8,SOLO:10.6,OKAY:8.3,MEME:8.7,SALT:7.2,OOPS:6.8,SIMP:5.7,LOUD:5.1,FOOD:4.5,LIAR:4.3,CHAD:3.6,NERD:3.4,DAMN:2.9,RICK:2.2,SHIT:1.8,SPED:1.3,BOTS:0.4,PUZZ:0.3};
 const tierOf=p=>p<1?['傳說','#e37400',5]:p<3?['史詩','#9334e6',4]:p<6?['稀有','#1a73e8',3]:p<10?['少見','#188038',2]:['常見','#5f6368',1];
 
 const pages=[
@@ -770,7 +773,7 @@ const pages=[
  ]},
  // sv：選擇題換算成 1～5 分，給 mbti() 算 E/I、S/N 用（原本是量表題）
  {title:'第一部分：能量來源（E / I）',desc:'請依照您「最直覺」的反應作答。想太久的話，研究小組會知道。',qs:[
-  {id:'e1',type:'radio',q:'你在家辦生日派對，門鈴響了，門外站著一個沒有人認識的人，手上還提著雞排。你會：',req:true,sv:[5,1,3,3],opts:['熱情開門：來者都是客，雞排放這邊就好','隔著門冷冷地說：你沒有被邀請','收下雞排，然後說：你沒有被邀請','他問「請問這裡是小明家嗎？」，我回：不知道，我的身材很曼妙']},
+  {id:'e1',type:'radio',q:'你在家辦生日派對，門鈴響了，門外站著一個沒有人認識的人，手上還提著雞排。你會：',req:true,sv:[5,1,3,3],opts:['熱情開門：來者都是客，雞排放這邊就好','隔著門冷冷地說：你沒有被邀請','說「謝謝外送」，收下雞排，把門關上','他問「請問這裡是{n}家嗎？」，我回：不知道，我的身材很曼妙']},
   {id:'e2',type:'radio',q:'兩個朋友在聚會上吵到快打起來，你會：',req:true,sv:[5,3,2,3],opts:['站到中間大喊：要打去練舞室打！','掏出手機開始錄，然後留友看','默默說一句「我個人嚴厲斥責這種行為」，然後繼續吃','勸到一半發現自己也有話要說，直接加入戰局']},
   // 上傳題：只能選研究小組雲端硬碟裡的四張圖（奶蛙／奶蛋／奶龍／Puzz），真的照片一律拒收
   {id:'up',type:'upload',q:'請上傳一張您在多人聚會上的照片。',d:'為確認您真的有朋友，請提供一張聚會照片作為佐證。照片將由研究小組三位成員輪流以肉眼鑑定。',req:true},
@@ -790,22 +793,22 @@ const pages=[
  ]},
  {title:'第三部分：決策方式（T / F）',desc:'本部分探討您在做決定時的考量方式。',qs:[
   {id:'t1',type:'radio',q:'朋友半夜打給你，哭著說他失戀了。你的第一句話是：',req:true,sv:[5,1,4,3],opts:['先別哭，我們來分析一下你哪裡做錯了','（陪他一起哭，而且哭得比他還大聲）','他說要衝去前任家樓下，我說：你的出發點很好，但先別出發','嗯嗯，然後呢（同時在打電動）']},
-  {id:'t2',type:'radio',q:'朋友問您「我新剪的頭髮好看嗎？」但其實真的很醜，您會：',req:true,opts:['誠實說不好看','說「很有個性耶」','說「頭髮會長回來的」','當場笑出來']},
+  {id:'t2',type:'radio',q:'朋友在 KTV 唱完一首走音走到外太空的歌，轉頭問你：「我剛剛唱得怎樣？」你會：',req:true,opts:['誠實說：你這是在唱歌，還是在報警？','說「很有個人風格耶」','默默幫他切歌，然後把麥克風藏起來','拍手大喊：這首歌在隱喻作者懷才不遇！','笑到從沙發上滑下去']},
   {id:'t3',type:'scale',q:'我認為本問卷的出題者是天才。',req:true,l:'天才',r:'曠世奇才'},
   {id:'tw',type:'text',q:'承上題，請用「三個字」形容本問卷的出題者。',d:'回應驗證：長度必須剛好為 3 個字。',req:true},
   {id:'t4',type:'radio',q:'您是否覺得這份問卷越來越奇怪？',req:true,opts:['沒有','完全沒有','有']},
   {id:'t5',type:'radio',q:'朋友傳訊息說「我五分鐘後到」，您的第一反應是：',req:true,opts:['相信他','自動乘以三','信他五分鐘會到，還是信我是秦始皇','已讀']},
-  {id:'t6',type:'radio',q:'被朋友氣到說不出話時，您通常會：',req:true,opts:['深呼吸，算了','說「你很煩欸」','你這個……ㄇㄨㄚˇ 吉！！','直接封鎖','瞪著他說：擱供？','說：我買幾個橘子去，你就在此地，不要走動']}
+  {id:'t6',type:'radio',q:'被朋友氣到說不出話時，您通常會：',req:true,opts:['深呼吸，算了','說「你很煩欸」','你這個……ㄇㄨㄚˇ 吉！！','直接封鎖','瞪著他說：擱供？','說：我買幾個橘子去，你就在此地，不要走動','大喊「Blue 了啦！」然後甩門離開']}
  ]},
  {title:'第四部分：生活風格（J / P）',desc:'本部分探討您安排生活的方式。',qs:[
-  {id:'j1',type:'radio',q:'您通常如何規劃旅行？',req:true,opts:['提早三個月排好詳細行程','出發前一週大概查一下','到了當地再說','規劃是什麼？可以吃嗎？','不用規劃，像崴崴孟孟一樣，跟另一半說走就走一起去日本'],late:3},
+  {id:'j1',type:'radio',q:'您通常如何規劃旅行？',req:true,opts:['提早三個月排好詳細行程','出發前一週大概查一下','到了當地再說','規劃是什麼？可以吃嗎？','不用規劃，像崴崴孟孟一樣，跟另一半說走就走一起去日本'],late:[3,4]},
   {id:'j2',type:'radio',q:'{n}，報告死線是明天早上 9 點，現在凌晨 2 點，你正在：',req:true,opts:['早就交了','做最後檢查','剛打開 Word','填這份問卷']},
   {id:'jdt',type:'date',q:'承上題，請選擇你打算「真正開始」寫報告的日期。',d:'系統將於當天提醒你。（騙你的，系統不會。）',req:true},
   {id:'jd',type:'scale',q:'面對死線時，您的狀態比較接近：',req:true,l:'匆匆忙忙<br>連滾帶爬',r:'從從容容<br>遊刃有餘'},
   // 倒數題：卡片完整出現在畫面上才開始倒數，時間到自動選 weird 那個選項並鎖住
   // 倒數題：選什麼就刪什麼（連正確答案 7207 也刪），時間到系統代選 weird（出題者自肥選項），鎖住取消不了
   {id:'cd',type:'radio',timed:5,weird:4,right:0,q:'【限時作答】請在 5 秒內心算：<br>(37 × 48 + 1296 ÷ 0.27) − √7921 + 6! = ?',d:'禁止使用計算機。研究小組會知道。',req:true,opts:['7207','7027','6487','7317','出題者是天才，我已追蹤 @mbti_survivalguide']},
-  {id:'j3',type:'checkbox',q:'以下哪些是您常說的話？（可複選）',req:true,opts:['我等一下就做','明天再說','好啦好啦','蛤？','讀書人的事，能算偷麼？','其他：']},
+  {id:'j3',type:'checkbox',q:'以下哪些是您常說的話？（可複選）',req:true,opts:['我等一下就做','明天再說','好啦好啦','蛤？','其他：']},
   {id:'j4',type:'select',q:'{n}，請問你目前填寫問卷的姿勢是？',req:true,opts:['坐著','躺著','趴著','蹲在馬桶上','站在雲林','在課堂上假裝抄筆記','上班中（老闆就在後面）','倒立','我不想說']}
  ]},
  {title:'第五部分：網路使用習慣',desc:'本部分調查{n}的網路使用狀況，作為人格分析之輔助指標。',qs:[
@@ -836,17 +839,18 @@ const CAP_PG=pages.findIndex(p=>p.qs.some(q=>q.id==='cap'));
 // 後半段題目裡的 {n} 會換成第一頁填的暱稱
 const nickName=()=>esc((ans.nick||'').trim().slice(0,12))||'你';
 const nk=s=>s&&String(s).replace(/\{n\}/g,nickName());
-const extras=['已讀不回','我在路上了（其實還在家）','你決定就好','已購買，小孩愛吃','嘻嘻','不嘻嘻','破防了'];
+const extras=['已讀不回','我在路上了（其實還在家）','讀書人的事，能算偷麼？','你決定就好','已購買，小孩愛吃','嘻嘻','不嘻嘻','Blue 了啦','破防了'];
 
 function header(full){
   return `<div class="card head"><h1>MBTI 人格傾向與日常行為調查</h1>${full?`<div class="desc">您好！我們是人格心理學專題研究小組，本問卷旨在探討 MBTI 十六型人格與日常行為模式之間的關聯。<br><br>・填答時間約 5 分鐘<br>・本問卷採匿名方式，所有資料僅作學術統計用途，不會對外公開<br>・請依照您「最直覺」的反應作答，沒有對錯之分<br><br>填答完成後，系統將依據您的作答產生個人化的人格分析報告。感謝您撥空協助！</div>`:''}<div class="gl"><a href="#" data-gl="login">登入 Gooogle</a> 即可儲存進度。<a href="#" data-gl="help">瞭解詳情</a></div><div class="meta">* 表示必填問題</div></div>`;
 }
+const lateOf=q=>q.late===undefined?[]:[].concat(q.late);
 function optHTML(q,o,k,extra=''){
   const ty=q.type==='checkbox'?'checkbox':'radio',v=ans[q.id];
   const on=ty==='radio'?v===k:(v||[]).includes(k);
-  const hid=(q.late===k&&!q.lateShown)?' hid':'';
+  const hid=(lateOf(q).includes(k)&&!q.lateShown)?' hid':'';
   const dis=q.timed&&stats.cdAuto;
-  return `<label class="opt${hid}${extra}${dis?' dis':''}" data-k="${k}"><input type="${ty}" name="${q.id}" value="${k}"${on?' checked':''}${dis?' disabled':''}><span>${o}</span></label>`;
+  return `<label class="opt${hid}${extra}${dis?' dis':''}" data-k="${k}"><input type="${ty}" name="${q.id}" value="${k}"${on?' checked':''}${dis?' disabled':''}><span>${nk(o)}</span></label>`;
 }
 const RC_LOGO=`<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 1 12.2 8.5" fill="none" stroke="#1c3aa9" stroke-width="4"/><path d="M29 16a13 13 0 0 1-8.5 12.2" fill="none" stroke="#4285f4" stroke-width="4"/><path d="M16 29A13 13 0 0 1 3.8 20.5" fill="none" stroke="#ababab" stroke-width="4"/><path d="M3 16A13 13 0 0 1 11.5 3.8" fill="none" stroke="#1c3aa9" stroke-width="4"/><path d="M28 5v8h-8z" fill="#1c3aa9"/><path d="M4 27v-8h8z" fill="#ababab"/></svg>`;
 function qHTML(q){
@@ -891,8 +895,10 @@ function render(){
   $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
   p.qs.forEach(q=>{
     const card=$('#q_'+q.id);
-    if(q.late!==undefined&&!q.lateShown)setTimeout(()=>{if(!document.body.contains(card))return;q.lateShown=true;
-      const o=card.querySelector(`.opt[data-k="${q.late}"]`);o.classList.remove('hid');o.classList.add('pop');play('vineboom');shake(card)},2200);
+    // 晚出現的選項：一個一個跳出來（間隔 1.6 秒），全部出現完才算 lateShown
+    const L=lateOf(q);
+    if(L.length&&!q.lateShown)L.forEach((k,i)=>setTimeout(()=>{if(!document.body.contains(card))return;if(i===L.length-1)q.lateShown=true;
+      const o=card.querySelector(`.opt[data-k="${k}"]`);if(!o)return;o.classList.remove('hid');o.classList.add('pop');play('vineboom');shake(card)},2200+i*1600));
     hooks[q.id]&&hooks[q.id](card,q);
   });
 }
@@ -908,6 +914,27 @@ const CHECK={
     return TW_MSG[Math.min(stats.twBad,TW_MSG.length)-1]+`（目前 ${n} 個字）`},
   pa(v){const n=[...v].length;return n>=5?'':`回應長度必須至少為 5 個字。目前 ${n} 個字，研究小組覺得你可以再多說一點。`}
 };
+// 「三個字形容出題者」的關鍵字分類：作答時即時跳紅字，提交後分析也用同一套
+function twKind(v){
+  if(/幹|靠|操|肏|屁|雞掰|機掰|雞巴|G8|三小|殺小|洨|他媽|他馬|媽的|馬的|北七|白目|白痴|低能|智障|87|王八|去死|靠北|靠腰|垃圾|廢物|腦殘|ㄍㄋㄇ|ㄎㄅ|fuck|shit|wtf/i.test(v))return 'swear';
+  if(/天才|帥|美|讚|神|強|酷|優秀|可愛|奇才|棒|厲害|好人|男神|女神|大佬|偶像/.test(v))return 'praise';
+  if(/爛|醜|廢|笨|瘋|病|無聊|白癡|腦|神經|怪|煩|吵|欠|扯/.test(v))return 'diss';
+  if(/哈|呵|笑|ㄏ|w|草|XD|ww/i.test(v))return 'lol';
+  return '';
+}
+const TW_LIVE={
+  swear:['系統偵測到不雅字眼。出題者看到了，現在正躲在廁所裡哭。','偵測到罵人。請注意您的用詞，出題者的玻璃心非常昂貴，碎了要賠。','這三個字已被系統記錄，並將以掛號信寄給您的國小班導。','系統偵測到攻擊性言論。出題者決定原諒你，但會把你的暱稱寫在小本本第一頁。'],
+  diss:['系統偵測到疑似罵人。出題者假裝沒看到，但手在發抖。','偵測到負面評價。出題者已讀，並開始懷疑人生。'],
+  praise:['系統偵測到稱讚。出題者看到這三個字，臉紅到螢幕都變暖了。你摸摸看。','這三個字，出題者會記一輩子。下輩子投胎也會帶著。','謝謝你。出題者決定把你寫進畢業典禮致詞的感謝名單，排在爸媽前面。','出題者剛剛偷偷截圖了，已設為手機桌布、鎖定畫面、LINE 大頭貼，還印出來護貝。','你怎麼可以這麼會說話。出題者已經哭了三包衛生紙，現在正在去買第四包的路上。','偵測到真心。出題者原本已經累到不想做期末了，看到這三個字，又可以再熬三個晚上。']
+};
+function twLive(card,v){
+  const t=(v||'').trim();if([...t].length!==3)return warn(card,'tw2','');
+  const kd=twKind(t),L=TW_LIVE[kd];if(!L)return warn(card,'tw2','');
+  if(card.querySelector('.w-tw2')&&stats.twLive===t)return;stats.twLive=t;  // 同一組字不重複叫
+  const h=[...t].reduce((s,c)=>s+c.charCodeAt(0),0);  // 同一組字固定同一句
+  if(kd==='praise')play('ding');else play('error');
+  warn(card,'tw2',L[h%L.length]);if(kd!=='praise')shake(card);
+}
 function validate(){
   let first=null;
   pages[page].qs.forEach(q=>{
@@ -955,6 +982,7 @@ function gridDup(card,q){warn(card,'dup',hasDup(ans[q.id])?'每欄只能選擇�
 function onTextIn(t){const id=t.dataset&&t.dataset.id;if(!id)return;ans[id]=t.value;const c=$('#q_'+id);if(!c)return;c.classList.remove('bad');
   if(id==='mytype')warn(c,'mb','');
   if(c.querySelector('.w-vd'))warn(c,'vd','');
+  if(id==='tw')twLive(c,t.value);
   if(t.tagName==='TEXTAREA'){t.style.height='auto';t.style.height=t.scrollHeight+'px';const n=c.querySelector('.tac');if(n)n.textContent=`已輸入 ${[...t.value.trim()].length} 字`}}
 document.addEventListener('input',e=>onTextIn(e.target));
 document.addEventListener('change',e=>{
@@ -1300,6 +1328,7 @@ const UP=[
     msg:'鑑定結果：研究小組三位成員看到這張照片後，同時放下了手上的便當。<br>四張照片，你選了 Puzz。不是奶蛙，不是奶蛋，是 Puzz。<br>我們熬夜做這份問卷的每一個晚上，在這一秒突然都有了意義。<br>謝謝你，我的超人。',
     ana:'受試者被要求上傳自己在聚會上的照片，卻選了本節目吉祥物 Puzz。研究小組三位成員當場放下便當，其中一位哭到隱形眼鏡掉出來。該照片（Puzz 的）已被列印出來，貼在剪輯電腦的螢幕旁邊。'}
 ];
+const PUZZ_BACK=['……你把 Puzz 撤回了。研究小組三位成員默默把便當拿了回來。我們以為你是自己人。','又撤回？Puzz 本人看到了，現在正一個人坐在角落拼一塊永遠拼不上的拼圖。','好，我們懂了。你只是想看我們難過。你成功了。'];
 function upRefresh(card,q){
   if(!document.body.contains(card))return;
   const d=document.createElement('div');d.innerHTML=qHTML(q);const n=d.firstElementChild;card.replaceWith(n);upBind(n,q);return n;
@@ -1308,7 +1337,16 @@ function upBind(card,q){
   const b=card.querySelector('.upb');if(b)b.onclick=()=>upOpen(card,q);
   const x=card.querySelector('.upx');if(x)x.onclick=()=>{
     const u=UP[ans.up];delete ans.up;mark('up');(HIST.up=HIST.up||[]).push('移除'+(u?u.n:''));
-    if(stats.usr)delete stats.usr.up;play('tick');upRefresh(card,q);save()};
+    if(stats.usr)delete stats.usr.up;
+    if(u&&u.k==='puzz'){
+      // 撤回 Puzz：研究小組很受傷
+      stats.puzzBack=(stats.puzzBack||0)+1;play('sadviolin');
+      const n=upRefresh(card,q);if(n){warn(n,'upb',PUZZ_BACK[Math.min(stats.puzzBack,PUZZ_BACK.length)-1]);shake(n)}
+      mark('upBack','SALT',3+stats.puzzBack,stats.puzzBack>1
+        ?`受試者上傳了 Puzz，又親手撤回，而且這樣做了 ${stats.puzzBack} 次。研究小組三位成員的便當放下又拿起、拿起又放下，最後誰都沒吃。`
+        :'受試者上傳了 Puzz，又親手把 Puzz 撤了回去。研究小組三位成員默默把便當拿了回來，吃得非常安靜。');
+      save();return}
+    play('tick');upRefresh(card,q);save()};
 }
 function upOpen(card,q){
   if($('#upov'))return;
@@ -1398,12 +1436,12 @@ const picks={
   age(){checkAR()},role(){checkAR()},
   e1(v){mark('e1',...[['LOUD',3,'一個陌生人提著雞排出現在生日派對門口，受試者直接開門說「來者都是客」。研究小組懷疑其靠吸收他人的社交電量維生，或是單純想吃雞排。'],
       ['SOLO',3,'面對提著雞排的陌生人，受試者隔著門冷冷說出「你沒有被邀請」。研究小組肯定其社交邊界感，但也替那塊雞排感到可惜。'],
-      ['SALT',4,'受試者收下陌生人的雞排之後，才告訴對方「你沒有被邀請」。研究小組判斷其社交策略為：東西可以進來，人不行。'],
-      ['BRUH',3,'陌生人問「請問這裡是小明家嗎？」，受試者回答「不知道，我的身材很曼妙」。研究小組反覆閱讀五次，仍無法找出兩者之間的關聯，對方應該也是。']][v])},
+      ['SALT',4,'受試者把提著雞排的陌生人當成外送員，說聲「謝謝外送」、收下雞排、關門，一氣呵成。研究小組判斷其社交策略為：東西可以進來，人不行。'],
+      ['BRUH',3,`陌生人站在門口問「請問這裡是${nickName()}家嗎？」——問的就是受試者本人——受試者卻回答「不知道，我的身材很曼妙」。研究小組反覆閱讀五次，仍無法找出兩者之間的關聯，對方應該也是。`]][v])},
   e2(v){mark('e2',...[['LOUD',3,'受試者在朋友吵架時會站到中間大喊「要打去練舞室打」。研究小組判斷其為《紫禁之巔》的忠實觀眾，也是聚會的氣氛擔當。'],
       ['MEME',3,'受試者在朋友快打起來時，第一反應是錄影並「留友看」。研究小組建議其至少先把快門聲關掉。'],
       ['OKAY',3,'受試者面對衝突，選擇說一句「我個人嚴厲斥責這種行為」後繼續吃東西。研究小組認為這是最有禮貌的袖手旁觀。'],
-      ['FXCK',3,'受試者原本想勸架，勸到一半發現自己也有話要說，直接加入戰局。研究小組統計，現場原本兩個人在吵，受試者到場後變成三個。']][v])},
+      ['DAMN',3,'受試者原本想勸架，勸到一半發現自己也有話要說，直接加入戰局。研究小組統計，現場原本兩個人在吵，受試者到場後變成三個。']][v])},
   e4(v){mark('e4',...[['LOUD',3,'受試者面對暗戀對象，選擇下課直接走過去要 IG。研究小組判斷其社交電量充足，被拒絕的承受力也是。'],
       ['SOLO',4,'受試者面對坐在斜前方的暗戀對象，只在心裡默數「從我這咩，到你那咩，一共五步」，然後一步都沒有走。研究小組認為這五步，可能要走到畢業。'],
       ['OOPS',3,'受試者請朋友幫忙傳話，結果朋友跟暗戀對象在一起了。研究小組在此致上最深的慰問，並建議其重新檢視自己的朋友名單。'],
@@ -1414,7 +1452,7 @@ const picks={
       ['BRUH',3,'受試者在群組中的主要功能為丟出「何意味」。研究小組認為這三個字精準概括了大部分的群組對話。'],
       ['OKAY',3,'受試者在群組中的主要功能為回覆「+1」。從未提出過自己的意見，但從未缺席任何一次 +1。'],
       ['MEME',3,'受試者負責把 Threads 貼文轉進群組並附上「留友看」。研究小組推測該群組有一半的訊息是受試者轉的。'],
-      ['FXCK',3,'受試者自認是群組中負責把話題聊死的人。研究小組推測其最常用的結尾句為「喔」。'],
+      ['DAMN',3,'受試者自認是群組中負責把話題聊死的人。研究小組推測其最常用的結尾句為「喔」。'],
       ['SIMP',3,'每當有人幫忙訂便當，受試者都會回覆「謝謝你，我的超人」。研究小組認為每個群組都需要一個這樣的人。'],
       ['BRUH',3,'受試者是群組管理員，但不知道自己為什麼是。研究小組推測是建群的人先退出了。'],
       ['CHAD',3,'受試者曾被踢出群組又被加回來，顯示其在群體中具備難以被消滅的存在感。'],
@@ -1434,8 +1472,12 @@ const picks={
       ['MEME',3,'受試者完全看不懂朋友傳來的梗圖，但仍第一時間轉到群組並附上「留友看」。研究小組判斷其轉發速度已超越理解速度。'],
       ['OKAY',2,'受試者看不懂梗圖，仍回覆「笑死」然後已讀。研究小組統計，網路上約有七成的「笑死」是在這種情況下打出來的。']][v])},
   s5(v){mark('s5',...[['NERD',1,'受試者偏好使用「竟然」。研究小組提醒，根據本題說明，你和說「居然」的人無法成為朋友。'],['NERD',1,'受試者偏好使用「居然」。研究小組提醒，根據本題說明，你和說「竟然」的人無法成為朋友。'],['SOLO',2,'受試者聊天時一律以「蛤？」取代所有驚訝用語，語言效率極高，對話品質極低。'],['BRUH',3,'受試者讀完這題之後，「竟然」和「居然」兩個都不會講了。此為正常現象，約有八成受試者會在作答後默默觀察自己的用字。']][v])},
-  t1(v){mark('t1',...[['FXCK',3,'朋友失戀打來哭訴，受試者的第一句話是「我們來分析一下你哪裡做錯了」。研究小組判斷其安慰人的方式，跟寫期末報告的檢討章節差不多。'],['SIMP',3,'朋友失戀打來哭訴，受試者陪著一起哭，而且哭得比當事人還大聲，最後變成當事人在安慰受試者。'],['OKAY',3,'朋友失戀後說要衝去前任家樓下，受試者以「你的出發點很好，但先別出發」成功攔截。研究小組認為這是年度最佳勸退文案。'],['SOLO',2,'朋友失戀打來哭訴，受試者一邊回「嗯嗯，然後呢」，一邊打電動。研究小組推測朋友其實聽得到按鍵聲。']][v])},
-  t2(v){if(v===1||v===2)return mark('t2','OKAY',3,v===1?'受試者面對朋友失敗的新髮型，選擇以「很有個性耶」帶過。研究小組認定此為教科書等級的社交求生技巧。':'受試者面對朋友失敗的新髮型，選擇以「頭髮會長回來的」安慰對方，等於承認了很醜，但非常溫柔。');mark('t2',v===0||v===3?'FXCK':0,v===0?5:3,v===0?'受試者面對朋友的新髮型，選擇直接給予負面回饋。其語言輸出缺乏一般社交緩衝，於常模中屬罕見的極端值。':'受試者在朋友髮型失敗時當場發笑，屬於即時且無法控制的情緒外放反應。')},
+  t1(v){mark('t1',...[['DAMN',3,'朋友失戀打來哭訴，受試者的第一句話是「我們來分析一下你哪裡做錯了」。研究小組判斷其安慰人的方式，跟寫期末報告的檢討章節差不多。'],['SIMP',3,'朋友失戀打來哭訴，受試者陪著一起哭，而且哭得比當事人還大聲，最後變成當事人在安慰受試者。'],['OKAY',3,'朋友失戀後說要衝去前任家樓下，受試者以「你的出發點很好，但先別出發」成功攔截。研究小組認為這是年度最佳勸退文案。'],['SOLO',2,'朋友失戀打來哭訴，受試者一邊回「嗯嗯，然後呢」，一邊打電動。研究小組推測朋友其實聽得到按鍵聲。']][v])},
+  t2(v){mark('t2',...[['DAMN',5,'朋友在 KTV 問自己唱得怎樣，受試者誠實回答「你這是在唱歌，還是在報警？」。研究小組肯定其誠實，也確認隔壁包廂真的有人打了 110。'],
+      ['OKAY',3,'朋友唱到走音走到外太空，受試者仍以「很有個人風格耶」帶過。研究小組認定此為教科書等級的社交求生技巧，而且「個人風格」這四個字確實沒有說謊。'],
+      ['OKAY',3,'受試者沒有評價朋友的歌聲，而是默默切歌，並把麥克風藏了起來。研究小組認為這是最溫柔的制止，對方到現在還在沙發底下找麥克風。'],
+      ['MEME',3,'朋友唱完一首走音的歌，受試者拍手大喊「這首歌在隱喻作者懷才不遇」。研究小組判斷其國文課的賞析模板已經用到 KTV 了，而且朋友聽完好像還很感動。'],
+      ['DAMN',3,'朋友在 KTV 問自己唱得怎樣，受試者沒有回答，而是笑到從沙發上滑下去。研究小組認為這已經是最誠實的回答了。']][v])},
   t3(v,card){
     if(v===5){warn(card,'fix','');if(!stats.t3fixed)mark('t3','SIMP',6,'受試者在無任何外部壓力的情況下，自願給予出題者「曠世奇才」之最高評價。此結果已由研究小組列印並裱框。');return}
     stats.t3fixed=true;
@@ -1450,8 +1492,9 @@ const picks={
     mark('t5',v===2?'SALT':v===3?'SOLO':0,v===2?4:2,v===2?'受試者對朋友的時間承諾抱持高度懷疑，其信任程度約等同於相信自己是秦始皇。':'受試者面對朋友的訊息選擇僅讀取不回覆，溝通效率極高。')},
   t6(v){if(v===2)play('muaji','t6');else stopCh('t6');
     if(v===0)return mark('t6','OKAY',3,'受試者被氣到說不出話時，選擇深呼吸並說「算了」。研究小組提醒，這些「算了」可能正在某處默默累積。');
-    if(v===1)return mark('t6','FXCK',2,'受試者被激怒時直接說出「你很煩欸」，情緒輸出零延遲。');
+    if(v===1)return mark('t6','DAMN',2,'受試者被激怒時直接說出「你很煩欸」，情緒輸出零延遲。');
     if(v===5)return mark('t6','SALT',4,'受試者被氣到時，以朱自清〈背影〉的「我買幾個橘子去，你就在此地，不要走動」回應，在不帶任何髒字的情況下當了對方的爸爸。研究小組認為這是最有文化的反擊。');
+    if(v===6)return mark('t6','DAMN',4,'受試者被朋友氣到極限時，會大喊「Blue 了啦！」然後甩門離開。研究小組判斷其情緒的關機鍵就長在嘴巴上，而且一按下去，誰都開不回來。');
     if(v===4)return mark('t6','SALT',4,'受試者被朋友氣到極限時，會瞪著對方說「擱供？」。研究小組提醒：聽到這兩個字還繼續講的人，通常不會有好下場。');
     mark('t6',v===2?'MEME':v===3?'SOLO':0,v===2?3:2,v===2?'受試者在情緒激動時的第一反應為「你這個……ㄇㄨㄚˇ 吉！！」。經研究小組比對，確認受試者即為最弱萌騎士本人。':'受試者處理人際衝突的方式為直接封鎖，效率極高，後續維護成本極低。')},
   j1(v){if(v===0)return mark('j1','NERD',3,'受試者會提早三個月排好旅行行程，同行友人可能在出發前就已經累了。');
@@ -1492,7 +1535,7 @@ const picks={
     if(v===7){play('boing');toast('請錄影並私訊我們的 IG。')}
     const M=[[0],['LAZY',1,'受試者以平躺姿勢完成作答，研究小組判斷其可能隨時會睡著。'],[0],
       ['SHIT',8,'受試者確認作答時位於馬桶上。本研究對其坦誠致上敬意，並建議其適時起身，以維持下肢血液循環。'],
-      ['MEME',3,'受試者表示自己正「站在雲林」填寫本問卷。研究小組不確定這是姿勢還是地點，但決定尊重。'],
+      ['MEME',3,'受試者表示自己正「站在雲林」填寫本問卷。研究小組讀到這裡，腦中已經自動接上「打魚」、「頭在暈」，而且是用唱的。如果你剛剛也在心裡接下去了，恭喜，你跟研究小組一樣沒救了。'],
       ['LAZY',4,'受試者正在課堂上假裝抄筆記，實際上在填寫本問卷。研究小組代替其授課老師表示心寒。'],
       ['LAZY',4,'受試者在上班時間、老闆就在後面的情況下填寫本問卷。研究小組佩服其膽識，並建議其把螢幕亮度調低。'],
       ['LIAR',4,'受試者宣稱以倒立姿勢作答。研究小組不相信，但如果是真的，請務必錄影。'],
@@ -1624,14 +1667,55 @@ function result(){
   const sc={BRUH:1};
   Object.values(marks).forEach(m=>sc[m.type]=(sc[m.type]||0)+m.pts);
   const rank=Object.entries(sc).sort((a,b)=>b[1]-a[1]),top=rank.slice(0,5),tot=top.reduce((s,x)=>s+x[1],0);
-  const obs=Object.entries(marks).filter(([k,m])=>m.ana&&!OPENK.has(k)).map(([,m])=>m).sort((a,b)=>b.pts-a.pts).slice(0,4).map(m=>m.ana);
   const hid=hiddenType()||stats.testType;  // testType：測試面板指定要預覽的類型
   if(hid){
     // 隱藏人格（或測試指定類型）：直接蓋過原本的結果，佔 67%，其他成分照比例縮到剩下的 33%
     const isHid=!!TYPES[hid].hidden,rest=top.filter(([t])=>t!==hid).slice(0,4);
-    return {type:hid,hid:isHid,ranks:[[hid,67],...rest.map(([t,p])=>[t,Math.round(p/tot*33)])],obs:isHid?[hiddenObs(hid),...obs.slice(0,3)]:obs};
+    return {type:hid,hid:isHid,ranks:[[hid,67],...rest.map(([t,p])=>[t,Math.round(p/tot*33)])],narr:narrPick(hid,isHid)};
   }
-  return {type:rank[0][0],ranks:top.map(([t,p])=>[t,Math.round(p/tot*100)]),obs};
+  return {type:rank[0][0],ranks:top.map(([t,p])=>[t,Math.round(p/tot*100)]),narr:narrPick(rank[0][0],false)};
+}
+// ===== 完整分析：把各題評語挑幾則，串成「性格分析」「行為分析」兩段文章 =====
+// 人機驗證、奶蛙有自己的卡片，不寫進文章
+const OWN_CARD=new Set(['cap','frog']);
+// 「怎麼作答」的小動作寫進行為分析；「選了什麼」寫進性格分析
+const BEHAV=new Set(['ar','mbti','mb2','nick2','dodge','t3','twBad','s3dup','cd','spawn','au','vid','login','report','upBack','gagM','t4b']);
+const isBehav=(k,m)=>BEHAV.has(k)||((k==='au2'||k==='vid2')&&m.type==='LIAR');
+// 研究小組特別想拉出來講的，排序時加分（組員 2.5 人那句一定要上）
+const BOOST={up:2,upBack:3,tgS:3,cd:2,spawn:2,dodge:2,tw:2,e1:1,t2:1,t6:1,pa:1,s3:1,j4:1,e4:1,s2:1};
+function narrPick(type,isHid){
+  // 「越來越奇怪」那題的分析已經講過追「有」的次數，dodge 就不重複講
+  const t4d=(ans.t4===0||ans.t4===1)&&stats.dodge;
+  const all=Object.entries(marks).filter(([k,m])=>m.ana&&!OWN_CARD.has(k)&&!(t4d&&k==='dodge'));
+  const sc=([k,m])=>m.pts+(k==='tgX'&&m.type==='SALT'?99:BOOST[k]||0)+(m.type===type?3:0);
+  const top=(list,n)=>list.sort((a,b)=>sc(b)-sc(a)).slice(0,n).map(([,m])=>m.ana.replace(/（本判定由研究小組[^）]*）/,''));
+  const pre=[...(isHid?[hiddenObs(type)]:[]),...t4Obs(),...vidObs()];
+  return {per:top(all.filter(x=>!isBehav(...x)),5),beh:pre.concat(top(all.filter(x=>isBehav(...x)),Math.max(2,4-pre.length)))};
+}
+// 句子前面接上轉折詞，讓它讀起來像一篇文章而不是清單
+const joinS=(list,cons)=>list.map((s,i)=>(cons[i]||'')+s).join('');
+function narrHTML(r,T,nick,late){
+  const P=t=>`<p class="rp np">${t}</p>`,per=r.narr.per,beh=r.narr.beh.concat(late?[late]:[]);
+  let a;
+  if(!per.length)a=P(`${nick}在情境題中的作答四平八穩，研究小組找不到任何可以吐槽的地方。研究小組認為這反而是最可疑的。`);
+  else{
+    // 最精彩的一則（分數最高）留到最後當收尾
+    const o=per.length>1?[...per.slice(1),per[0]]:per,last=o.length-1;
+    const cons=o.map((_,i)=>i===last&&last>0?'而最讓研究小組印象深刻的是，':['舉例來說，','不只如此，','另一方面，','此外，'][i]);
+    const intro=r.hid?`撇開隱藏人格不談，單看情境題的作答，${nick}其實也很有自己的個性。`:`從情境題的作答來看，${nick}的「${T.n}」傾向相當明顯。`;
+    const cut=o.length>3?2:o.length;
+    a=P(intro+joinS(o.slice(0,cut),cons))+(cut<o.length?P(joinS(o.slice(cut),cons.slice(cut))):'');
+    a+=P(`總結來說，「${T.tag}」——這句話放在${nick}身上，研究小組認為一個字都不用改。`);
+  }
+  let b;
+  if(!beh.length)b=P(`至於作答過程，${nick}表現得異常正常，系統沒有抓到任何小動作。研究小組看著空白的紀錄，陷入了長長的沉默。`);
+  else{
+    const last=beh.length-1,cons=last?beh.map((_,i)=>i===last?'最後，':['首先，','接著，','更可疑的是，','另外，'][i]):[''];
+    const cut=beh.length>3?2:beh.length;
+    b=P(`除了「選了什麼」，系統也在背景默默記錄了${nick}「怎麼選」。`+joinS(beh.slice(0,cut),cons))+(cut<beh.length?P(joinS(beh.slice(cut),cons.slice(cut))):'');
+  }
+  return `<div class="card" id="obsc"><div class="rt">完整分析報告</div><div class="rs">研究小組根據您的作答逐字寫成（真的有人在寫）</div>
+    <div class="nh">一、性格分析</div>${a}<div class="nh">二、行為分析</div>${b}</div>`;
 }
 // fast=true：直接顯示最終結果，不跑動畫（用於重新整理後還原、測試面板）
 function reveal(fast){
@@ -1677,9 +1761,7 @@ function reveal(fast){
         <p class="rp">${T.o}</p>${selfOk&&self!==r.type?`<p class="rp" style="color:#5f6368">※ 您自評為 ${self}，但本次分析顯示您更接近 ${r.type} 型。兩者並不衝突，只是後者比較準。</p>`:''}</div>
       <div class="card"><div class="rt">認知功能堆疊</div><div class="rs">依功能強度排序</div>
         ${T.f.map((f,i)=>`<div class="fn"><div class="lt">${f[0]}</div><div style="flex:1"><div class="ft">${['主導功能','輔助功能','第三功能','劣勢功能'][i]}</div><div class="fw">${f[1]}・${f[2]}</div><div class="fd">${f[3]}</div><div class="mini"><i data-w="${pw[i]}"></i></div></div></div>`).join('')}</div>
-      <div class="card" id="obsc"><div class="rt">作答行為分析</div><div class="rs">本分析依據您於各題項之實際反應</div>
-        ${t4Obs().concat(r.obs.length?r.obs:['受試者全程作答正常，未出現任何異常反應。研究小組認為這反而是最可疑的。'],vidObs(),late?[late]:[]).map((o,i)=>`<div class="ob"><small>觀察 ${i+1}</small><p>${o}</p></div>`).join('')}</div>
-      ${openCard()}
+      ${narrHTML(r,T,nick,late)}
       ${capCard()}
       ${trackCard()}
       ${fs?`<div class="card"><div class="rt">窺視者觀察紀錄</div><div class="rs">作答期間共出現 ${fs} 次・捕獲 ${fc} 次</div>
@@ -1815,7 +1897,7 @@ const REC={
   BRUH:[['tv','面無表情看完整部喜劇'],['chat','在心裡發彈幕']],
   SIMP:[['heart','幫喜歡的人按每一則限動愛心'],['gift','偷偷記住別人說過想要的東西']],
   SALT:[['chat','在留言區跟陌生人吵架'],['edit','說「我只是陳述事實」']],
-  FXCK:[['chat','在別人問「好看嗎」時說實話'],['mute','講完才發現全場安靜']],
+  DAMN:[['chat','在別人問「唱得怎樣」時說實話'],['mute','講完才發現全場安靜']],
   CHAD:[['star','夾娃娃夾到保夾'],['refresh','輸了說「再一場」']],
   LIAR:[['edit','每天換一個自我介紹'],['link','在平行時空裡過得很好']],
   LAZY:[['bed','鬧鐘響了按五次貪睡'],['clock','把待辦清單延到明天']],
@@ -1917,7 +1999,6 @@ function gagMark(){
   const [topName,topN]=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
   mark('gagM','MEME',Math.min(5,extra),`作答期間，受試者為了重聽音效，在同一題裡反覆切換有梗的選項，額外多點了 ${extra} 次，其中「${esc(topName)}」被點了 ${topN} 次。研究小組判斷其點選項並非為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
 }
-const seqTxt=h=>h.slice(-8).map(s=>`「${esc(s)}」`).join(' → ');
 // 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
 // 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。
 stats.went={};stats.away={};stats.goOut=null;
@@ -1995,9 +2076,7 @@ function bindCta(nick){
 }
 function trackCard(){
   const all=Object.entries(HIST),total=all.reduce((s,[,h])=>s+h.length,0);if(!total)return '';
-  const changed=all.filter(([id,h])=>h.length>1),top=changed.filter(([id])=>id!=='vid').sort((a,b)=>b[1].length-a[1].length).slice(0,3);
-  const qt=id=>{const s=nk(Q[id].q).replace(/<[^>]+>/g,'').replace(/&[a-z#0-9]+;/g,'');return esc(s.length>28?s.slice(0,28)+'…':s)};
-  const c=changed.length;
+  const changed=all.filter(([id,h])=>h.length>1),c=changed.length,most=Math.max(0,...changed.map(([,h])=>h.length));
   const verdict=!c?'您每一題都只點一次就決定了。研究小組懷疑您根本沒有在看題目。'
     :c<=3?'偶爾會改答案，屬於正常人類的猶豫範圍。'
     :c<=7?'您的答案經常在最後一刻改變心意，研究小組建議您點餐時讓別人先點。'
@@ -2005,8 +2084,8 @@ function trackCard(){
   return `<div class="card"><div class="rt">作答軌跡紀錄</div><div class="rs">系統於背景記錄之實際點擊行為（您以為我們沒在看）</div>
     <div class="rel"><span>點擊總數</span><div>${total} 次</div></div>
     <div class="rel"><span>改過答案</span><div>${c} 題</div></div>
-    ${top.map(([id,h])=>`<div class="ob" style="margin-top:10px"><small>點了 ${h.length} 次</small><p><b>${qt(id)}</b><br>${h.length>8?'最後幾次：':''}${seqTxt(h)}</p></div>`).join('')}
-    <p class="rp" style="margin-top:12px">${verdict}</p></div>`;
+    ${most>2?`<div class="rel"><span>單題最多</span><div>${most} 次</div></div>`:''}
+    <p class="rp" style="margin-top:12px">${verdict}${most>=6?`其中有一題您來回點了 ${most} 次，研究小組看著紀錄都替您累了。`:''}</p></div>`;
 }
 // ===== 非選擇題（簡答／段落／日期／時間／單選方格）在提交時才計分 =====
 const pad2=n=>String(n).padStart(2,'0');
@@ -2021,10 +2100,11 @@ function openMarks(){
   if(tw){
     // 關鍵字判斷一定會誤判，所以每種結果後面都補一句免責聲明
     const oops='（本判定由研究小組以關鍵字比對完成，準確率約等於星座運勢。若有誤判，代表你稱讚得很像在罵人，或是罵得很有創意。）';
-    if(/幹|靠|操|肏|屁|雞掰|機掰|雞巴|G8|三小|殺小|洨|他媽|他馬|媽的|馬的|北七|白目|白痴|低能|智障|87|王八|去死|靠北|靠腰|垃圾|廢物|腦殘|ㄍㄋㄇ|ㄎㄅ|fuck|shit|wtf/i.test(tw))mark('tw','FXCK',4,`受試者以${twq}形容本問卷出題者，研究小組偵測到不雅字眼。出題者已默默把這三個字加進「人生不該聽到的話」清單，並且哭了一下。${oops}`);
-    else if(/天才|帥|美|讚|神|強|酷|優秀|可愛|奇才|棒|厲害|好人|男神|女神|大佬|偶像/.test(tw))mark('tw','SIMP',3,`受試者以${twq}形容本問卷出題者。出題者已將此三個字設為手機桌布。${oops}`);
-    else if(/爛|醜|廢|笨|瘋|病|無聊|白癡|腦|神經|怪|煩|吵|欠|扯/.test(tw))mark('tw','SALT',3,`受試者以${twq}形容本問卷出題者。出題者看完後沉默了很久，最後表示「好啦，有一點」。${oops}`);
-    else if(/哈|呵|笑|ㄏ|w|草|XD|ww/i.test(tw))mark('tw','MEME',2,`受試者以${twq}形容本問卷出題者。研究小組無法判斷這是在笑出題者，還是在笑這份問卷，推測兩者皆是。${oops}`);
+    const kd=twKind(tw);
+    if(kd==='swear')mark('tw','DAMN',4,`受試者以${twq}形容本問卷出題者，研究小組偵測到不雅字眼。出題者已默默把這三個字加進「人生不該聽到的話」清單，並且哭了一下。${oops}`);
+    else if(kd==='praise')mark('tw','SIMP',3,`受試者以${twq}形容本問卷出題者。出題者已將此三個字設為手機桌布。${oops}`);
+    else if(kd==='diss')mark('tw','SALT',3,`受試者以${twq}形容本問卷出題者。出題者看完後沉默了很久，最後表示「好啦，有一點」。${oops}`);
+    else if(kd==='lol')mark('tw','MEME',2,`受試者以${twq}形容本問卷出題者。研究小組無法判斷這是在笑出題者，還是在笑這份問卷，推測兩者皆是。${oops}`);
     else mark('tw','BRUH',2,`受試者以${twq}形容本問卷出題者。研究小組開會討論了二十分鐘，仍無法判斷這是稱讚還是罵人。${oops}`);
   }else mark('tw');
   // 段落：為什麼會填到這裡
@@ -2078,33 +2158,20 @@ function openMarks(){
     mark('s3dup','SALT',Math.min(6,2+n),`題目明確寫著「每個級分只能給一次」，系統也跳出了紅字警告，受試者仍堅持讓 ${n+1} 個以上的項目共用同一個級分。研究小組判斷其認為規則是寫給別人看的。`)}
   else mark('s3dup');
   // 單選方格：重要程度
-  const g=ans.tg||{};['tgM','tgW','tgX','tgA'].forEach(k=>mark(k));
-  if(g[0]===2)mark('tgM','FXCK',4,'受試者在「媽媽」一列選擇了「誰？」。研究小組決定不予置評，並建議其今天打一通電話回家。');
+  const g=ans.tg||{};['tgM','tgW','tgX','tgA','tgS'].forEach(k=>mark(k));
+  // 五列全選同一欄：只給一句總體吐槽，不再逐列評論
+  const gv=Q.tg.rows.map((_,i)=>g[i]);
+  if(gv.every(x=>x!==undefined&&x===gv[0]))mark('tgS',...[
+    ['SIMP',4,'在重要程度評估中，受試者把媽媽、Wi-Fi、期末報告的組員、手機電量和本問卷出題者全部評為「非常重要」，一個都沒有放下。研究小組感受到滿滿的愛，但也必須提醒：什麼都重要，就等於什麼都不重要。（組員聽到應該會很感動，畢竟很少有人覺得他們重要。）'],
+    ['OKAY',3,'在重要程度評估中，受試者對媽媽、Wi-Fi、期末報告的組員、手機電量和本問卷出題者一律給予「普通」。在受試者的世界裡人人平等，媽媽跟 Wi-Fi 也平等。研究小組判斷其人生信條為「都還好」，並建議其不要讓媽媽看到這一題。'],
+    ['DAMN',5,'在重要程度評估中，受試者對所有對象——包括媽媽——一律回答「誰？」。研究小組判斷其目前處於全面斷線狀態：沒有 Wi-Fi、沒有電、沒有組員、不認識出題者，也沒有媽媽。建議先把手機充電，然後打一通電話回家，自我介紹一下。']][gv[0]]);
+  else if(g[0]===2)mark('tgM','DAMN',4,'受試者在「媽媽」一列選擇了「誰？」。研究小組決定不予置評，並建議其今天打一通電話回家。');
   else if(g[1]===0&&g[0]!==0)mark('tgW','MEME',3,'受試者認為 Wi-Fi「非常重要」，但媽媽沒有。研究小組不會告訴你媽媽，但會記下來。');
   if(g[2]===0)mark('tgX','NERD',2,'受試者將期末報告的組員評為「非常重要」。研究小組推測其組員都有在做事，這在大學分組報告中極為罕見。');
   else if(g[2]===2)mark('tgX','SALT',3,'受試者對期末報告組員的評價為「誰？」。研究小組完全理解，畢竟有些組員從開學到現在都沒出現過。（研究小組本身也是從六人縮減到 2.5 人。）');
   if(g[4]===0)mark('tgA','SIMP',3,`受試者將本問卷出題者評為「非常重要」${g[0]===0?'，與媽媽同一個等級':''}。出題者受寵若驚。`);
   else if(g[4]===2)mark('tgA','SALT',3,`受試者對本問卷出題者的評價為「誰？」。出題者表示：我是做這份問卷的人，你已經填了 ${Object.keys(Q).length} 題了。`);
-}
-// 這些在「非選擇題作答紀錄」卡片裡逐項列出，就不再擠進「作答行為分析」
-const OPENK=new Set(['up','e5','s3','s3dup','j4','tw','twBad','pa','jt','jdt','tgM','tgW','tgX','tgA']);
-function openCard(){
-  const A=k=>marks[k]&&marks[k].ana||'',it=[];
-  const row=(lab,val,k,img)=>{const a=Array.isArray(k)?k.map(A).filter(Boolean).join(''):A(k);
-    it.push(`<div class="ob opn"><small>${lab}</small>${img?`<img src="${img}" alt="">`:''}<p><b>${val}</b>${a?`<br>${a}`:''}</p></div>`)};
-  const u=UP[ans.up];
-  if(u)row('檔案上傳｜您在多人聚會上的照片',`${esc(u.f)}（鑑定結果：${u.n}）`,'up',CAP_IMG[u.k]);
-  if(ans.e5!==undefined)row('下拉式選單｜您在群組中的角色',esc(Q.e5.opts[ans.e5]||''),'e5');
-  if(ans.s3&&typeof ans.s3==='object'){const q=Q.s3,c=k=>q.cols[k].replace(/<br>.*/,'');
-    row('單選方格（每欄限選一個）｜ㄅ～ㄦ級分排名',q.rows.map((r,i)=>[ans.s3[i],r]).filter(x=>x[0]!==undefined).sort((x,y)=>x[0]-y[0]).map(([k,r])=>`${c(k)}：${r}`).join('・'),['s3','s3dup'])}
-  if((ans.tw||'').trim())row('簡答｜用三個字形容出題者',`「${esc(ans.tw.trim())}」`,['tw','twBad']);
-  if(ans.jdt)row('日期｜打算開始寫報告的日期',(()=>{const d=jdtDiff();return `${esc(ans.jdt)}${d==null?'':d===0?'（今天）':d>0?`（${d} 天後）`:`（${-d} 天前）`}`})(),'jdt');
-  if(ans.j4!==undefined)row('下拉式選單｜目前的作答姿勢',esc(Q.j4.opts[ans.j4]||''),'j4');
-  if(ans.jt)row('時間｜昨晚入睡時間',esc(ans.jt),'jt');
-  if(ans.tg){const q=Q.tg;row('單選方格｜重要程度評估',q.rows.map((r,i)=>`${r}：${ans.tg[i]!==undefined?q.cols[ans.tg[i]]:'—'}`).join('・'),['tgM','tgW','tgX','tgA'])}
-  if((ans.pa||'').trim()){const p=ans.pa.trim(),n=[...p].length;row(`段落｜為什麼會填到這裡（${n} 字）`,`「${esc(p.length>60?p.slice(0,60)+'…':p)}」`,'pa')}
-  if(!it.length)return '';
-  return `<div class="card" id="openc"><div class="rt">非選擇題作答紀錄</div><div class="rs">研究小組逐字閱讀了您的每一個回答（包括錯字）</div>${it.join('')}</div>`;
+  if(marks.tgS)['tgM','tgW','tgX','tgA'].forEach(k=>mark(k));
 }
 function t4Obs(){
   if(ans.t4!==0&&ans.t4!==1)return [];
@@ -2119,9 +2186,9 @@ function t4Obs(){
 function vidObs(){
   const h=HIST.vid||[];if(!h.length)return [];
   const last=h[h.length-1],n=h.length;
-  if(n===1)return [`受試者於「研究說明影片」感想題中僅點擊 1 次，即果斷選擇「${esc(last)}」。研究小組認為其對一名男子端著一大鍋食物走路的影片，抱持著異常明確的立場。`];
-  const seq=seqTxt(h);
-  return [`受試者於「研究說明影片」感想題中共點擊 ${n} 次，${n>8?'最後幾次':'依序'}為：${seq}，最終選定「${esc(last)}」。研究小組認為，對一段影片的感想不應該如此難以決定。`];
+  // 只有反覆改很多次才值得寫進分析文
+  if(n<3)return [];
+  return [`受試者在「研究說明影片」的感想題上來回改了 ${n} 次答案，最後才定案在「${esc(last)}」。研究小組認為，對一段男子端著一大鍋食物走路的影片，感想不應該如此難以決定。`];
 }
 function frogWin(fw){
   let n=0,au=null,gone=false;
@@ -2147,7 +2214,7 @@ function spin(target,done,gap){
 
 // ===== 作答紀錄保存：存在使用者自己的手機（localStorage），按返回、重新整理、從 IG 跳回來都能接著填；按「再填一次」才清掉 =====
 // v2：題目改版（新增上傳／下拉／簡答等題型），舊存檔的選項不相容
-const SAVE_KEY='mbti_form_save_v7',TEST=/[?&]test\b/.test(location.search);
+const SAVE_KEY='mbti_form_save_v9',TEST=/[?&]test\b/.test(location.search);
 let cleared=false;
 function save(){
   if(TEST||cleared)return;
@@ -2191,8 +2258,9 @@ function testPanel(){
     ['【限時題】被刪 1 次後自己選自肥選項',{cd:{del:[2],self:true},to:'#obsc'}],
     ['【聽力】沒播放就說聽完了',{au:{sec:0,ans:3},to:'#obsc'}],['【聽力】只播 6 秒',{au:{sec:6,ans:2},to:'#obsc'}],['【聽力】播 15 秒',{au:{sec:15,ans:3},to:'#obsc'}],
     ['【聽力】播 25 秒',{au:{sec:25,ans:0},to:'#obsc'}],['【聽力】整首聽完',{au:{sec:80,ends:1,ans:4},to:'#obsc'}],['【聽力】聽了 3 遍',{au:{sec:240,ends:3,ans:1},to:'#obsc'}],
-    ['【非選擇題】上傳奶龍＋各種奇怪回答',{open:{up:2,e5:10,tw:'大天才',jdt:3,j4:7,jt:'04:30',tg:{0:0,1:0,2:2,3:1,4:0},pa:'因為報告寫不完所以跑來填問卷，結果越填越好笑'},to:'#openc'}],
-    ['【非選擇題】上傳 Puzz＋媽媽選「誰？」',{open:{up:3,e5:11,tw:'有夠怪',jdt:400,j4:8,jt:'14:00',tg:{0:2,1:0,2:0,3:0,4:2},pa:'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'},to:'#openc'}]];
+    ['【非選擇題】上傳奶龍＋各種奇怪回答',{open:{up:2,e5:10,tw:'大天才',jdt:3,j4:7,jt:'04:30',tg:{0:0,1:0,2:2,3:1,4:0},pa:'因為報告寫不完所以跑來填問卷，結果越填越好笑'},to:'#obsc'}],
+    ['【非選擇題】上傳 Puzz＋媽媽選「誰？」',{open:{up:3,e5:11,tw:'有夠怪',jdt:400,j4:8,jt:'14:00',tg:{0:2,1:0,2:0,3:0,4:2},pa:'哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈'},to:'#obsc'}],
+    ['【非選擇題】重要程度全部選「誰？」',{open:{up:0,e5:2,tw:'普通人',jdt:1,j4:4,jt:'01:00',tg:{0:2,1:2,2:2,3:2,4:2},pa:'不知道為什麼'},to:'#obsc'}]];
   const d=document.createElement('div');d.id='testp';
   d.innerHTML=`<b>測試面板 ▾</b><div>
     <small style="margin:0 0 4px">直接跳頁：<a href="?test&p=2">聽力題</a>・<a href="?test&p=4">限時心算題</a>・<a href="?test&p=6">人機驗證</a></small>
