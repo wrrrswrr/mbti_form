@@ -71,7 +71,8 @@ function form(){
     r.innerHTML=`<b>研究小組回覆：</b><br>${R[pick][1]}`;r.classList.add('on')});
   $('#send').onclick=()=>{
     if(pick===null){const q=$('#q');q.classList.add('bad','shake');setTimeout(()=>q.classList.remove('shake'),450);return}
-    try{localStorage.setItem('mbti_form_reported',R[pick][0])}catch(e){}
+    // 連同時間一起存：問卷那邊只算「這次作答期間」的檢舉，舊的不會被翻出來
+    try{localStorage.setItem('mbti_form_reported',JSON.stringify({r:R[pick][0],t:Date.now()}))}catch(e){}
     done();
   };
 }

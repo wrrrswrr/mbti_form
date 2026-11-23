@@ -108,7 +108,7 @@ function gagMark(){
   const extra=Object.values(byId).reduce((s,n)=>s+Math.max(0,n-1),0);
   if(extra<3)return mark('gagM');
   const [topName,topN]=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
-  mark('gagM','MEME',Math.min(5,extra),`作答期間，受試者為了重聽音效，在同一題裡反覆切換有梗的選項，額外多點了 ${extra} 次，其中「${esc(topName)}」被點了 ${topN} 次。這顯示其做事的優先順序是「好玩」先於「完成」，點選項不是為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
+  mark('gagM','MEME',Math.min(5,extra),'點選項不是為了作答，是為了聽音效，重度爛梗依賴者。',3);
 }
 // 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
 // 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。

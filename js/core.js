@@ -57,4 +57,5 @@ function warn(card,key,text){
 const ans={};let page=0;
 const stats={dodge:0,igDodge:0,spawn:0,submitDodge:0,badMbti:0,lastBad:null,rolled:false};
 const marks={};
-function mark(key,type,pts,ana){if(!type)delete marks[key];else marks[key]={type,pts,ana}}
+// fun：這句短評的有趣度（1～5），分析文句子太多時，用它挑出最好笑的幾句
+function mark(key,type,pts,ana,fun=2){if(!type)delete marks[key];else marks[key]={type,pts,ana,fun}}

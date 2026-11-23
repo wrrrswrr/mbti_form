@@ -51,11 +51,11 @@ function auAfter(){
 }
 function auMark(){
   const s=Math.round(stats.auSec||0),e=stats.auEnds||0,st=s<1?'不到 1':s;if(!stats.auSec)return mark('au');
-  if(e>=2)return mark('au','MEME',4,`受試者將聽力測驗音檔重複播放 ${e} 遍。經研究小組確認，該音檔內容為奇諾比奧的歌聲。這顯示其對奇怪的東西有異常的耐受度，甚至會上癮。研究小組無法理解，但選擇尊重。`);
-  if(e===1)return mark('au','SIMP',4,`受試者完整聆聽了奇諾比奧的演唱，全程未按下暫停。這顯示其具備超越常人的包容力：一件事開始了，就會撐到結束。或是忘記手機還開著。`);
-  if(s>=20)return mark('au','CHAD',3,`受試者在奇諾比奧的歌聲中撐過 ${st} 秒，這顯示其對不舒服的忍耐度顯著高於常模，研究小組成員實測平均僅撐 6 秒。`);
-  if(s>=10)return mark('au','OKAY',2,`受試者聆聽奇諾比奧的歌聲 ${st} 秒後選擇停止，這顯示其會先給機會，確定不行才離開，屬於「我有給過機會了」的成熟反應。`);
-  mark('au','SALT',2,`受試者僅聆聽 ${st} 秒即按下暫停，這顯示其對不喜歡的東西判斷極快，不浪費一秒在不想要的事情上。`);
+  if(e>=2)return mark('au','MEME',4,`奇諾比奧的歌聽了 ${e} 遍，對奇怪的東西耐受度異常，甚至會上癮。`,4);
+  if(e===1)return mark('au','SIMP',4,'包容力超越常人，一件事開始了就撐到結束——或是忘記手機還開著。',4);
+  if(s>=20)return mark('au','CHAD',3,`耳朵比心臟還堅強，撐了 ${st} 秒，研究小組成員平均只撐 6 秒。`,3);
+  if(s>=10)return mark('au','OKAY',2,'會先給機會，確定真的不行才離開。',2);
+  mark('au','SALT',2,'討厭一個東西只需要幾秒，而且從不給第二次機會。',2);
 }
 
 // ===== 倒數題 =====
@@ -199,16 +199,16 @@ function capCard(){
 const UP=[
   {k:'frog1',f:'IMG_聚會_你看那個人.jpg',n:'奶蛙',type:'SALT',pts:3,e:3,snd:'frog',
     msg:'鑑定結果：照片中的人物沒有在參與聚會，而是一臉得意地指著畫面外的某個人。研究小組推測他正在說「欸你看那個人穿那樣」。',
-    ana:'受試者上傳的聚會照片中，人物正一臉得意地指著畫面外的某人。這顯示其在聚會中不是主角，而是負責觀察別人的那一個：主要功能為「講別人八卦」，次要功能為「負責笑」。'},
+    fun:3,ana:'在聚會裡負責在角落指著別人講八卦。'},
   {k:'egg',f:'IMG_聚會_我在這.png',n:'奶蛋',type:'SOLO',pts:4,e:1,snd:'boing',
     msg:'鑑定結果：照片中的人物已將自己縮成一顆蛋，眼神放空，沒有手、沒有腳，也沒有參與任何對話。研究小組推測他正在腦中規劃回家的路線。',
-    ana:'受試者以一顆眼神放空的奶蛋作為自己在聚會上的照片。這顯示其在多人場合會自動進入「蛋形態」：人在現場，靈魂已經在回家的路上，直到回家才孵化。'},
+    fun:4,ana:'在人群中會自動縮成一顆蛋，靈魂已經在回家的路上。'},
   {k:'dragon',f:'IMG_聚會_大家都到了嗎.jpg',n:'奶龍',type:'LOUD',pts:4,e:5,snd:'vineboom',
     msg:'鑑定結果：照片中的人物笑得非常燦爛，正熱情地對鏡頭揮手。但研究小組仔細檢查後發現，背景是一片空白——這場聚會只有他一個人。',
-    ana:'受試者上傳的聚會照片為一隻熱情揮手的奶龍，但畫面中沒有任何其他人。這顯示其社交熱情極高，但熱情和實際朋友數量不一定成正比——其他人還沒到（或不會來）。'},
+    fun:3,ana:'社交熱情滿分，可惜朋友數量沒跟上。'},
   {k:'puzz',f:'puzz_官方授權照.jpg',n:'Puzz',type:'SIMP',pts:6,e:3,snd:'congcong',
     msg:'鑑定結果：研究小組三位成員看到這張照片後，同時放下了手上的便當。<br>四張照片，你選了 Puzz。不是奶蛙，不是奶蛋，是 Puzz。<br>我們熬夜做這份問卷的每一個晚上，在這一秒突然都有了意義。<br>謝謝你，我的超人。',
-    ana:'受試者被要求上傳自己在聚會上的照片，卻選了本節目吉祥物 Puzz。這顯示其對本節目的認同已經大過對自己的認同。研究小組三位成員當場放下便當，其中一位哭到隱形眼鏡掉出來。該照片（Puzz 的）已被列印出來，貼在剪輯電腦的螢幕旁邊。'}
+    fun:4,ana:'連聚會照片都交 Puzz，對本節目的認同已經大過對自己的認同。'}
 ];
 const PUZZ_BACK=['……你把 Puzz 撤回了。研究小組三位成員默默把便當拿了回來。我們以為你是自己人。','又撤回？Puzz 本人看到了，現在正一個人坐在角落拼一塊永遠拼不上的拼圖。','好，我們懂了。你只是想看我們難過。你成功了。'];
 function upRefresh(card,q){
@@ -224,9 +224,7 @@ function upBind(card,q){
       // 撤回 Puzz：研究小組很受傷
       stats.puzzBack=(stats.puzzBack||0)+1;play('sadviolin');
       const n=upRefresh(card,q);if(n){warn(n,'upb',PUZZ_BACK[Math.min(stats.puzzBack,PUZZ_BACK.length)-1]);shake(n)}
-      mark('upBack','SALT',3+stats.puzzBack,stats.puzzBack>1
-        ?`受試者上傳了 Puzz，又親手撤回，而且這樣做了 ${stats.puzzBack} 次。研究小組三位成員的便當放下又拿起、拿起又放下，最後誰都沒吃。`
-        :'受試者上傳了 Puzz，又親手把 Puzz 撤了回去。研究小組三位成員默默把便當拿了回來，吃得非常安靜。');
+      mark('upBack','SALT',3+stats.puzzBack,'');
       save();return}
     play('tick');upRefresh(card,q);save()};
 }
@@ -299,7 +297,7 @@ function upSend(card,q,i){
   setTimeout(()=>{if(st)st.textContent='研究小組鑑定中…（三個人正在輪流看）'},1300);
   setTimeout(()=>{
     ans.up=i;(stats.usr=stats.usr||{}).up=i;(HIST.up=HIST.up||[]).push(u.n);
-    mark('up',u.type,u.pts,u.ana);play(u.snd);
+    mark('up',u.type,u.pts,u.ana,u.fun);play(u.snd);
     const n=upRefresh(card,q);if(n)n.classList.remove('bad');save();
   },2300);
 }

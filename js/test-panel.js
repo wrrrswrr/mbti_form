@@ -42,7 +42,7 @@ function testPanel(){
       const fake=document.createElement('div');picks.au(c.au.ans,fake);toast(stats.auSec?auComment():'（沒播放，不會有評語）')}
     if(c.open){const o=c.open,d=new Date();d.setDate(d.getDate()+o.jdt);
       Object.assign(ans,o,{jdt:`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`});
-      const u=UP[o.up];mark('up',u.type,u.pts,u.ana);picks.e5(o.e5);picks.j4(o.j4)}
+      const u=UP[o.up];mark('up',u.type,u.pts,u.ana,u.fun);picks.e5(o.e5);picks.j4(o.j4)}
     if(c.back){reveal(true);setTimeout(()=>{ctaBack(...c.back);$('#cta').scrollIntoView({behavior:'smooth',block:'center'})},100)}
     else show(c.to);
   };

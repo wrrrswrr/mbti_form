@@ -58,12 +58,6 @@ function hiddenType(){
 // PUZZ：照片上傳從頭到尾只上傳過 Puzz 一次（沒有移除、沒有換過），而且人機驗證「只」選了 Puzz 一張
 const upLoyal=()=>{const h=HIST.up||[];return ans.up===3&&h.length===1&&h[0]==='Puzz'&&!stats.upCleared};
 const isPuzz=()=>upLoyal()&&!!stats.cap&&stats.cap.sel.length===1&&stats.cap.sel[0]==='puzz';
-function hiddenObs(h){
-  if(h==='PUZZ')return '受試者在照片上傳題中選擇了 Puzz；在要求選出所有奶蛙的人機驗證中，九張圖也只選了 Puzz 一張，兩隻真正的奶蛙一隻都沒點。研究小組判斷受試者並不是看錯，而是眼裡本來就只有 Puzz。';
-  if(h==='BOTS')return `受試者在本問卷全部 ${botCount()||'所有'} 題選擇題中，一律選擇第一個選項，無一例外。此作答模式與自動化程式高度一致。值得注意的是，受試者稍早${stats.cap?'已通過':'曾被要求進行'}「我不是機器人」驗證，研究小組正在重新檢討驗證機制。`;
-  const s=durSec(),n=Object.keys(Q).length;
-  return `受試者僅花 ${s==null?'不到兩分鐘':durTxt(s)}即完成全部 ${n} 題，平均每題約 ${s==null?'1':(s/n).toFixed(1)} 秒。此速度已低於人類閱讀題目所需之最短時間，研究小組判斷其並未閱讀題目，而是憑感覺在點。`;
-}
 // 深夜加料：凌晨 1～5 點完成
 function lateLine(){
   const t=stats.testLate||stats.t1;if(!t)return '';const d=new Date(t),h=d.getHours();
@@ -82,47 +76,137 @@ function result(){
   }
   return {type:rank[0][0],ranks:top.map(([t,p])=>[t,Math.round(p/tot*100)]),narr:narrPick(rank[0][0],false)};
 }
-// ===== 完整分析：把各題評語挑幾則，串成「性格分析」「行為分析」兩段文章 =====
-// 人機驗證、奶蛙有自己的卡片，不寫進文章
-const OWN_CARD=new Set(['cap','frog']);
-// 「怎麼作答」的小動作寫進行為分析；「選了什麼」寫進性格分析
-const BEHAV=new Set(['ar','mbti','mb2','nick2','dodge','t3','twBad','s3dup','cd','spawn','au','vid','login','report','upBack','gagM','t4b']);
-const isBehav=(k,m)=>BEHAV.has(k)||((k==='au2'||k==='vid2')&&m.type==='LIAR');
-// 研究小組特別想拉出來講的，排序時加分（組員 2.5 人那句一定要上）
-const BOOST={up:2,upBack:3,tgS:3,cd:2,spawn:2,dodge:2,tw:2,e1:1,t2:1,t6:1,pa:1,s3:1,j4:1,e4:1,s2:1};
-function narrPick(type,isHid){
-  // 「越來越奇怪」那題的分析已經講過追「有」的次數，dodge 就不重複講
-  const t4d=(ans.t4===0||ans.t4===1)&&stats.dodge;
-  const all=Object.entries(marks).filter(([k,m])=>m.ana&&!OWN_CARD.has(k)&&!(t4d&&k==='dodge'));
-  const sc=([k,m])=>m.pts+(k==='tgX'&&m.type==='SALT'?99:BOOST[k]||0)+(m.type===type?3:0);
-  const top=(list,n)=>list.sort((a,b)=>sc(b)-sc(a)).slice(0,n).map(([,m])=>m.ana.replace(/（本判定由研究小組[^）]*）/,''));
-  const pre=[...(isHid?[hiddenObs(type)]:[]),...t4Obs(),...vidObs()];
-  return {per:top(all.filter(x=>!isBehav(...x)),5),beh:pre.concat(top(all.filter(x=>isBehav(...x)),Math.max(2,4-pre.length)))};
+// ===== 完整分析：一、性格分析　二、行為分析　三、你與研究小組 =====
+// 每題的短評（marks[k].ana）是一句不帶主詞的性格描述，不重述題目或選項；這裡依主題排好順序串成段落。
+// 跟出題者／研究小組有關的題目不用短評，改由 authorPart() 依多題的組合另外寫。
+const THEMES=[
+  ['在人際關係上，',['e1','e2','e4','e5','up','m3','q2']],
+  ['思考方式上，',['s1','s2','s4','s5','au2','vid2','m2','m4','q67']],
+  ['面對情緒和別人的選擇時，',['t1','t2','t5','t6']],
+  ['生活習慣方面，',['j1','j2','jd','jdt','j3a','j3b','j3c','j3e','j3d','j4','jt','m1','q3','pa','res']]
+];
+// 行為分析：作答過程中的小動作（「沒播放卻說有聽／有看」也算行為，不算思考方式）
+const BEH_KEYS=['ar','mb2','mbti','nick2','au2','vid2','spawn','au','vid','gagM'];
+const isLie=k=>(k==='au2'||k==='vid2')&&marks[k]&&marks[k].type==='LIAR';
+// 句子上限：超過就照有趣度（同分看人格分數）挑，挑完再照題目順序排回去，讀起來才順
+const MAX_PER_THEME=3,MAX_BEH=4;
+function pickFun(keys,max){
+  const has=keys.filter(k=>marks[k]&&marks[k].ana);
+  const keep=new Set([...has].sort((a,b)=>(marks[b].fun||2)-(marks[a].fun||2)||marks[b].pts-marks[a].pts).slice(0,max));
+  return has.filter(k=>keep.has(k)).map(k=>marks[k].ana);
 }
-// 句子前面接上轉折詞，讓它讀起來像一篇文章而不是清單
-const joinS=(list,cons)=>list.map((s,i)=>(cons[i]||'')+s).join('');
+function narrPick(type,isHid){
+  const per=THEMES.map(([lead,keys])=>[lead,pickFun(keys.filter(k=>!isLie(k)),MAX_PER_THEME)]).filter(([,l])=>l.length);
+  const fixed=[...(isHid?[hidBeh(type)]:[]),...vidBeh()];
+  const beh=[...fixed,...pickFun(BEH_KEYS.filter(k=>!(k==='au2'||k==='vid2')||isLie(k)),Math.max(1,MAX_BEH-fixed.length))];
+  return {per,beh};
+}
+function hidBeh(h){
+  if(h==='PUZZ')return '從頭到尾眼裡只有 Puzz，其他東西一概看不見，連真正的奶蛙都沒放在眼裡。';
+  if(h==='BOTS')return '作答模式與自動化程式高度一致，研究小組正在重新檢討人機驗證機制。';
+  const s=durSec(),n=Object.keys(Q).length;
+  return `作答速度已經低於人類閱讀題目的極限，平均每題約 ${s==null?'1':(s/n).toFixed(1)} 秒，基本上是憑感覺在點。`;
+}
+function vidBeh(){const n=(HIST.vid||[]).length;return n>=3?[`對一支影片的感想可以來回改 ${n} 次，做決定比想像中困難。`]:[]}
+function lateBeh(){const t=stats.testLate||stats.t1;if(!t)return '';const d=new Date(t),h=d.getHours();
+  return h>=1&&h<5?`凌晨 ${h} 點還醒著填問卷，研究小組建議立刻去睡覺。`:''}
+
+// ----- 三、你與研究小組：看「對出題者的態度」，依多題的組合給評語 -----
+const S3N=['這份問卷','出題者','「曾國城在古蹟抽菸」','期末考','奶蛙'];
+function authorPart(nick){
+  const tg=ans.tg||{},r=ans.s3&&typeof ans.s3==='object'?ans.s3:{},kd=twKind((ans.tw||'').trim());
+  const cdN=(stats.cdDel||[]).length,puzzUp=ans.up===3,back=stats.puzzBack||0;
+  // 好感度：越高越愛出題者
+  let love=0;
+  if(ans.t3===5&&!stats.t3fixed)love+=2;else if(stats.t3fixed)love-=1;
+  love+={praise:2,swear:-3,diss:-1}[kd]||0;
+  love+=[2,1,0,-1,-2][r[1]]||0;love+=r[0]===0?1:r[0]===4?-1:0;
+  love+=tg[4]===0?2:tg[4]===2?-2:0;
+  if(stats.cdSelf)love+=2;
+  const paLove=PA_LOVE.test((ans.pa||'').trim());if(paLove)love+=2;
+  if(stats.merit)love+=1;if(stats.rep)love-=2;
+  if(puzzUp)love+=2;love-=back;
+  const verdict=love>=8?`${nick}對出題者的感情，已經超出一般受試者應有的範圍。研究小組讀完這一段，有一位成員去洗了把臉。`
+    :love>=4?`整體而言，${nick}對研究小組相當友善：會吐槽，但看得出來是自己人。`
+    :love>=0?`${nick}對出題者的態度大致是禮貌而保持距離：該配合的配合，該吐槽的也沒少。`
+    :love>=-4?`${nick}對出題者顯然有些意見，只是大部分時候選擇用委婉的方式表達。`
+    :`${nick}對出題者的敵意相當明確。研究小組讀完這一段，決定先去冷靜一下。`;
+  const p1=[verdict];
+  // 天才評分
+  if(ans.t3===5&&!stats.t3fixed)p1.push('認為出題者是天才這件事，完全不需要系統幫忙，自己就給出了最高分。');
+  else if(stats.t3fixed)p1.push('被系統強制改分之後沒有再改回來——嘴上不抗議，但心裡顯然沒有認同。');
+  // 三個字
+  if(kd==='praise')p1.push('形容出題者時毫不吝嗇，那三個字出題者已經設成手機桌布。');
+  else if(kd==='swear')p1.push('形容出題者時完全不修飾，那三個字已被出題者列入「人生不該聽到的話」。');
+  else if(kd==='diss')p1.push('形容出題者時不打算說違心話，出題者沉默了很久，最後承認「好啦，有一點」。');
+  else if(kd==='lol')p1.push('形容出題者時以笑帶過，研究小組至今分不出那是褒是貶。');
+  else if((ans.tw||'').trim())p1.push('形容出題者的那三個字，讓研究小組開了二十分鐘的會，仍分不出是稱讚還是罵人。');
+  if(stats.twBad)p1.push(`而且三個字顯然不夠用，硬是多寫了 ${stats.twBad} 次——對出題者的話，比規定的多很多。`);
+  // ㄅ～ㄦ級分排名：看出題者跟問卷、跟其他項目的相對位置
+  const p2=[],a=r[1],b=r[0];
+  if(a!==undefined){
+    if(a===0&&b===0)p2.push('在級分排名裡，把作品和作者一起捧上最高級，是真的喜歡，不是客套。');
+    else if(a===0)p2.push('在級分排名裡，覺得出題者這個人比這份問卷優秀，屬於對人不對事。');
+    else if(b===0&&a>=3)p2.push('在級分排名裡，喜歡這份問卷，卻不太喜歡做問卷的人：作品可以，作者不行。');
+    else if(a===4)p2.push('在級分排名裡，出題者被放在最底層，研究小組已經理解自己的定位。');
+    else p2.push('在級分排名裡，出題者落在不上不下的位置：安全、普通、沒有感情。');
+    const above=[2,3,4].filter(i=>r[i]!==undefined&&r[i]<a);
+    if(above.length===3)p2.push(`排在出題者前面的，有${above.map(i=>S3N[i]).join('、')}，出題者只差一點就全場墊底。`);
+    else if(above.includes(2))p2.push(`最傷的是，出題者輸給了${S3N[2]}${above.length>1?`，還有${above.filter(i=>i!==2).map(i=>S3N[i]).join('、')}`:''}。研究小組正在反省。`);
+    else if(above.length)p2.push(`連${above.map(i=>S3N[i]).join('、')}都排在出題者前面，研究小組正在反省。`);
+  }
+  if(r[3]===0)p2.push('另外，把期末考捧上最高級——若不是卷王，就是還沒看到成績。');
+  if(hasDup(r))p2.push('明明每個級分只能給一次，還是硬要並列，規則對其而言只是參考。');
+  // 重要程度：五列全選同一欄只給一句總評；否則看出題者跟媽媽、Wi-Fi、組員的相對位置
+  const g=[0,1,2,3,4].map(i=>tg[i]);
+  if(g.every(x=>x!==undefined&&x===g[0]))p2.push(['在重要程度評估裡，什麼都非常重要，一個都放不下。什麼都重要，就等於什麼都不重要。',
+    '在重要程度評估裡人人平等，媽媽和 Wi-Fi 也平等。人生信條：都還好。',
+    '在重要程度評估裡誰都不認識，包括媽媽。目前處於全面斷線狀態，建議先充電，再打通電話回家自我介紹一下。'][g[0]]);
+  else if(g.some(x=>x!==undefined)){
+    if(g[4]===0)p2.push(g[0]===0?'在重要程度上，把出題者和媽媽放在同一個等級，出題者受寵若驚。':'在重要程度上，出題者的地位比媽媽還高。研究小組很感動，但建議不要讓媽媽知道。');
+    else if(g[4]===2)p2.push('在重要程度上，對出題者的存在毫無印象，即使已經相處了這麼多題。');
+    else if(g[4]===1)p2.push('在重要程度上，出題者屬於「普通」，研究小組接受這個定位。');
+    if(g[0]===2)p2.push('至於媽媽那一列，研究小組不予置評，只建議今天打一通電話回家。');
+    else if(g[1]===0&&g[3]===0&&g[0]!==0)p2.push('真正放在心上的是 Wi-Fi 和電量，數位生存需求凌駕一切，包括媽媽。');
+    else if(g[1]===0&&g[0]!==0)p2.push('Wi-Fi 在心中的地位高過媽媽，這件事研究小組會保密。');
+    if(g[2]===2)p2.push('對期末報告的組員已經沒有任何期待。研究小組完全理解，畢竟有些組員從開學到現在都沒出現過。（研究小組本身也是從六人縮減到 2.5 人。）');
+    else if(g[2]===0)p2.push('還把組員看得很重要，若不是遇到了好組員，就是自己就是那個好組員。');
+  }
+  // 其他跟研究小組的互動
+  const p3=[];
+  if(stats.cdDone){
+    if(stats.cdSelf)p3.push(cdN?'限時心算題算不出來的時候，懂得改選一個讓出題者開心的答案。':'限時心算題連算都沒算，直接選了讓出題者開心的那個答案，非常識相。');
+    else if(cdN>=2)p3.push(`限時心算題不到最後一秒不放棄，試了 ${cdN} 次，最後還是被系統代為「支持」了出題者。`);
+    else if(cdN===1)p3.push('限時心算題試過一次發現不對，就很快接受了被系統代答的命運。');
+    else p3.push('限時心算題很清楚自己算不出來，乾脆直接等系統代答。');
+  }
+  if(ans.t4===0||ans.t4===1){
+    p3.push(ans.t4===0?'到了第三部分還覺得這份問卷一點都不奇怪，研究小組在此誠摯詢問：你還好嗎？':'特別強調自己「完全」不覺得這份問卷奇怪——會強調的人，心裡通常都有。');
+    if(stats.dodge)p3.push(`何況系統紀錄顯示，其曾經追著「有」點了 ${stats.dodge} 次，只是嘴硬。`);
+  }else if(ans.t4===2)p3.push(stats.dodge?`為了承認這份問卷很奇怪，還追著跑掉的選項點了 ${stats.dodge} 次，誠實得很有毅力。`:'誠實承認這份問卷很奇怪，但還是選擇留下來，看它還能多奇怪。');
+  if(ans.q1===3)p3.push('被問煩了會直接吐槽研究小組 ven 題，研究小組虛心接受。');
+  if(puzzUp&&!back)p3.push('聚會照片選了 Puzz，研究小組三位成員至今仍然很感動。');
+  else if(back)p3.push(`${back>1?'不只一次':'曾經'}把 Puzz 傳上來又撤回去，研究小組三位成員的便當放下又拿起${puzzUp?'；好在最後還是傳回來了，研究小組決定原諒':''}。`);
+  if(stats.cap&&stats.cap.sel.includes('puzz')&&!puzzUp)p3.push('人機驗證的時候，眼裡只看得到 Puzz。');
+  if(paLove)p3.push('連「為什麼會填到這裡」都能寫成告白，示愛門檻低到令人擔心——但出題者很受用，那段話已經印出來貼在床頭了。');
+  if(stats.merit)p3.push(`甚至主動跑去「登入」，寫下出題者的優點「${esc(stats.merit)}」，出題者已截圖。`);
+  if(stats.rep)p3.push(`作答期間還試圖檢舉本表單，理由是「${esc(stats.rep)}」。研究小組已讀，哭完之後決定繼續做下去。`);
+  return [p1,p2,p3].filter(p=>p.length);
+}
 function narrHTML(r,T,nick,late){
-  const P=t=>`<p class="rp np">${t}</p>`,per=r.narr.per,beh=r.narr.beh.concat(late?[late]:[]);
-  let a;
-  if(!per.length)a=P(`${nick}在情境題中的作答四平八穩，研究小組找不到任何可以吐槽的地方。研究小組認為這反而是最可疑的。`);
-  else{
-    // 最精彩的一則（分數最高）留到最後當收尾
-    const o=per.length>1?[...per.slice(1),per[0]]:per,last=o.length-1;
-    const cons=o.map((_,i)=>i===last&&last>0?'而最讓研究小組印象深刻的是，':['舉例來說，','不只如此，','另一方面，','此外，'][i]);
-    const intro=r.hid?`撇開隱藏人格不談，單看情境題的作答，${nick}其實也很有自己的個性。`:`從情境題的作答來看，${nick}的「${T.n}」傾向相當明顯。`;
-    const cut=o.length>3?2:o.length;
-    a=P(intro+joinS(o.slice(0,cut),cons))+(cut<o.length?P(joinS(o.slice(cut),cons.slice(cut))):'');
-    a+=P(`總結來說，「${T.tag}」——這句話放在${nick}身上，研究小組認為一個字都不用改。`);
-  }
-  let b;
-  if(!beh.length)b=P(`至於作答過程，${nick}表現得異常正常，系統沒有抓到任何小動作。研究小組看著空白的紀錄，陷入了長長的沉默。`);
-  else{
-    const last=beh.length-1,cons=last?beh.map((_,i)=>i===last?'最後，':['首先，','接著，','更可疑的是，','另外，'][i]):[''];
-    const cut=beh.length>3?2:beh.length;
-    b=P(`除了「選了什麼」，系統也在背景默默記錄了${nick}「怎麼選」。`+joinS(beh.slice(0,cut),cons))+(cut<beh.length?P(joinS(beh.slice(cut),cons.slice(cut))):'');
-  }
+  const P=t=>`<p class="rp np">${t}</p>`;
+  // 一、性格：每個主題一段，段首接上暱稱
+  let a=r.narr.per.length
+    ?r.narr.per.map(([lead,l],i)=>P((i===0?(r.hid?`撇開隱藏人格不談，${nick}其實也很有自己的個性。`:`從整體作答來看，${nick}是不折不扣的「${T.n}」。`):'')+lead+l.join(''))).join('')
+      +P(`總結來說，「${T.tag}」——這句話放在${nick}身上，研究小組認為一個字都不用改。`)
+    :P(`${nick}的作答四平八穩，研究小組找不到任何可以吐槽的地方。研究小組認為這反而是最可疑的。`);
+  // 二、行為
+  const beh=r.narr.beh.concat(lateBeh()?[lateBeh()]:[]);
+  const b=beh.length?P(`作答過程中，系統也偷偷記下了一些你以為沒人看到的小動作。`+beh.join('')):P(`至於作答過程，${nick}表現得異常正常，系統沒有抓到任何小動作。研究小組看著空白的紀錄，陷入了長長的沉默。`);
+  // 三、你與研究小組
+  const c=authorPart(nick).map(l=>P(l.join(''))).join('');
   return `<div class="card" id="obsc"><div class="rt">完整分析報告</div><div class="rs">研究小組根據您的作答逐字寫成（真的有人在寫）</div>
-    <div class="nh">一、性格分析</div>${a}<div class="nh">二、行為分析</div>${b}</div>`;
+    <div class="nh">一、性格分析</div>${a}<div class="nh">二、行為分析</div>${b}${c?`<div class="nh">三、你與研究小組</div>${c}`:''}</div>`;
 }
 // fast=true：直接顯示最終結果，不跑動畫（用於重新整理後還原、測試面板）
 function reveal(fast){
@@ -138,8 +222,10 @@ function reveal(fast){
       else mark('frog','BRUH',3,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者完全沒有察覺。忽有龐然大物，拔山倒樹而來，蓋一奶蛙也，受試者連頭都沒抬。研究小組建議其平時多留意身後。`)}
     gagMark();openMarks();
     // report.html（檢舉頁）會留下檢舉理由
-    let rep=null;try{rep=localStorage.getItem('mbti_form_reported')}catch(e){}
-    if(rep)mark('report','SALT',4,`受試者在作答期間曾嘗試檢舉本表單，理由為「${esc(rep)}」。這顯示其不滿意時不只會抱怨，還會實際採取行動。研究小組已讀，哭完之後決定繼續做下去。`);
+    // 只算這次作答期間（打開問卷之後）的檢舉；舊格式（純文字、沒有時間）或更早的檢舉一律不算
+    let rep=null;try{const o=JSON.parse(localStorage.getItem('mbti_form_reported')||'null');if(o&&o.r&&o.t>=(stats.t0||0))rep=o.r}catch(e){}
+    stats.rep=rep?String(rep).slice(0,40):null;
+    if(rep)mark('report','SALT',4,'');else mark('report');
     const r=result(),T=TYPES[r.type],nick=esc((ans.nick||'受試者').trim()),pw=[92,78,61,37];
     const rare=RARE[r.type]||5,[tn,tc,ts]=tierOf(rare),late=lateLine();
     RES={r,T,nick,rare,late};

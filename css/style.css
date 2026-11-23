@@ -19,6 +19,14 @@ body{margin:0;background:#f0ebf8;font-family:Roboto,"Noto Sans TC","PingFang TC"
 .opt{display:flex;align-items:center;gap:12px;padding:9px 0;font-size:14px;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.6,.5,1);width:fit-content;position:relative;z-index:2}
 .opt input{width:20px;height:20px;accent-color:#673ab7;margin:0;cursor:pointer;flex:none}
 .opt.hid{display:none}
+/* 「憋不住」爆發：怒氣值條、卡片越來越紅（boil）、爆發瞬間閃一下（blow）、之後慢慢冷卻（cool） */
+.ang{display:flex;align-items:center;gap:10px;margin:10px 0 4px;font-size:13px;font-weight:700;color:#c62828}
+.angb{flex:1;height:10px;background:#fde0e0;border-radius:5px;overflow:hidden}
+.angb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb74d,#e53935);transition:width 1.2s linear}
+.ang b{min-width:38px;text-align:right}
+.card.boil{background:#fff5f5;border-color:#e57373;transition:background 1.2s,border-color 1.2s}
+.card.boil.blow{background:#ffebee;box-shadow:0 0 0 4px rgba(229,57,53,.25)}
+.card.cool{transition:background 1.6s,border-color 1.6s,box-shadow 1.6s}
 .opt.pop{animation:pop .6s cubic-bezier(.3,1.8,.5,1)}
 @keyframes pop{0%{transform:scale(0) rotate(-20deg);background:#fff59d}60%{background:#fff59d}100%{transform:scale(1);background:transparent}}
 .err,.wmsg{color:#d93025;font-size:12px;margin-top:12px;line-height:1.6}

@@ -53,13 +53,56 @@ function render(){
   $('#form').innerHTML=h;window.scrollTo(0,0);bindNav();frogPeek();
   p.qs.forEach(q=>{
     const card=$('#q_'+q.id);
-    // 晚出現的選項：一個一個跳出來（間隔 1.6 秒），全部出現完才算 lateShown
-    const L=lateOf(q);
-    if(L.length&&!q.lateShown)L.forEach((k,i)=>setTimeout(()=>{if(!document.body.contains(card))return;if(i===L.length-1)q.lateShown=true;
-      const o=card.querySelector(`.opt[data-k="${k}"]`);if(!o)return;o.classList.remove('hid');o.classList.add('pop');play('vineboom');shake(card)},2200+i*1600));
+    lateArm(card,q);
     hooks[q.id]&&hooks[q.id](card,q);
   });
 }
+// ===== 晚出現的選項 =====
+// 一般題（late）：等選項區「完整」出現在畫面中間、停 0.8 秒才開始（滑過去不算），一個一個跳出來（間隔 1.6 秒）。
+// burst 題：不看時間，選了一開始那幾個選項之後才爆發（見 burstOpts）。
+function lateArm(card,q){
+  const L=lateOf(q);if(!L.length||q.lateShown)return;
+  if(q.burst){
+    // 之前已經選過、但爆發還沒演完就離開這頁：回來時直接全部顯示，不再演一次
+    if(ans[q.id]!==undefined){q.lateShown=true;L.forEach(k=>{const o=card.querySelector(`.opt[data-k="${k}"]`);if(o)o.classList.remove('hid')})}
+    return}
+  const box=card.querySelector('.opts');if(!box)return;
+  let tm,go=false;
+  const run=()=>{if(go)return;go=true;io.disconnect();
+    L.forEach((k,i)=>setTimeout(()=>{if(!document.body.contains(card))return;if(i===L.length-1)q.lateShown=true;
+      const o=card.querySelector(`.opt[data-k="${k}"]`);if(!o)return;o.classList.remove('hid');o.classList.add('pop');play('vineboom');shake(card)},1000+i*1600))};
+  const io=new IntersectionObserver(es=>{const e=es[0];clearTimeout(tm);if(!document.body.contains(card))return io.disconnect();
+    const full=e.intersectionRatio>=.98||(e.rootBounds&&e.intersectionRect.height>=e.rootBounds.height*.95);
+    if(e.isIntersecting&&full)tm=setTimeout(run,800)},{rootMargin:'-10% 0px -15% 0px',threshold:[0,.25,.5,.75,.98,1]});
+  io.observe(box);
+}
+// 「憋不住」爆發：選了冷靜的選項 → 怒氣值慢慢集滿、卡片越來越紅越抖 → 集滿那一刻，
+// 藏起來的選項從「剛剛選的那個選項」裡一個一個噴出來（內心真正想說的話）→ 卡片慢慢冷卻
+function burstOpts(card,q,from){
+  if(q.lateShown||q.bursting)return;q.bursting=true;
+  const src=card.querySelector(`.opt[data-k="${from}"]`),L=lateOf(q);
+  warn(card,'burst','系統偵測到你在壓抑情緒。');
+  card.querySelector('.opts').insertAdjacentHTML('beforebegin','<div class="ang"><span>怒氣值</span><div class="angb"><i></i></div><b>0%</b></div>');
+  const ang=card.querySelector('.ang'),fill=ang.querySelector('i'),pct=ang.querySelector('b');
+  card.classList.add('boil');reflow(fill);fill.style.width='100%';
+  let p=0;const iv=setInterval(()=>{if(!document.body.contains(card))return clearInterval(iv);
+    p=Math.min(100,p+10);pct.textContent=p+'%';play('tick');if(p>=50)shake(card);
+    if(p<100)return;clearInterval(iv);
+    // 集滿：憋不住了
+    warn(card,'burst','憋不住了。');play('vineboom');shake(card);card.classList.add('blow');
+    const s=src&&src.getBoundingClientRect();
+    L.forEach((k,i)=>setTimeout(()=>{if(!document.body.contains(card))return;
+      const o=card.querySelector(`.opt[data-k="${k}"]`);if(!o)return;o.classList.remove('hid');
+      const r=o.getBoundingClientRect(),dx=s?s.left-r.left:0,dy=s?s.top-r.top:0;play('boing');
+      o.animate([{transform:`translate(${dx}px,${dy}px) scale(.2) rotate(-25deg)`,opacity:0,background:'#ff8a80'},
+        {transform:'translate(0,-8px) scale(1.12) rotate(4deg)',opacity:1,background:'#ffcdd2',offset:.7},
+        {transform:'none',opacity:1,background:'transparent'}],{duration:560,easing:'cubic-bezier(.2,1.3,.4,1)'});
+      if(i===L.length-1)setTimeout(()=>{if(!document.body.contains(card))return;
+        q.lateShown=true;q.bursting=false;card.classList.remove('blow');card.classList.replace('boil','cool');
+        ang.remove();warn(card,'burst','你內心真正想說的話，都在這裡了。');save()},700)},350+i*260));
+  },120);
+}
+const reflow=el=>void el.offsetWidth;
 const STR_T={text:1,para:1,date:1,time:1};
 function answered(q){const v=ans[q.id];
   if(q.type==='grid')return !!v&&q.rows.every((_,i)=>v[i]!==undefined);
@@ -68,7 +111,7 @@ function answered(q){const v=ans[q.id];
 const TW_MSG=['回應長度必須剛好為 3 個字。','是三個字。不是兩個，也不是四個。','研究小組相信你數得到三。','一、二、三。三個字。你可以的。'];
 const CHECK={
   tw(v){const n=[...v].length;if(n===3)return '';stats.twBad=(stats.twBad||0)+1;
-    mark('twBad','SALT',Math.min(6,stats.twBad*2),`受試者在「用三個字形容出題者」一題中，輸入了不是三個字的答案共 ${stats.twBad} 次（例如「${esc(v.slice(0,12))}」，共 ${n} 個字）。這顯示其無法把感受壓縮進別人給的框架裡：規則說三個字，心裡有三十個字。研究小組判斷其對出題者有很多話想說。`);
+    mark('twBad','SALT',Math.min(6,stats.twBad*2),'');
     return TW_MSG[Math.min(stats.twBad,TW_MSG.length)-1]+`（目前 ${n} 個字）`},
   pa(v){const n=[...v].length;return n>=5?'':`回應長度必須至少為 5 個字。目前 ${n} 個字，研究小組覺得你可以再多說一點。`}
 };
@@ -92,6 +135,15 @@ function twLive(card,v){
   const h=[...t].reduce((s,c)=>s+c.charCodeAt(0),0);  // 同一組字固定同一句
   if(kd==='praise')play('ding');else play('error');
   warn(card,'tw2',L[h%L.length]);if(kd!=='praise')shake(card);
+}
+// 「為什麼會填到這裡」段落題：寫到愛你之類的，跳肉麻紅字（同一個關鍵字只叫一次，不會每打一個字就叫）
+const PA_LOVE=/愛你|愛妳|愛死|好愛|超愛|最愛|喜歡你|喜歡妳|想你|想妳|嫁給我|娶我|在一起|告白|親親|抱抱|啾|💕|❤|♥|love you|ily/i;
+const PA_LIVE=['偵測到告白。出題者讀到這裡，已經開始挑婚紗了。','系統偵測到愛意。研究小組三位成員同時臉紅，其中一位把便當打翻了。','你怎麼可以這樣撩出題者。這段話已被印出來貼在床頭，每天睡前讀三遍。','偵測到真愛。這段文字已被設為研究小組群組的公告，永久置頂。','出題者讀完這段話心跳 180，已經叫了救護車，但不後悔。','我們也愛你。真的。比期末報告還愛。'];
+function paLive(card,v){
+  const m=(v||'').match(PA_LOVE);if(!m)return warn(card,'pa2','');
+  if(card.querySelector('.w-pa2')&&stats.paLive===m[0])return;stats.paLive=m[0];
+  const h=[...m[0]].reduce((s,c)=>s+c.charCodeAt(0),0);
+  play('ding');warn(card,'pa2',PA_LIVE[h%PA_LIVE.length]);
 }
 function validate(){
   let first=null;
@@ -141,6 +193,7 @@ function onTextIn(t){const id=t.dataset&&t.dataset.id;if(!id)return;ans[id]=t.va
   if(id==='mytype')warn(c,'mb','');
   if(c.querySelector('.w-vd'))warn(c,'vd','');
   if(id==='tw')twLive(c,t.value);
+  if(id==='pa')paLive(c,t.value);
   if(t.tagName==='TEXTAREA'){t.style.height='auto';t.style.height=t.scrollHeight+'px';const n=c.querySelector('.tac');if(n)n.textContent=`已輸入 ${[...t.value.trim()].length} 字`}}
 document.addEventListener('input',e=>onTextIn(e.target));
 document.addEventListener('change',e=>{
@@ -194,10 +247,10 @@ function checkAR(silent){
   mark('ar','LIAR',6,AR_OBS[ans.age+'-'+ans.role]);
 }
 const AR_OBS={
-  '0-1':'受試者自稱未滿 18 歲，卻同時具備大學生 / 研究生身分。這顯示其對「事實」的定義相當寬鬆，連基本資料都可以即興發揮。研究小組推測其為傳說中的跳級天才，或單純覺得這樣填比較好玩。',
-  '0-2':'受試者自稱未滿 18 歲，卻已是一名上班族。這顯示其若不是太早被社會磨練，就是太晚學會填表。研究小組已將此筆資料轉交勞動部。',
-  '2-0':'受試者年滿 23 歲，目前身分仍為高中生。這顯示其對某個人生階段有著無法割捨的執念，或者只是不想長大。',
-  '3-0':'受試者年過 31 歲，目前身分仍為高中生。這顯示其不是勾錯，就是人生走了一條非常獨特的路線。研究小組傾向相信是老師勾錯了；若否，致上最深的敬意。'
+  '0-1':'未滿 18 歲就讀大學，對「事實」的定義比一般人寬鬆約四成。',
+  '0-2':'未滿 18 歲就當上班族，勞動部想跟其聊聊。',
+  '2-0':'23 歲以上還在讀高中，對高中生活的執念連彼得潘都說太誇張。',
+  '3-0':'31 歲以上的高中生，人生走了一條非常獨特的路線（或是勾錯了）。'
 };
 const MB_MSG=['請填寫有效的 MBTI 類型（例如：INFP、ESTJ）。','本問卷為正式學術問卷，請勿隨意填寫。','我們是很正經的問卷，請你也正經一點。','研究小組已經注意到你了。','好，你贏了。但這格還是要填對才能繼續。'];
 const FORGOT=/忘|不記得|不知道|不曉得|記不得|idk|不清楚/i;
@@ -209,26 +262,26 @@ function checkMbti(){
     stats.lastBad=null;
     if(ans.know===1||ans.know===2){
       warn(card,'mb',ans.know===2?'您剛剛選的是「沒有做過」。':'您剛剛選的是「有，但忘記了」。');shake(card);
-      mark('mb2','LIAR',3,ans.know===2?'受試者表示從未接受 MBTI 測驗，卻能明確填寫自身類型，這顯示其記憶會依情境自動調整，需要的時候才會想起來。':'受試者表示已忘記自己的 MBTI 類型，卻在下一題立刻想起來了。這顯示其說「忘記了」的時候，通常只是懶得想。');
+      mark('mb2','LIAR',3,ans.know===2?'說沒做過 MBTI 卻填得出類型，記憶有選擇性，跟欠錢的朋友一樣。':'說忘了自己的 MBTI，下一題馬上想起來，「忘記了」通常只是懶得想。',3);
       const key=ans.know+v.toUpperCase();if(stats.knowWarned===key)return true;stats.knowWarned=key;return false}
     mark('mb2');return true;
   }
   if(FORGOT.test(v)){
     const msg=ans.know===0?'您上一題選的是「有，且<b>記得</b>自己的類型」。':ans.know===1?'我們知道你忘了，上一題就說過了。不記得的話這格可以空白。':'沒做過的話，這格可以空白就好。';
     warn(card,'mb',msg);shake(card);
-    mark('mbti','LIAR',5,'受試者先表示記得自己的 MBTI 類型，隨後於類型欄位填寫「忘記」。這顯示其說話前不太回頭檢查自己剛剛說過什麼，兩句話之間的時間差不到十秒。');
+    mark('mbti','LIAR',5,'剛說記得自己的 MBTI，下一秒就填「忘記」，前後矛盾不到十秒。',4);
     return false;
   }
   if(v!==stats.lastBad){stats.badMbti++;stats.lastBad=v}
   shake(card);
   warn(card,'mb',MB_MSG[Math.min(stats.badMbti,MB_MSG.length)-1]);
-  mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`受試者於 MBTI 類型欄位輸入非標準類型「${esc(v.slice(0,16))}」，累計 ${stats.badMbti} 次。這顯示其看到規則的第一反應不是遵守，而是測試它的底線在哪裡。`);
+  mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`MBTI 欄位亂填${stats.badMbti>1?`，被擋了 ${stats.badMbti} 次還在試`:''}，看到規則的第一反應是測試它的底線在哪。`,3);
   return false;
 }
 function checkNick(){
   const card=$('#q_nick2'),a=(ans.nick||'').trim(),b=(ans.nick2||'').trim();
   if(a.toLowerCase()===b.toLowerCase()){warn(card,'nk','');mark('nick2');stats.nickWarned=null;return true}
-  mark('nick2','LIAR',4,`受試者第一頁自稱「${esc(a.slice(0,12))}」，於品質確認題中改稱「${esc(b.slice(0,12))}」，這顯示其要不是記性不好，就是自我認同每隔幾頁就會更新一次。`);
+  mark('nick2','LIAR',4,'前後兩次填的暱稱不一樣，自我認同每隔幾頁就更新一次，比手機系統還勤。',3);
   if(stats.nickWarned===b)return true;
   stats.nickWarned=b;warn(card,'nk','與第一頁填寫的不同。我們不會說什麼，但會記下來。');shake(card);return false;
 }
@@ -262,7 +315,7 @@ const hooks={
     q.opts[3]=`「你是不是 ${t}」`;card.querySelector('.opt[data-k="3"] span').textContent=q.opts[3];
   },
   t4(card,q){
-    dodger(card,q,2,'dodge','好啦，有一點點',n=>mark('dodge','CHAD',n*2,`選項「有」在畫面上持續移動的情況下，受試者仍嘗試點擊共 ${n} 次。這顯示其越得不到的東西越想要，越跑越要追。研究小組建議勿讓其接觸夾娃娃機。`));
+    dodger(card,q,2,'dodge','好啦，有一點點',n=>mark('dodge','CHAD',n*2,''));
   },
   ig(card,q){
     dodger(card,q,2,'igDodge','好啦，等一下就去追',n=>{});
