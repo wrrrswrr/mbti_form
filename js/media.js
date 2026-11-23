@@ -88,7 +88,7 @@ function preloadRick(card){
 function rickRolled(card){
   const q=Q.j3,other=q.opts.length-1;stats.rolled=true;
   q.opts[other]='其他（你已經知道會發生什麼了）';const s=card.querySelector(`.opt[data-k="${other}"] span`);if(s)s.textContent=q.opts[other];
-  mark('spawn','RICK',7,`受試者連續點擊「其他」共 ${stats.spawn+1} 次，對未知選項展現強烈探索動機，最終被導向一段 1987 年的音樂錄影帶。`);
+  mark('spawn','RICK',7,`受試者連續點擊「其他」共 ${stats.spawn+1} 次，這顯示其好奇心強過警覺心，明知道可能有詐還是要點開，最終被導向一段 1987 年的音樂錄影帶。`);
 }
 function playRick(card){
   ytShow('rick',CONFIG.rickId,h=>card.querySelector('.opts').insertAdjacentHTML('afterend',h));
@@ -97,7 +97,7 @@ function hotStarted(){const th=$('#thumb');stopAll();ytReveal('hot');if(th)th.re
 function hotDone(){
   stats.vidPlayed=true;
   const vc=$('#q_vid');if(vc){warn(vc,'vid','');if(ans.vid!==undefined)picks.vid(ans.vid,vc,null,null,true)}
-  mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。研究小組無法解釋此影片與本研究之關聯，受試者亦未提出質疑。');
+  mark('vid','RICK',1,'受試者主動點擊來路不明的「研究說明影片」，並觀看了一名男子端著一大鍋食物的過程。這顯示其對來路不明的內容幾乎不設防，看了也不問為什麼。');
 }
 
 const FROG={shown:0,caught:0,seen:{},off:false,t:[]};

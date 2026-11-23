@@ -139,7 +139,7 @@ function reveal(fast){
     gagMark();openMarks();
     // report.html（檢舉頁）會留下檢舉理由
     let rep=null;try{rep=localStorage.getItem('mbti_form_reported')}catch(e){}
-    if(rep)mark('report','SALT',4,`受試者在作答期間曾嘗試檢舉本表單，理由為「${esc(rep)}」。研究小組已讀，哭完之後決定繼續做下去。`);
+    if(rep)mark('report','SALT',4,`受試者在作答期間曾嘗試檢舉本表單，理由為「${esc(rep)}」。這顯示其不滿意時不只會抱怨，還會實際採取行動。研究小組已讀，哭完之後決定繼續做下去。`);
     const r=result(),T=TYPES[r.type],nick=esc((ans.nick||'受試者').trim()),pw=[92,78,61,37];
     const rare=RARE[r.type]||5,[tn,tc,ts]=tierOf(rare),late=lateLine();
     RES={r,T,nick,rare,late};

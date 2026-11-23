@@ -6,7 +6,7 @@ const lateOf=q=>q.late===undefined?[]:[].concat(q.late);
 function optHTML(q,o,k,extra=''){
   const ty=q.type==='checkbox'?'checkbox':'radio',v=ans[q.id];
   const on=ty==='radio'?v===k:(v||[]).includes(k);
-  const hid=(lateOf(q).includes(k)&&!q.lateShown)?' hid':'';
+  const hid=(lateOf(q).includes(k)&&!q.lateShown&&!on)?' hid':'';  // 已經選了的不藏
   const dis=q.timed&&stats.cdAuto;
   return `<label class="opt${hid}${extra}${dis?' dis':''}" data-k="${k}"><input type="${ty}" name="${q.id}" value="${k}"${on?' checked':''}${dis?' disabled':''}><span>${nk(o)}</span></label>`;
 }
@@ -68,7 +68,7 @@ function answered(q){const v=ans[q.id];
 const TW_MSG=['回應長度必須剛好為 3 個字。','是三個字。不是兩個，也不是四個。','研究小組相信你數得到三。','一、二、三。三個字。你可以的。'];
 const CHECK={
   tw(v){const n=[...v].length;if(n===3)return '';stats.twBad=(stats.twBad||0)+1;
-    mark('twBad','SALT',Math.min(6,stats.twBad*2),`受試者在「用三個字形容出題者」一題中，輸入了不是三個字的答案共 ${stats.twBad} 次（例如「${esc(v.slice(0,12))}」，共 ${n} 個字）。研究小組判斷其對出題者有很多話想說，三個字根本不夠。`);
+    mark('twBad','SALT',Math.min(6,stats.twBad*2),`受試者在「用三個字形容出題者」一題中，輸入了不是三個字的答案共 ${stats.twBad} 次（例如「${esc(v.slice(0,12))}」，共 ${n} 個字）。這顯示其無法把感受壓縮進別人給的框架裡：規則說三個字，心裡有三十個字。研究小組判斷其對出題者有很多話想說。`);
     return TW_MSG[Math.min(stats.twBad,TW_MSG.length)-1]+`（目前 ${n} 個字）`},
   pa(v){const n=[...v].length;return n>=5?'':`回應長度必須至少為 5 個字。目前 ${n} 個字，研究小組覺得你可以再多說一點。`}
 };
@@ -194,10 +194,10 @@ function checkAR(silent){
   mark('ar','LIAR',6,AR_OBS[ans.age+'-'+ans.role]);
 }
 const AR_OBS={
-  '0-1':'受試者自稱未滿 18 歲，卻同時具備大學生 / 研究生身分。研究小組推測其為傳說中的跳級天才，或是對「基本資料」一詞的理解具有高度彈性。',
-  '0-2':'受試者自稱未滿 18 歲，卻已是一名上班族。研究小組已將此筆資料轉交勞動部，並對其提早感受社會險惡表示同情。',
-  '2-0':'受試者年滿 23 歲，目前身分仍為高中生。研究小組推測其對高中生活有著無法割捨的情感，或是單純不想長大。',
-  '3-0':'受試者年過 31 歲，目前身分仍為高中生。研究小組傾向相信其為一名老師，只是不小心勾錯了；若否，研究小組致上最深的敬意。'
+  '0-1':'受試者自稱未滿 18 歲，卻同時具備大學生 / 研究生身分。這顯示其對「事實」的定義相當寬鬆，連基本資料都可以即興發揮。研究小組推測其為傳說中的跳級天才，或單純覺得這樣填比較好玩。',
+  '0-2':'受試者自稱未滿 18 歲，卻已是一名上班族。這顯示其若不是太早被社會磨練，就是太晚學會填表。研究小組已將此筆資料轉交勞動部。',
+  '2-0':'受試者年滿 23 歲，目前身分仍為高中生。這顯示其對某個人生階段有著無法割捨的執念，或者只是不想長大。',
+  '3-0':'受試者年過 31 歲，目前身分仍為高中生。這顯示其不是勾錯，就是人生走了一條非常獨特的路線。研究小組傾向相信是老師勾錯了；若否，致上最深的敬意。'
 };
 const MB_MSG=['請填寫有效的 MBTI 類型（例如：INFP、ESTJ）。','本問卷為正式學術問卷，請勿隨意填寫。','我們是很正經的問卷，請你也正經一點。','研究小組已經注意到你了。','好，你贏了。但這格還是要填對才能繼續。'];
 const FORGOT=/忘|不記得|不知道|不曉得|記不得|idk|不清楚/i;
@@ -209,26 +209,26 @@ function checkMbti(){
     stats.lastBad=null;
     if(ans.know===1||ans.know===2){
       warn(card,'mb',ans.know===2?'您剛剛選的是「沒有做過」。':'您剛剛選的是「有，但忘記了」。');shake(card);
-      mark('mb2','LIAR',3,ans.know===2?'受試者表示從未接受 MBTI 測驗，卻能明確填寫自身類型，其記憶系統可能存在選擇性運作。':'受試者表示已忘記自己的 MBTI 類型，卻在下一題立刻想起來了。研究小組認為其記憶具有「被問到才會想起來」的特性。');
+      mark('mb2','LIAR',3,ans.know===2?'受試者表示從未接受 MBTI 測驗，卻能明確填寫自身類型，這顯示其記憶會依情境自動調整，需要的時候才會想起來。':'受試者表示已忘記自己的 MBTI 類型，卻在下一題立刻想起來了。這顯示其說「忘記了」的時候，通常只是懶得想。');
       const key=ans.know+v.toUpperCase();if(stats.knowWarned===key)return true;stats.knowWarned=key;return false}
     mark('mb2');return true;
   }
   if(FORGOT.test(v)){
     const msg=ans.know===0?'您上一題選的是「有，且<b>記得</b>自己的類型」。':ans.know===1?'我們知道你忘了，上一題就說過了。不記得的話這格可以空白。':'沒做過的話，這格可以空白就好。';
     warn(card,'mb',msg);shake(card);
-    mark('mbti','LIAR',5,'受試者先表示記得自己的 MBTI 類型，隨後於類型欄位填寫「忘記」。兩項陳述之間的時間差不到十秒，研究小組對其記憶體容量表示關切。');
+    mark('mbti','LIAR',5,'受試者先表示記得自己的 MBTI 類型，隨後於類型欄位填寫「忘記」。這顯示其說話前不太回頭檢查自己剛剛說過什麼，兩句話之間的時間差不到十秒。');
     return false;
   }
   if(v!==stats.lastBad){stats.badMbti++;stats.lastBad=v}
   shake(card);
   warn(card,'mb',MB_MSG[Math.min(stats.badMbti,MB_MSG.length)-1]);
-  mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`受試者於 MBTI 類型欄位輸入非標準類型「${esc(v.slice(0,16))}」，累計 ${stats.badMbti} 次。在系統明確提示後仍持續嘗試，顯示其對既定規則具顯著挑戰傾向。`);
+  mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`受試者於 MBTI 類型欄位輸入非標準類型「${esc(v.slice(0,16))}」，累計 ${stats.badMbti} 次。這顯示其看到規則的第一反應不是遵守，而是測試它的底線在哪裡。`);
   return false;
 }
 function checkNick(){
   const card=$('#q_nick2'),a=(ans.nick||'').trim(),b=(ans.nick2||'').trim();
   if(a.toLowerCase()===b.toLowerCase()){warn(card,'nk','');mark('nick2');stats.nickWarned=null;return true}
-  mark('nick2','LIAR',4,`受試者第一頁自稱「${esc(a.slice(0,12))}」，於品質確認題中改稱「${esc(b.slice(0,12))}」，其自我認同可能仍在形成階段。`);
+  mark('nick2','LIAR',4,`受試者第一頁自稱「${esc(a.slice(0,12))}」，於品質確認題中改稱「${esc(b.slice(0,12))}」，這顯示其要不是記性不好，就是自我認同每隔幾頁就會更新一次。`);
   if(stats.nickWarned===b)return true;
   stats.nickWarned=b;warn(card,'nk','與第一頁填寫的不同。我們不會說什麼，但會記下來。');shake(card);return false;
 }
@@ -262,7 +262,7 @@ const hooks={
     q.opts[3]=`「你是不是 ${t}」`;card.querySelector('.opt[data-k="3"] span').textContent=q.opts[3];
   },
   t4(card,q){
-    dodger(card,q,2,'dodge','好啦，有一點點',n=>mark('dodge','CHAD',n*2,`選項「有」在畫面上持續移動的情況下，受試者仍嘗試點擊共 ${n} 次。其目標追逐動機顯著高於常模，研究小組建議勿讓其接觸夾娃娃機。`));
+    dodger(card,q,2,'dodge','好啦，有一點點',n=>mark('dodge','CHAD',n*2,`選項「有」在畫面上持續移動的情況下，受試者仍嘗試點擊共 ${n} 次。這顯示其越得不到的東西越想要，越跑越要追。研究小組建議勿讓其接觸夾娃娃機。`));
   },
   ig(card,q){
     dodger(card,q,2,'igDodge','好啦，等一下就去追',n=>{});

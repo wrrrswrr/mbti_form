@@ -1,7 +1,7 @@
 // 作答紀錄保存／還原（localStorage）
 // ===== 作答紀錄保存：存在使用者自己的手機（localStorage），按返回、重新整理、從 IG 跳回來都能接著填；按「再填一次」才清掉 =====
 // v2：題目改版（新增上傳／下拉／簡答等題型），舊存檔的選項不相容
-const SAVE_KEY='mbti_form_save_v9',TEST=/[?&]test\b/.test(location.search);
+const SAVE_KEY='mbti_form_save_v10',TEST=/[?&]test\b/.test(location.search);
 let cleared=false;
 function save(){
   if(TEST||cleared)return;

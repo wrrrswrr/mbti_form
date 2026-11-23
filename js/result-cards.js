@@ -8,7 +8,7 @@ const REC={
   BRUH:[['tv','面無表情看完整部喜劇'],['chat','在心裡發彈幕']],
   SIMP:[['heart','幫喜歡的人按每一則限動愛心'],['gift','偷偷記住別人說過想要的東西']],
   SALT:[['chat','在留言區跟陌生人吵架'],['edit','說「我只是陳述事實」']],
-  DAMN:[['chat','在別人問「唱得怎樣」時說實話'],['mute','講完才發現全場安靜']],
+  DAMN:[['chat','在朋友分享夢想時幫他算損益兩平'],['mute','講完才發現全場安靜']],
   CHAD:[['star','夾娃娃夾到保夾'],['refresh','輸了說「再一場」']],
   LIAR:[['edit','每天換一個自我介紹'],['link','在平行時空裡過得很好']],
   LAZY:[['bed','鬧鐘響了按五次貪睡'],['clock','把待辦清單延到明天']],
@@ -108,7 +108,7 @@ function gagMark(){
   const extra=Object.values(byId).reduce((s,n)=>s+Math.max(0,n-1),0);
   if(extra<3)return mark('gagM');
   const [topName,topN]=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
-  mark('gagM','MEME',Math.min(5,extra),`作答期間，受試者為了重聽音效，在同一題裡反覆切換有梗的選項，額外多點了 ${extra} 次，其中「${esc(topName)}」被點了 ${topN} 次。研究小組判斷其點選項並非為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
+  mark('gagM','MEME',Math.min(5,extra),`作答期間，受試者為了重聽音效，在同一題裡反覆切換有梗的選項，額外多點了 ${extra} 次，其中「${esc(topName)}」被點了 ${topN} 次。這顯示其做事的優先順序是「好玩」先於「完成」，點選項不是為了作答，而是為了聽音效，屬於重度爛梗依賴者。`);
 }
 // 追蹤「有沒有點進我們的連結」以及「點出去之後在外面待了幾秒」（回到這頁時用 visibilitychange 計算）。
 // 注意：網頁看不到對方在 IG / YouTube 上有沒有真的按追蹤，只能看離開多久來推測。

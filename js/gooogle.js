@@ -40,7 +40,7 @@ function glLogin(){
       if(cur===1){if(!v)return err('請輸入一點東西。什麼都可以，我們不會看。');mood=v;busy(700,()=>step(2));return}
       if(!v)return err('出題者沒有優點嗎？請再想一下。');merit=v;
       busy(1600,()=>{step(3);play('ding');
-        mark('login','RICK',2,`受試者在一份完全不需要登入的問卷中，主動點擊「登入 Gooogle」並走完整個登入流程，過程中還寫下出題者的優點「${esc(merit.slice(0,20))}」。研究小組判定其容易被長得很像的登入畫面騙到，建議以後先看網址。`);save()});
+        mark('login','RICK',2,`受試者在一份完全不需要登入的問卷中，主動點擊「登入 Gooogle」並走完整個登入流程，過程中還寫下出題者的優點「${esc(merit.slice(0,20))}」。這顯示其對看起來很正式的東西缺乏戒心，按鈕放在那裡就會想按。研究小組建議以後先看網址。`);save()});
     }
     else if(k==='forgot')toast('忘記心情很正常。大部分的人都是這樣活下來的。');
     else if(k==='create')toast('建立帳戶功能已被研究小組拿去吃了。');
