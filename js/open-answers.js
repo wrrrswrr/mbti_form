@@ -31,15 +31,6 @@ function openMarks(){
   else if(pn>=50)mark('pa','NERD',4,'一開口就停不下來。當初你退出文壇，研究小組也是極力反對的。',4);
   else if(/謝謝阿婆|ven|刀盾|醬板鴨|何意味|曼妙|留友看|擱供|麥可|露比|咩/i.test(pa))mark('pa','MEME',4,'腦中已經沒有正常的中文，只剩下梗。',3);
   else mark('pa','OKAY',1,'面對再亂七八糟的問卷都認真回答，是研究小組不配擁有的人。',2);
-  // 時間：昨晚幾點睡
-  const tm=(ans.jt||'').match(/^(\d{1,2}):(\d{2})/);
-  if(tm){const h=+tm[1],t=`${pad2(h)}:${tm[2]}`;
-    if(h>=21)mark('jt','NERD',2,'作息自律到不像大學生。',2);
-    else if(h<=2)mark('jt','LAZY',2,'晚上才是真正的人生，白天只是在待機。',2);
-    else if(h<=5)mark('jt','LAZY',4,'對睡眠的態度是能撐就撐，黑眼圈是勳章。',3);
-    else if(h<=11)mark('jt','BRUH',4,'作息已經跟太陽分手了。',4);
-    else mark('jt','LIAR',3,`${t} 睡覺的時候太陽都還沒下山，那不是睡覺，是昏迷。`,3)}
-  else mark('jt');
   // 日期：打算哪天開始寫報告
   const d=jdtDiff();
   if(d==null)mark('jdt');
