@@ -186,8 +186,15 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('.ddm'))ddClose();
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')ddClose()});
-const hasDup=v=>{const c=Object.values(v||{});return new Set(c).size<c.length};
-function gridDup(card,q){warn(card,'dup',hasDup(ans[q.id])?'每欄只能選擇一個回應':'')}
+// 單選方格（五列）的作答型態：same 全同分（v 是哪一級）、odd 四項同分只有一項不同（i 是哪一項、v 它的級分、w 其他四項的級分）、
+// rank 五個都不同、split 只用ㄅ跟ㄦ、two 只用兩種、tie 有部分並列
+// last 是最後一欄的索引（ㄅ～ㄦ是 4，重要程度是 2），split 用它判斷是不是只用頭尾兩欄
+function gridKind(r,last=4){const c=[0,1,2,3,4].map(i=>r&&r[i]);if(c.some(x=>x===undefined))return null;const u=new Set(c);
+  if(u.size===1)return{k:'same',v:c[0]};if(u.size===5)return{k:'rank'};
+  if(u.size===2){const i=c.findIndex(x=>c.filter(y=>y===x).length===1);
+    if(i>=0)return{k:'odd',i,v:c[i],w:c[(i+1)%5]};
+    return{k:u.has(0)&&u.has(last)?'split':'two'}}
+  return{k:'tie',n:c.length-u.size}}
 function onTextIn(t){const id=t.dataset&&t.dataset.id;if(!id)return;ans[id]=t.value;const c=$('#q_'+id);if(!c)return;c.classList.remove('bad');
   if(id==='mytype')warn(c,'mb','');
   if(c.querySelector('.w-vd'))warn(c,'vd','');
@@ -202,8 +209,6 @@ document.addEventListener('change',e=>{
   const gm=t.name&&t.name.match(/^(\w+)__(\d+)$/);
   if(gm&&Q[gm[1]]){const q=Q[gm[1]],r=+gm[2],k=+t.value,v={...(ans[q.id]||{})},card=$('#q_'+q.id);
     v[r]=k;ans[q.id]=v;
-    // 每欄只能選一個：重複時跳紅字警告，但不擋人（分析時再吐槽）
-    if(q.oneCol){gridDup(card,q);if(hasDup(v))play('error')}
     (HIST[q.id]=HIST[q.id]||[]).push(`${q.rows[r]}：${q.cols[k].replace(/<br>/g,'')}`);
     if(answered(q))card.classList.remove('bad');
     if(q.id==='tg'&&r===0&&k===2){play('bruh');toast('你在「媽媽」那一列選了「誰？」。我們不會說什麼，但媽媽會。')}
@@ -316,7 +321,6 @@ const hooks={
   au(card){auBind(card)},
   cap(card){const l=card.querySelector('#rcl');if(l)l.onclick=()=>capOpen(card)},
   up(card,q){upBind(card,q)},
-  s3(card,q){gridDup(card,q)},
   pa(card){const t=card.querySelector('.ta');if(t.value)t.style.height=t.scrollHeight+'px'}
 };
 

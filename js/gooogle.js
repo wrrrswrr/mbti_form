@@ -37,7 +37,11 @@ function glLogin(){
   ov.onclick=e=>{const a=e.target.closest('[data-a]');if(!a||busyNow)return;const k=a.dataset.a;
     if(k==='next'){
       const v=(ov.querySelector('#glIn').value||'').trim();
-      if(cur===1){if(!v)return err('請輸入一點東西。什麼都可以，我們不會看。');mood=v;busy(700,()=>step(2));return}
+      if(cur===1){if(!v)return err('請輸入一點東西。什麼都可以，我們不會看。');
+        // 欄位明明寫「不是電子郵件」還是有人打 gmail：吐槽 + 記進行為分析（stats 每輪「再填一次」會清掉）
+        if(/@|gmail|\.com\b/i.test(v)){stats.gmail=(stats.gmail||0)+1;save();
+          return err(['欄位上面寫「不是電子郵件」。你有在看題目嗎？','又是電子郵件。研究小組開始懷疑你前面的題目也都沒看。','第三次了。這已經不是沒看題目，是在挑釁。'][Math.min(stats.gmail,3)-1])}
+        mood=v;busy(700,()=>step(2));return}
       if(!v)return err('出題者沒有優點嗎？請再想一下。');merit=v;
       busy(1600,()=>{step(3);play('ding');
         stats.merit=merit.slice(0,20);mark('login','RICK',2,'');save()});
