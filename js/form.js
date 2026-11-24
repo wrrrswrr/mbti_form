@@ -152,7 +152,6 @@ function validate(){
     const ok=answered(q),c=$('#q_'+q.id);c.classList.toggle('bad',!ok);if(!ok&&!first)first=c;
     if(ok&&CHECK[q.id]){const m=CHECK[q.id](ans[q.id].trim());warn(c,'vd',m);if(m){shake(c);play('error');if(!first)first=c}}});
   if(page===0&&!checkMbti()&&!first)first=$('#q_mytype');
-  if($('#q_nick2')&&ans.nick2&&!checkNick()&&!first)first=$('#q_nick2');
   if(first){first.scrollIntoView({behavior:'smooth',block:'center'});return false}return true;
 }
 function bindNav(){
@@ -277,13 +276,6 @@ function checkMbti(){
   warn(card,'mb',MB_MSG[Math.min(stats.badMbti,MB_MSG.length)-1]);
   mark('mbti','LIAR',Math.min(10,stats.badMbti*3),`MBTI 欄位亂填${stats.badMbti>1?`，被擋了 ${stats.badMbti} 次還在試`:''}，看到規則的第一反應是測試它的底線在哪。`,3);
   return false;
-}
-function checkNick(){
-  const card=$('#q_nick2'),a=(ans.nick||'').trim(),b=(ans.nick2||'').trim();
-  if(a.toLowerCase()===b.toLowerCase()){warn(card,'nk','');mark('nick2');stats.nickWarned=null;return true}
-  mark('nick2','LIAR',4,'前後兩次填的暱稱不一樣，自我認同每隔幾頁就更新一次，比手機系統還勤。',3);
-  if(stats.nickWarned===b)return true;
-  stats.nickWarned=b;warn(card,'nk','與第一頁填寫的不同。我們不會說什麼，但會記下來。');shake(card);return false;
 }
 const LINES=['你從','你從新竹','你從桃園','你從','你從','你從桃園新竹','你從桃園新竹','你從桃園新竹','好','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','你從桃園新竹','到台北吃麻油雞','你從','好','你從桃園新竹','要開車吃麻油雞到台北','然後你吃完麻油雞跟朋友唱歌','然後你說你會','搭計程車回桃園新竹','好啦隨便啦我沒有辦法跟你溝通'];
 function listen(card){

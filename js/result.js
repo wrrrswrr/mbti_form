@@ -10,14 +10,6 @@ function submit(){
       $('#pbi').style.width=p+'%';$('#pct').textContent=p+'%';$('#anaT').textContent=txt;if(s==='six7'){play('sixseven');flash('6 7')}else play(s||'tick');setTimeout(go,d)})();
   },1300);
 }
-function mbti(){
-  const g=k=>{const v=ans[k];if(v===undefined)return 3;return Q[k].sv?Q[k].sv[v]:v};
-  const up=UP[ans.up]?UP[ans.up].e:3;  // 原本的 e3 改成照片上傳題：奶龍 5、Puzz 3、奶蛙 2、奶蛋 1
-  // e1、e2 的 sv 直接是外向分數（越高越 E）
-  const E=(g('e1')+g('e2')+up)/3+(ans.e4===0||ans.e5===0||ans.e5===10?1:ans.e4===1||ans.e5===2||ans.e5===11?-1:0)>=3?'E':'I';
-  const S=g('s1')-g('s2')>0?'S':'N',T=g('t1')>=3?'T':'F',J=ans.j1===0||ans.j1===1?'J':'P';
-  return E+S+T+J;
-}
 // ===== 隱藏人格判定 =====
 // 作答秒數：只算「問卷真的顯示在畫面上」的時間（stats.act，毫秒）。
 // 切到別的 App／分頁、螢幕關掉、關掉網頁都會暫停；提交後就停止計時。
@@ -34,6 +26,7 @@ setInterval(actTick,1000);
 document.addEventListener('visibilitychange',actTick);
 addEventListener('pagehide',()=>{actTick();ACT.last=0});
 // 舊版存檔沒有 stats.act 的話，退回用「打開 → 提交」的總時間
+const SPED_SEC=120;  // 少於這個秒數填完 → SPED 隱藏人格
 const durSec=()=>!stats.t1?null:stats.act!=null?Math.round(stats.act/1000):stats.t0?Math.round((stats.t1-stats.t0)/1000):null;
 const durTxt=s=>s==null?'—':s<60?`${s} 秒`:`${Math.floor(s/60)} 分 ${s%60} 秒`;
 // BOTS：所有選擇題（使用者自己點的）都是第一個選項；倒數題被系統代答的那題不算
@@ -52,7 +45,8 @@ function hiddenType(){
   if(stats.testHid)return stats.testHid;
   if(isPuzz())return 'PUZZ';
   if(botCount()>10)return 'BOTS';
-  const s=durSec();if(s!=null&&s<120)return 'SPED';
+  // 熟悉題目、只點不讀的極限大約 55～65 秒；第一次填、快速亂點約 80～100 秒
+  const s=durSec();if(s!=null&&s<SPED_SEC)return 'SPED';
   return null;
 }
 // PUZZ：照片上傳從頭到尾只上傳過 Puzz 一次（沒有移除、沒有換過），而且人機驗證「只」選了 Puzz 一張
@@ -80,13 +74,13 @@ function result(){
 // 每題的短評（marks[k].ana）是一句不帶主詞的性格描述，不重述題目或選項；這裡依主題排好順序串成段落。
 // 跟出題者／研究小組有關的題目不用短評，改由 authorPart() 依多題的組合另外寫。
 const THEMES=[
-  ['在人際關係上，',['e1','e2','e4','e5','up','m3','q2']],
-  ['思考方式上，',['s1','s2','s4','s5','au2','vid2','m2','m4','q67']],
-  ['面對情緒和別人的選擇時，',['t1','t2','t5','t6']],
-  ['生活習慣方面，',['j1','j2','jd','jdt','j3a','j3b','j3c','j3e','j3d','j4','jt','m1','q3','pa','res']]
+  ['在人際關係上，',['e2','e4','e5','up','q2']],
+  ['思考方式上，',['s1','s2','s4','au2','vid2','m2','m4','q67']],
+  ['面對情緒和別人的選擇時，',['t1','t5','t6']],
+  ['生活習慣方面，',['j1','j2','jd','jdt','j3a','j3b','j3c','j3e','j3d','j4','jt','q3','pa','res']]
 ];
 // 行為分析：作答過程中的小動作（「沒播放卻說有聽／有看」也算行為，不算思考方式）
-const BEH_KEYS=['ar','mb2','mbti','nick2','au2','vid2','spawn','au','vid','gagM'];
+const BEH_KEYS=['ar','mb2','mbti','au2','vid2','spawn','au','vid','gagM'];
 const isLie=k=>(k==='au2'||k==='vid2')&&marks[k]&&marks[k].type==='LIAR';
 // 句子上限：超過就照有趣度（同分看人格分數）挑，挑完再照題目順序排回去，讀起來才順
 const MAX_PER_THEME=3,MAX_BEH=4;
@@ -214,7 +208,7 @@ function reveal(fast){
   if(!fast){document.body.classList.add('glitch');play('vineboom')}
   setTimeout(()=>{
     document.body.classList.remove('glitch');window.scrollTo(0,0);
-    const self=(ans.mytype||'').trim().toUpperCase(),selfOk=MB_OK.test(self),base=selfOk?self:mbti();
+    const self=(ans.mytype||'').trim().toUpperCase(),selfOk=MB_OK.test(self);
     // 奶蛙總共探頭 N-2 = 6 次（第 3～8 頁各一次），翻太快沒看到的也算漏看
     const fs=N-2,fc=Math.min(FROG.caught,fs),allFrog=fc===fs;
     if(fs){if(allFrog)mark('frog','CHAD',7,`作答期間，一隻奶蛙曾 ${fs} 次從螢幕角落探頭偷看，受試者全數捕獲。忽有龐然大物，拔山倒樹而來，蓋一奶蛙也——而受試者每一次都看到了。其周邊視覺與反應速度遠超常模，研究小組懷疑其平常就很在意別人在看他。`);
@@ -278,17 +272,14 @@ function reveal(fast){
       const b=$('#rbody');b.style.display='block';b.classList.add('on');b.querySelectorAll('i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%');
       return;
     }
-    spin(base,()=>{
-      $('#sn').textContent=`初步結果：${base}`;
-      setTimeout(()=>{play('error');$('#sn').textContent=r.hid?'偵測到隱藏作答模式，正在解鎖隱藏人格…':'偵測到大量異常作答，改以《網路人格資料庫》重新判定…';
-        setTimeout(()=>spin(r.type,()=>{
-          $('#slots').classList.add('flip','final');play('vineboom');setTimeout(()=>play('airhorn'),500);
-          $('#sl').textContent='重新判定後，您的人格類型為';
-          $('#sn').innerHTML=`<b>${r.type}｜${T.n}</b>${T.tag}`;
-          const b=$('#rbody');b.style.display='block';const fw=$('#frogwin');if(fw)frogWin(fw);
-          setTimeout(()=>{b.classList.add('on');b.querySelectorAll('i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%')},300);
-        },180),1400);
-      },1300);
-    },380);
+    // 不再先轉出一般 MBTI：提交動畫跑完就直接轉出自製類型
+    if(r.hid)$('#sn').textContent='偵測到隱藏作答模式，正在解鎖隱藏人格…';
+    spin(r.type,()=>{
+      $('#slots').classList.add('flip','final');play('vineboom');setTimeout(()=>play('airhorn'),500);
+      $('#sl').textContent='重新判定後，您的人格類型為';
+      $('#sn').innerHTML=`<b>${r.type}｜${T.n}</b>${T.tag}`;
+      const b=$('#rbody');b.style.display='block';const fw=$('#frogwin');if(fw)frogWin(fw);
+      setTimeout(()=>{b.classList.add('on');b.querySelectorAll('i[data-w]').forEach(i=>i.style.width=i.dataset.w+'%')},300);
+    },180);
   },fast?0:900);
 }
