@@ -1,7 +1,17 @@
 // 音效：Web Audio 播放、合成備用音效、聲道管理
 let ac;
 try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
-function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended'||ac.state==='interrupted')ac.resume();return ac}
+function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==='suspended'||ac.state==='interrupted'){const p=ac.resume();if(p&&p.catch)p.catch(()=>{})}return ac}
+// 等 AudioContext 真的在跑再播。iOS 切 App / 來電後會變 interrupted，不是點擊觸發的播放解不開，
+// 這時就不硬播（不然會在下次點擊時突然冒出來），改提示使用者點一下
+function ready(){
+  const a=A();if(a.state==='running')return Promise.resolve(true);
+  const p=a.resume();
+  return Promise.race([p&&p.then?p.catch(()=>{}):Promise.resolve(),new Promise(r=>setTimeout(r,400))]).then(()=>a.state==='running');
+}
+let lastHint=0;
+function hint(){const n=Date.now();if(n-lastHint<8000)return;lastHint=n;try{toast('🔊 點一下畫面就能開啟音效')}catch(e){}}
 let unlocked=false;
 ['pointerdown','touchend','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{
   const a=A();if(unlocked)return;unlocked=true;
@@ -50,27 +60,43 @@ const SYN={
   sixseven(){tone(523,.22,'square',.15);tone(587,.4,'square',.15,null,.28)},
   frog(){tone(600,.12,'sine',.35,1200);tone(1200,.18,'sine',.25,500,.12)}
 };
-const fileBad={};
 const chan={};
 const BUF={};
+const useEl={};  // 這台裝置的 Web Audio 解不了這個檔（或在 file:// 下），直接改用 <audio> 播
+function decode(b){return new Promise((res,rej)=>{
+  const p=A().decodeAudioData(b,res,()=>rej('dec'));if(p&&p.catch)p.catch(()=>{})})}
 function loadBuf(k){
   if(BUF[k])return BUF[k];
-  if(fileBad[k]||!SOUND_FILES[k]||location.protocol==='file:'){fileBad[k]=true;return BUF[k]=Promise.resolve(null)}
-  return BUF[k]=fetch(SOUND_FILES[k]).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()})
-    .then(b=>new Promise((res,rej)=>A().decodeAudioData(b,res,rej)))
-    .catch(()=>{fileBad[k]=true;return null});
+  if(!SOUND_FILES[k])return Promise.resolve(null);
+  if(location.protocol==='file:'){useEl[k]=true;return Promise.resolve(null)}
+  const get=()=>fetch(SOUND_FILES[k]).then(r=>{if(!r.ok)throw 'net';return r.arrayBuffer()}).then(decode);
+  // 失敗先等一下重試一次；還是失敗就不快取結果，下次播放會再抓（不再永久判死）
+  return BUF[k]=get().catch(()=>new Promise(r=>setTimeout(r,600)).then(get)).catch(e=>{
+    delete BUF[k];if(e==='dec')useEl[k]=true;return null});
 }
+function elPlay(k,h){
+  const el=h.el=new Audio(SOUND_FILES[k]);el.volume=.9;
+  el.onended=()=>live.delete(h);
+  const p=el.play();
+  return p&&p.then?p.then(()=>true,()=>false):Promise.resolve(true);
+}
+// 播放順序：解碼好的檔案（Web Audio）→ <audio> 元素 → 合成音
 function play(k,ch){
-  const free=!!FREE[k];
+  const free=!!FREE[k],file=SOUND_FILES[k];
   if(k!=='tick'&&!free)stopAll();
-  const syn=()=>{if(!SYN[k])return;freeNow=free;try{SYN[k]()}finally{freeNow=false}};
-  if(!SOUND_FILES[k]||fileBad[k])return syn();
-  const h={dead:false,src:null,stop(){h.dead=true;if(h.src)try{h.src.stop()}catch(e){}}};
+  const h={dead:false,src:null,el:null,stop(){h.dead=true;
+    if(h.src)try{h.src.stop()}catch(e){}if(h.el)try{h.el.pause()}catch(e){}}};
   if(!free)live.add(h);if(ch&&!free)(chan[ch]=chan[ch]||[]).push(h);
-  loadBuf(k).then(buf=>{
-    if(h.dead)return;if(!buf){live.delete(h);return syn()}
-    const a=A(),s=a.createBufferSource(),g=a.createGain();s.buffer=buf;g.gain.value=.9;
-    s.connect(g).connect(free?a.destination:out());s.onended=()=>live.delete(h);s.start();h.src=s;
+  const done=()=>live.delete(h);
+  const syn=()=>{done();if(h.dead||!SYN[k])return;freeNow=free;try{SYN[k]()}finally{freeNow=false}};
+  Promise.all([ready(),file&&!useEl[k]?loadBuf(k):null]).then(([ok,buf])=>{
+    if(h.dead)return;
+    if(!ok){done();return hint()}
+    if(buf){
+      const a=A(),s=a.createBufferSource(),g=a.createGain();s.buffer=buf;g.gain.value=.9;
+      s.connect(g).connect(free?a.destination:out());s.onended=done;s.start();h.src=s;return}
+    if(file)return elPlay(k,h).then(played=>{if(!played&&!h.dead)syn()});
+    syn();
   });
   return h;
 }

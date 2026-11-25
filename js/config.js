@@ -13,15 +13,9 @@ const CONFIG={
 
 const BRAINWASH=['高峰期的街上堆滿車子長長的一隊堵塞max','夢的翅膀已經受了傷','她很壞嘟嘟嘟','以上皆是'];
 
+// 只列 sounds/ 裡真的有的檔案；vineboom、bruh、error、fart、airhorn、boing、ding、sadviolin 用 sound.js 的合成音
+// （之後補上 mp3 檔，再把那行加回來就會改播檔案）
 const SOUND_FILES={
-  vineboom:'sounds/vineboom.mp3',
-  bruh:'sounds/bruh.mp3',
-  error:'sounds/error.mp3',
-  fart:'sounds/fart.mp3',
-  airhorn:'sounds/airhorn.mp3',
-  boing:'sounds/boing.mp3',
-  ding:'sounds/ding.mp3',
-  sadviolin:'sounds/sadviolin.mp3',
   sixseven:'sounds/67.mp3',
   frog:'sounds/frog.mp3',
   muaji:'sounds/muaji.mp3',
