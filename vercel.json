@@ -5,12 +5,12 @@
     {
       "source": "/",
       "destination": "https://mbti-form.112405025.workers.dev/",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/:path*",
       "destination": "https://mbti-form.112405025.workers.dev/:path*",
-      "permanent": false
+      "permanent": true
     }
   ],
   "headers": [
