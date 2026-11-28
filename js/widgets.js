@@ -5,7 +5,7 @@ const AU={el:null,last:0,src:'sounds/chinopio.mp3'};
 const mmss=s=>isFinite(s)?`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`:'--:--';
 function auEl(){
   if(AU.el)return AU.el;
-  const el=AU.el=new Audio(AU.src);el.preload='metadata';
+  const el=AU.el=new Audio(AU.src);el.preload='metadata';el.volume=VOL;
   const ui=()=>{const c=$('#q_au');if(!c)return;
     const pp=c.querySelector('.pp'),on=!el.paused;
     if(pp.classList.contains('on')!==on){pp.classList.toggle('on',on);pp.innerHTML=ic(on?'pause':'play',24,'#fff');pp.setAttribute('aria-label',on?'暫停':'播放')}

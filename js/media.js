@@ -32,10 +32,10 @@ function ytPreload(key,id,place,onPlay){
   const go=()=>{if(!document.getElementById(key+'Player'))return;
     new YT.Player(key+'Player',{videoId:id,playerVars:{playsinline:1,rel:0,origin:location.origin},
       // YouTube 會把「靜音」狀態記在手機裡（之前的靜音備案呼叫過 mute() 就會一直被記住），所以載好時先強制解除靜音
-      events:{onReady:e=>{YTP[key]=e.target;try{e.target.unMute();e.target.setVolume(100)}catch(x){}
+      events:{onReady:e=>{YTP[key]=e.target;try{e.target.unMute();e.target.setVolume(Math.round(100*VOL))}catch(x){}
           if(YTW[key])ytStart(key);else ytPlace(key)},
         onStateChange:e=>{
-          if(e.data===1){try{if(e.target.isMuted()){e.target.unMute();e.target.setVolume(100)}}catch(x){}}
+          if(e.data===1){try{if(e.target.isMuted()){e.target.unMute();e.target.setVolume(Math.round(100*VOL))}}catch(x){}}
           if((e.data===1||e.data===3)&&!YTS[key]){YTS[key]=true;YTCB[key]&&YTCB[key]()}}}})};
   ytReady?go():ytQ.push(go);
 }

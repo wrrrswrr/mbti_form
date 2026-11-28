@@ -1,5 +1,9 @@
 // 音效：Web Audio 播放、合成備用音效、聲道管理
 let ac;
+// 總音量（1 = 原本的大小）：所有音效、音樂、聽力題音檔、YouTube 影片都乘上這個值，想整體調大調小改這裡就好
+const VOL=.8;
+let master=null;
+function dest(){const a=A();if(!master){master=a.createGain();master.gain.value=VOL;master.connect(a.destination)}return master}
 try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
 function A(){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();
   if(ac.state==='suspended'||ac.state==='interrupted'){const p=ac.resume();if(p&&p.catch)p.catch(()=>{})}return ac}
@@ -36,7 +40,7 @@ function noise(dur,freq,q,vol,lfoF=0,lfoAmt=0){
 let bus=null;const live=new Set();
 const FREE={frog:1};
 let freeNow=false;
-function out(){const a=A();if(freeNow)return a.destination;if(!bus){bus=a.createGain();bus.connect(a.destination)}return bus}
+function out(){if(freeNow)return dest();if(!bus){bus=A().createGain();bus.connect(dest())}return bus}
 function stopAll(){
   live.forEach(h=>h.stop());live.clear();
   Object.keys(chan).forEach(k=>chan[k]=[]);
@@ -76,7 +80,7 @@ function loadBuf(k){
     delete BUF[k];if(e==='dec')useEl[k]=true;return null});
 }
 function elPlay(k,h){
-  const el=h.el=new Audio(SOUND_FILES[k]);el.volume=.9;
+  const el=h.el=new Audio(SOUND_FILES[k]);el.volume=.9*VOL;
   el.onended=()=>live.delete(h);
   const p=el.play();
   return p&&p.then?p.then(()=>true,()=>false):Promise.resolve(true);
@@ -99,7 +103,7 @@ function playRaw(k,ch){
     if(!ok){done();return hint()}
     if(buf){
       const a=A(),s=a.createBufferSource(),g=a.createGain();s.buffer=buf;g.gain.value=.9;
-      s.connect(g).connect(free?a.destination:out());s.onended=done;s.start();h.src=s;return}
+      s.connect(g).connect(free?dest():out());s.onended=done;s.start();h.src=s;return}
     if(file)return elPlay(k,h).then(played=>{if(!played&&!h.dead)syn()});
     syn();
   }).catch(done);
