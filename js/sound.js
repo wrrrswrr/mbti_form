@@ -82,7 +82,11 @@ function elPlay(k,h){
   return p&&p.then?p.then(()=>true,()=>false):Promise.resolve(true);
 }
 // 播放順序：解碼好的檔案（Web Audio）→ <audio> 元素 → 合成音
-function play(k,ch){
+// 音效絕對不能讓呼叫它的程式中斷：有些 App 內建瀏覽器連 AudioContext 都建不起來，
+// 這時 play 會直接丟錯，後面的「換畫面」就不會執行（例如驗證按鈕按了沒反應）。出錯一律當作沒聲音
+const MUTE={dead:true,src:null,el:null,stop(){}};
+function play(k,ch){try{return playRaw(k,ch)}catch(e){return MUTE}}
+function playRaw(k,ch){
   const free=!!FREE[k],file=SOUND_FILES[k];
   if(k!=='tick'&&!free)stopAll();
   const h={dead:false,src:null,el:null,stop(){h.dead=true;
@@ -98,7 +102,7 @@ function play(k,ch){
       s.connect(g).connect(free?a.destination:out());s.onended=done;s.start();h.src=s;return}
     if(file)return elPlay(k,h).then(played=>{if(!played&&!h.dead)syn()});
     syn();
-  });
+  }).catch(done);
   return h;
 }
 function stopCh(ch){if(chan[ch]){chan[ch].forEach(h=>h.stop());chan[ch]=[]}}

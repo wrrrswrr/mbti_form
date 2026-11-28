@@ -58,7 +58,8 @@ body{margin:0;background:#f0ebf8;font-family:Roboto,"Noto Sans TC","PingFang TC"
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px) rotate(-1deg)}40%{transform:translateX(10px) rotate(1deg)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 body.glitch .wrap{animation:glitch .7s steps(2) infinite}
 @keyframes glitch{0%{transform:translate(0);filter:none}25%{transform:translate(-8px,4px) skewX(8deg);filter:hue-rotate(90deg) invert(1)}50%{transform:translate(8px,-4px);filter:saturate(8)}75%{transform:translate(-4px,0) skewX(-10deg);filter:invert(1)}100%{transform:translate(0)}}
-#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:4500;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+/* 提示框只顯示文字，不能擋點擊：它疊在所有視窗上面，手機上剛好會蓋住驗證視窗底部的「驗證」按鈕 */
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:#323232;color:#fff;padding:14px 22px;border-radius:6px;font-size:14px;transition:transform .3s;z-index:4500;max-width:90vw;box-shadow:0 3px 8px rgba(0,0,0,.3);pointer-events:none}
 #toast.show{transform:translate(-50%,0)}
 #testp{position:fixed;right:10px;bottom:10px;z-index:4000;background:#fff;border:2px dashed #673ab7;border-radius:8px;padding:10px;width:220px;max-height:70vh;overflow-y:auto;box-shadow:0 3px 10px rgba(0,0,0,.2);font-size:13px}
 #testp b{display:block;cursor:pointer;color:#673ab7;margin-bottom:6px}
@@ -208,12 +209,15 @@ body{font-variant-emoji:text}
 .rc .cb.ok:after{content:"";position:absolute;left:7px;top:-4px;width:9px;height:22px;border:solid #009e55;border-width:0 4px 4px 0;transform:rotate(45deg)}
 .rc .logo{display:flex;flex-direction:column;align-items:center;font-size:10px;color:#555;line-height:1.25;text-align:center}
 .rc .logo small{font-size:8px;color:#555}
-#rcov{position:fixed;inset:0;z-index:3500;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;padding:10px}
-.rcw{background:#fff;border:1px solid #ccc;box-shadow:0 0 8px rgba(0,0,0,.25);width:400px;max-width:100%;padding:7px;font-family:Roboto,Arial,sans-serif;animation:rcin .2s ease-out}
-/* 驗證視窗專用：整個框（含白底）一起淡入，不能用 pop（pop 會把背景變透明，九宮格看起來像各自飄著） */
+/* 螢幕太矮（IG／LINE 內建瀏覽器、手機橫放）時視窗會比畫面高：外層要能捲動，否則底下的「驗證」按鈕會被切掉按不到。
+   置中改用 margin:auto（放得下就置中，放不下就從頂端開始、可以往下捲）；align-items:center 放不下時會把頂端也切掉 */
+#rcov{position:fixed;inset:0;z-index:3500;background:rgba(255,255,255,.55);display:flex;padding:10px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+/* 寬度跟著畫面高度縮：視窗高度約等於寬度 + 190px，這樣九宮格跟按鈕通常一個畫面就放得下 */
+.rcw{margin:auto;flex:none;background:#fff;border:1px solid #ccc;box-shadow:0 0 8px rgba(0,0,0,.25);width:400px;width:min(400px,max(260px,calc(100vh - 210px)));width:min(400px,max(260px,calc(100dvh - 210px)));max-width:100%;padding:7px;font-family:Roboto,Arial,sans-serif;animation:rcin .2s ease-out}/* 驗證視窗專用：整個框（含白底）一起淡入，不能用 pop（pop 會把背景變透明，九宮格看起來像各自飄著） */
 @keyframes rcin{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
 .rch{background:#4a90e2;color:#fff;padding:22px 18px 20px;font-size:14px;line-height:1.4}
 .rch b{display:block;font-size:26px;font-weight:700;margin:2px 0}
+@media(max-height:560px){.rch{padding:12px 14px}.rch b{font-size:22px}}
 .rcg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:7px 0}
 .rcg div{position:relative;aspect-ratio:1;cursor:pointer;overflow:hidden;background:#fff}
 .rcg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .12s}

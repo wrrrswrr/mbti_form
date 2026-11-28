@@ -177,6 +177,7 @@ function capResult(card,ov,sel){
     lines=['你只找到 1 隻奶蛙。','另一隻奶蛙表示很受傷，但還是讓你過了。'];
     mark('cap','LAZY',2,'受試者在人機驗證中只選了 1 隻奶蛙就按下驗證，另一隻被晾在一旁。研究小組判斷其屬於「差不多就好」派。')}
   ov.querySelector('.rcw').innerHTML=`<div class="rcr"><img src="${img}" alt=""><div class="rt">${title}</div>${lines.map(l=>`<p>${l}</p>`).join('')}<button class="rcb" data-a="done">繼續作答</button></div>`;
+  ov.scrollTop=0;
   ov.onclick=e=>{if(!e.target.closest('[data-a="done"]'))return;
     ov.remove();stats.cap={sel};ans.cap=1;
     const cb=card.querySelector('.cb');cb.classList.add('ok');card.querySelector('#rcl span').textContent='驗證完成';card.classList.remove('bad');
