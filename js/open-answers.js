@@ -1,10 +1,56 @@
 // 非選擇題計分（提交時才算）＋結果頁小動畫
 // ===== 非選擇題（簡答／段落／日期／時間／單選方格）在提交時才計分 =====
 const pad2=n=>String(n).padStart(2,'0');
-function jdtDiff(){
-  const m=(ans.jdt||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;
+// 年份可能是 0001 或超過 9999（瀏覽器允許到 275760 年），所以年份抓 4～6 位數；
+// 0～99 年不能直接 new Date(y,…)，會被當成 1900～1999 年，要用 setFullYear
+function jdtDate(v){
+  const m=(v||'').match(/^(\d{4,6})-(\d{2})-(\d{2})$/);if(!m)return null;
+  const d=new Date(0);d.setHours(0,0,0,0);d.setFullYear(+m[1],m[2]-1,+m[3]);return d;
+}
+function jdtDiff(v=ans.jdt){
+  const d=jdtDate(v);if(!d)return null;
   const t=new Date(stats.t1||Date.now()),t0=new Date(t.getFullYear(),t.getMonth(),t.getDate());
-  return Math.round((new Date(+m[1],m[2]-1,+m[3])-t0)/864e5);
+  return Math.round((d-t0)/864e5);
+}
+// 不合理的年份：作答時跳紅字（live），提交後寫進分析（ana）。沒有命中回傳 null，走一般的天數判斷
+function jdtOdd(v=ans.jdt){
+  const dt=jdtDate(v);if(!dt)return null;
+  const y=dt.getFullYear(),cy=new Date(stats.t1||Date.now()).getFullYear(),d=jdtDiff(v);
+  if(y<=1)return{type:'BRUH',pts:5,
+    live:'西元元年？那時候耶穌剛出生，你的報告題目大概是〈論馬槽的通風問題〉。',
+    ana:'連時間軸都可以拉到西元元年，拖延的反方向也能做到極致，研究小組不知道該稱讚還是報警。'};
+  if(y<1000)return{type:'BRUH',pts:5,
+    live:`西元 ${y} 年？那時候連紙都還很貴。請問你打算把報告刻在竹簡上嗎？`,
+    ana:`宣稱早在西元 ${y} 年就開始寫報告，研究小組已將此事轉交考古學系處理。`};
+  if(y<1900)return{type:'LIAR',pts:5,
+    live:`${y} 年還沒有電燈、沒有網路、也還沒有你。請問你是用毛筆寫報告嗎？`,
+    ana:`說自己 ${y} 年就開始寫報告，那時候連電燈都還沒普及，說謊的時候完全不查資料。`};
+  if(y<cy-30)return{type:'LIAR',pts:4,
+    live:`${y} 年你應該還沒出生。出生前就開始寫報告，這已經不是卷王，是胎教。`,
+    ana:'自稱出生前就開始準備報告，研究小組判斷其不是卷王，就是對「開始」的定義非常寬鬆。'};
+  if(d<-365)return{type:'LAZY',pts:4,
+    live:`你 ${cy-y} 年前就開始寫了，到現在還沒寫完？這份報告陪你的時間比大部分的感情還長。`,
+    ana:`報告已經開始寫了 ${cy-y} 年還沒寫完，「有在進行」跟「有在完成」是兩件完全不同的事。`};
+  if(y>99999)return{type:'BRUH',pts:5,
+    live:`西元 ${y} 年？瀏覽器願意讓你選到這裡已經是奇蹟了。那時候太陽大概也不想上班了。`,
+    ana:'把報告排到瀏覽器日期的極限才開始寫，拖延已經不是習慣，是一種宇宙尺度的信仰。'};
+  if(y>=3000)return{type:'BRUH',pts:5,
+    live:`${y} 年？屆時人類可能已經移居火星，報告請以全像投影方式繳交。`,
+    ana:`把報告排到 ${y} 年才開始寫，研究小組建議直接把報告列為傳家之寶。`};
+  if(y>cy+100)return{type:'BRUH',pts:4,
+    live:`${y} 年你大概已經不在了。這份報告預計將由你的曾孫代為完成。`,
+    ana:'把報告排到自己的壽命之外，打算讓下一代繼承這份死線，非常有遠見。'};
+  return null;
+}
+// 日期欄位打字時，瀏覽器會先吐出 0002-… 這種半成品年份，所以停手 0.7 秒才判斷，避免一路亂叫
+let jdtTm=0;
+function jdtLive(card,v,silent){
+  clearTimeout(jdtTm);
+  const go=()=>{if(!document.body.contains(card))return;const o=jdtOdd(v);
+    if(!o){stats.jdtLive=null;return warn(card,'jdt','')}
+    if(card.querySelector('.w-jdt')&&stats.jdtLive===o.live)return;stats.jdtLive=o.live;
+    warn(card,'jdt',o.live);if(!silent){play('error');shake(card)}};
+  if(silent)go();else jdtTm=setTimeout(go,700);
 }
 function openMarks(){
   // 簡答：三個字形容出題者
@@ -32,8 +78,9 @@ function openMarks(){
   else if(/謝謝阿婆|ven|刀盾|醬板鴨|何意味|曼妙|留友看|擱供|麥可|露比|咩/i.test(pa))mark('pa','MEME',4,'腦中已經沒有正常的中文，只剩下梗。',3);
   else mark('pa','OKAY',1,'面對再亂七八糟的問卷都認真回答，是研究小組不配擁有的人。',2);
   // 日期：打算哪天開始寫報告
-  const d=jdtDiff();
+  const d=jdtDiff(),jo=jdtOdd();
   if(d==null)mark('jdt');
+  else if(jo)mark('jdt',jo.type,jo.pts,jo.ana,5);
   else if(d<0)mark('jdt','NERD',3,'不用死線逼也會自己動，組員上輩子一定燒了好香。',2);
   else if(d===0)mark('jdt','LIAR',3,'嘴上的「今天開始」，跟別人的「明天再說」是同一個意思。',3);
   else if(d<=6)mark('jdt','LAZY',2,`事情都排在「不久的將來」，到時候大概會再延 ${d} 天。`,2);

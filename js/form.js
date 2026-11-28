@@ -200,6 +200,7 @@ function onTextIn(t){const id=t.dataset&&t.dataset.id;if(!id)return;ans[id]=t.va
   if(c.querySelector('.w-vd'))warn(c,'vd','');
   if(id==='tw')twLive(c,t.value);
   if(id==='pa')paLive(c,t.value);
+  if(id==='jdt')jdtLive(c,t.value);
   if(t.tagName==='TEXTAREA'){t.style.height='auto';t.style.height=t.scrollHeight+'px';const n=c.querySelector('.tac');if(n)n.textContent=`已輸入 ${[...t.value.trim()].length} 字`}}
 document.addEventListener('input',e=>onTextIn(e.target));
 document.addEventListener('change',e=>{
@@ -321,6 +322,7 @@ const hooks={
   au(card){auBind(card)},
   cap(card){const l=card.querySelector('#rcl');if(l)l.onclick=()=>capOpen(card)},
   up(card,q){upBind(card,q)},
-  pa(card){const t=card.querySelector('.ta');if(t.value)t.style.height=t.scrollHeight+'px'}
+  pa(card){const t=card.querySelector('.ta');if(t.value)t.style.height=t.scrollHeight+'px'},
+  jdt(card){if(ans.jdt)jdtLive(card,ans.jdt,true)}  // 換頁回來時把紅字補回去
 };
 
