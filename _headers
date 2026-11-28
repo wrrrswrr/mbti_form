@@ -1,0 +1,7 @@
+# Cloudflare Pages 的快取設定（build.mjs 會複製到 dist/）
+# 檔名帶 hash 的檔案內容不會變，放心快取一年
+/app.*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sounds/*
+  Cache-Control: public, max-age=31536000, immutable

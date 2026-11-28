@@ -45,4 +45,5 @@ if(html.includes('css/style.css'))throw new Error('CSS 沒有成功內嵌');
 
 writeFileSync(`${OUT}/index.html`,html);
 copyFileSync('report.html',`${OUT}/report.html`);
+copyFileSync('_headers',`${OUT}/_headers`); // Cloudflare Pages 的快取設定（Vercel 用 vercel.json，會忽略這個檔）
 console.log(`built ${OUT}/: index.html, report.html, ${jsName} (${srcs.length} 個 js), ${Object.keys(soundMap).length} 個音效`);
