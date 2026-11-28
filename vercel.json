@@ -3,6 +3,11 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/",
+      "destination": "https://mbti-form.112405025.workers.dev/",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "destination": "https://mbti-form.112405025.workers.dev/:path*",
       "permanent": false
