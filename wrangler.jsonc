@@ -1,0 +1,8 @@
+// Cloudflare Worker 設定：部署前先跑 build.mjs，再把 dist/ 當靜態網站發布
+// （dist/_headers 會被套用，打包的 JS 和音效快取一年）
+{
+  "name": "mbti-form",
+  "compatibility_date": "2025-06-01",
+  "build": { "command": "node build.mjs" },
+  "assets": { "directory": "./dist" }
+}

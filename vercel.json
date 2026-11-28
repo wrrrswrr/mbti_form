@@ -1,6 +1,13 @@
 {
   "buildCommand": "node build.mjs",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://mbti-form.112405025.workers.dev/:path*",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/app.(.*).js",
