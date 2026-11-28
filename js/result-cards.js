@@ -39,8 +39,9 @@ function recHTML(type){
 function doneAt(){const d=new Date(stats.testLate||stats.t1||Date.now());return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`}
 // 奶蛙從第 3 頁開始每頁探頭一次，總共 N-2 = 6 次；翻太快沒看到的也算漏抓
 function frogTxt(){const ft=N-2,fc=Math.min(FROG.caught,ft);return `${fc} / ${ft} 次${fc===ft?'（全數捕獲）':!fc?'（一次都沒抓到）':''}`}
-// 結果圖右下角的探頭奶蛙：先載好，drawResult 是同步畫的
+// 結果圖右下角的探頭奶蛙：先載好，drawResult 是同步畫的。全數捕獲的人換成大笑版
 const FROG_PEEK=new Image();FROG_PEEK.src=FROG_IMG.peek;
+const FROG_LAUGH=new Image();FROG_LAUGH.src=FROG_IMG.laugh;
 // 用 canvas 畫一張「Google 表單風格」的結果圖
 function drawResult(){
   const {r,T,nick,rare,late}=RES,W=1080,P=60,CW=W-P*2,IN=56,F='"Noto Sans TC","PingFang TC","Microsoft JhengHei",Roboto,Arial,sans-serif';
@@ -84,9 +85,11 @@ function drawResult(){
   b.font=`400 34px "Product Sans",Roboto,Arial,sans-serif`;b.fillStyle='#5f6368';b.textAlign='center';b.fillText('Gooogle 表單',W/2,y+70);
   b.font=`400 24px ${F}`;b.fillText(`${CONFIG.showName}・${CONFIG.igHandle}`,W/2,y+108);
   // 奶蛙從圖片底邊探頭（跟作答時一樣只露出上面 42%）
-  if(FROG_PEEK.complete&&FROG_PEEK.naturalWidth){
-    const fw=200,fh=fw*FROG_PEEK.naturalHeight/FROG_PEEK.naturalWidth;
-    b.drawImage(FROG_PEEK,W-P-fw,H-fh*.42,fw,fh);
+  const ft=N-2,allFrog=ft>0&&Math.min(FROG.caught,ft)===ft;
+  let fi=allFrog?FROG_LAUGH:FROG_PEEK;if(!(fi.complete&&fi.naturalWidth))fi=FROG_PEEK;  // 大笑圖萬一沒載好就退回一般版
+  if(fi.complete&&fi.naturalWidth){
+    const fw=200,fh=fw*fi.naturalHeight/fi.naturalWidth;
+    b.drawImage(fi,W-P-fw,H-fh*.42,fw,fh);
   }
   return B;
 }
