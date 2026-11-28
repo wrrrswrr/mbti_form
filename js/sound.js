@@ -16,7 +16,8 @@ let unlocked=false;
 ['pointerdown','touchend','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{
   const a=A();if(unlocked)return;unlocked=true;
   const s=a.createBufferSource();s.buffer=a.createBuffer(1,1,22050);s.connect(a.destination);s.start(0);
-  Object.keys(SOUND_FILES).forEach(loadBuf);
+  // 不再一次預載全部音效（省請求次數）；play() 用到時才 loadBuf。奶蛙隨時會出現，先載這個
+  loadBuf('frog');
 }catch(e){}},true));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ac)try{ac.resume()}catch(e){}});
 function tone(f,dur,type='sine',vol=.3,fEnd,delay=0){
